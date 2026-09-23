@@ -1,105 +1,131 @@
 <script setup>
+import { percent, trajectoryStatus } from "../utils/labels.js";
 definePageMeta({ alias: ["/dashboard"] });
-const { current } = useCareer();
+const { store, loadEmployee, gradeName, roleName } = useCareer();
+onMounted(() => loadEmployee());
 const gaps = computed(() =>
-  current.value.p.gaps
-    .filter((g) => g.gap > 0)
-    .sort((a, b) => Number(b.critical) - Number(a.critical) || b.gap - a.gap),
+  (store.trajectory?.gaps || [])
+    .filter((g) => g.gap === null || g.gap > 0)
+    .sort((a, b) => Number(b.critical) - Number(a.critical)),
 );
 </script>
 <template>
-  <div>
-    <CqHeading
-      title="Развивайтесь в своём темпе"
-      :subtitle="`Здравствуйте, ${current.employee.full_name.split(' ')[0]}. Здесь ваш путь, следующий шаг и прогресс — без лишнего шума.`"
-      ><NuxtLink to="/profile" class="btn secondary"
-        >Мой профиль <CqIcon name="user" /></NuxtLink
-    ></CqHeading>
-    <section class="hero">
-      <div>
-        <div class="eyebrow">
-          {{ current.employee.role }} · {{ current.employee.grade }}
+  <CqAsync
+    :loading="store.loading"
+    :error="store.error"
+    :empty="!store.profile"
+    @retry="loadEmployee()"
+  >
+    <div v-if="store.profile">
+      <CqHeading
+        title="Развивайтесь в своём темпе"
+        :subtitle="
+          'Здравствуйте, ' +
+          store.profile.fullName +
+          '. Здесь ваш путь, следующий шаг и прогресс.'
+        "
+        ><NuxtLink to="/profile" class="btn secondary"
+          >Мой профиль <CqIcon name="user" /></NuxtLink
+      ></CqHeading>
+      <section class="hero">
+        <div>
+          <div class="eyebrow">
+            {{ roleName(store.profile.roleId) }} ·
+            {{ gradeName(store.profile.gradeId) }}
+          </div>
+          <h2>Понятный шаг.<br />Заметный рост.</h2>
+          <p>
+            {{ trajectoryStatus[store.trajectory.status] }}. Следующий грейд:
+            {{ gradeName(store.trajectory.nextGradeId) }}.
+          </p>
+          <div class="actions">
+            <NuxtLink to="/path" class="btn gold"
+              >Посмотреть мой путь <CqIcon name="arrow" /></NuxtLink
+            ><CqTag color="dark">Личная траектория</CqTag>
+          </div>
         </div>
-        <h2>Понятный шаг.<br />Заметный рост.</h2>
-        <p>
-          Двигайтесь к цели «{{ current.p.goal.target_grade }}» через навыки,
-          которые действительно важны для вашей роли.
-        </p>
-        <div class="actions">
-          <NuxtLink to="/path" class="btn gold"
-            >Посмотреть мой путь <CqIcon name="arrow" /></NuxtLink
-          ><CqTag color="dark">Личная траектория</CqTag>
-        </div>
+        <div class="hero-art"><CqProgress :profile="store.trajectory" /></div>
+      </section>
+      <div class="grid three stats">
+        <CqMetric
+          label="Соответствие навыков"
+          :value="percent(store.trajectory.readinessPercent)"
+          caption="Не вероятность повышения"
+          icon="target"
+        />
+        <CqMetric
+          label="Данные о навыках"
+          :value="percent(store.trajectory.coverage * 100)"
+          caption="Покрытие требований известными данными"
+          icon="layers"
+        />
+        <CqMetric
+          label="Критические навыки"
+          :value="
+            store.trajectory.criticalSkillsMet === null
+              ? 'Нет данных'
+              : store.trajectory.criticalSkillsMet
+                ? 'Закрыты'
+                : 'Есть разрывы'
+          "
+          caption="По требованиям следующего грейда"
+          icon="check"
+        />
       </div>
-      <div class="hero-art"><CqProgress :profile="current.p" /></div>
-    </section>
-    <div class="grid four stats">
-      <CqMetric
-        label="Соответствие цели"
-        :value="current.p.progress + '%'"
-        caption="Не вероятность повышения"
-        icon="target"
-      /><CqMetric
-        label="Требования закрыты"
-        :value="`${current.p.met} / ${current.p.gaps.length}`"
-        caption="По выбранному профилю роли"
-        icon="check"
-      /><CqMetric
-        label="Критические разрывы"
-        :value="current.p.criticalOpen.length"
-        caption="Приоритет для следующих шагов"
-        icon="layers"
-      /><CqMetric
-        label="Следующие шаги"
-        :value="current.recs.length"
-        caption="Доступно прямо сейчас"
-        icon="path"
-      />
-    </div>
-    <div class="section panel-head">
-      <h2>Ваш следующий шаг</h2>
-      <NuxtLink to="/recommendations" class="btn ghost"
-        >Все рекомендации <CqIcon name="arrow"
-      /></NuxtLink>
-    </div>
-    <div class="grid main-aside">
-      <div>
-        <CqRecommendation
-          v-if="current.recs.length"
-          :rec="current.recs[0]"
-          compact
-        /><CqNotice v-else color="gold"
-          >Доступного шага сейчас нет.
-          <NuxtLink to="/path" class="inline-link">Проверьте цель</NuxtLink> или
-          обсудите пробелы каталога с HR.</CqNotice
-        >
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Что приблизит к цели</h2>
-          <CqIcon name="target" />
-        </div>
-        <CqSkill v-for="gap in gaps.slice(0, 4)" :key="gap.id" :gap="gap" />
-        <div class="skill-legend">
-          <span><i />Текущий уровень</span
-          ><span><i class="gold" />Критический навык</span>
-        </div>
-        <div class="section">
-          <CqNotice
-            >Прогресс рассчитан по требованиям роли, а не по количеству
-            пройденных курсов.</CqNotice
-          >
-        </div>
-      </div>
-    </div>
-    <div class="panel section">
-      <div class="panel-head">
-        <h2>Последняя активность</h2>
-        <NuxtLink to="/activities" class="btn ghost"
-          >Вся история <CqIcon name="arrow"
+      <div class="section panel-head">
+        <h2>Ваш следующий шаг</h2>
+        <NuxtLink to="/recommendations" class="btn ghost"
+          >Все рекомендации <CqIcon name="arrow"
         /></NuxtLink>
       </div>
-      <CqRecent :history="current.history" :limit="3" />
+      <div class="grid main-aside">
+        <div>
+          <CqNotice v-if="store.recommendations?.stale" color="gold"
+            >Профиль изменился. Обновите рекомендации.</CqNotice
+          >
+          <CqRecommendation
+            v-if="store.recommendations?.recommendations.length"
+            :rec="store.recommendations.recommendations[0]"
+            compact
+          />
+          <section v-else class="panel">
+            <p>
+              {{
+                store.recommendations
+                  ? "Подходящих рекомендаций сейчас нет."
+                  : "Подбор ещё не выполнялся."
+              }}
+            </p>
+            <NuxtLink to="/recommendations" class="btn section"
+              >Подобрать следующий шаг</NuxtLink
+            >
+          </section>
+        </div>
+        <section class="panel">
+          <h2>Что приблизит к цели</h2>
+          <CqSkill
+            v-for="gap in gaps.slice(0, 4)"
+            :key="gap.skillId"
+            :gap="gap"
+          />
+          <p v-if="!gaps.length" class="empty-inline">
+            {{ trajectoryStatus[store.trajectory.status] }}
+          </p>
+          <CqNotice
+            >Прогресс рассчитан по требованиям роли, а не по количеству
+            курсов.</CqNotice
+          >
+        </section>
+      </div>
+      <section class="panel section">
+        <div class="panel-head">
+          <h2>Последняя активность</h2>
+          <NuxtLink to="/activities" class="btn ghost"
+            >Вся история <CqIcon name="arrow"
+          /></NuxtLink>
+        </div>
+        <CqRecent :history="store.history" :limit="3" />
+      </section>
     </div>
-  </div>
+  </CqAsync>
 </template>

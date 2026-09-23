@@ -1,48 +1,36 @@
 <script setup>
-import { eventTitle, formats, date, statuses } from "../utils/labels.js";
+import { date, statuses } from "../utils/labels.js";
 const props = defineProps({
-  history: Array,
+  history: { type: Array, default: () => [] },
   limit: { type: Number, default: 4 },
+  hr: Boolean,
 });
-const { store } = useCareer();
+const { activityName } = useCareer();
 const rows = computed(() =>
   props.history
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, props.limit)
-    .map((r) => ({
-      ...r,
-      event: store.data.events.find((e) => e.event_id === r.event_id),
-    })),
+    .slice(0, props.limit),
 );
 </script>
 <template>
-  <div v-for="r in rows" :key="r.record_id" class="activity-line">
-    <span class="mini-icon"
-      ><CqIcon :name="r.event.mandatory ? 'shield' : 'book'"
-    /></span>
+  <div v-for="row in rows" :key="row.id" class="activity-line">
+    <span class="mini-icon"><CqIcon name="book" /></span>
     <div>
-      <NuxtLink
+      <strong v-if="hr">{{ activityName(row.activityId) }}</strong
+      ><NuxtLink
+        v-else
         class="activity-title"
-        :to="{ path: '/event', query: { id: r.event_id } }"
-        >{{ eventTitle(r.event) }}</NuxtLink
+        :to="{ path: '/event', query: { id: row.activityId } }"
+        >{{ activityName(row.activityId) }}</NuxtLink
       >
       <div class="activity-date">
-        {{ date(r.date) }} ·
-        {{
-          r.event.mandatory
-            ? "Обязательное назначение"
-            : formats[r.event.format]
-        }}
+        {{ date(row.date) }} · {{ row.completionPct }}%
       </div>
     </div>
-    <div class="tags">
-      <CqTag :color="statuses[r.status]?.[1]">{{
-        statuses[r.status]?.[0]
-      }}</CqTag>
-    </div>
+    <CqTag :color="statuses[row.status]?.[1]">{{
+      statuses[row.status]?.[0] || row.status
+    }}</CqTag>
   </div>
-  <div v-if="!rows.length" class="empty-inline">
-    Истории участия пока нет. Рекомендации опираются на профиль и цель.
-  </div>
+  <div v-if="!rows.length" class="empty-inline">Истории участия пока нет.</div>
 </template>

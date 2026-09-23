@@ -1,0 +1,14 @@
+# Merged after backend/compose.yaml; paths are relative to backend/.
+# Preserve its defaults and backend/.env, then apply the optional root .env.
+x-root-environment: &root-environment
+  env_file:
+    - path: ../.env
+      required: false
+
+services:
+  migrate:
+    <<: *root-environment
+  bootstrap:
+    <<: *root-environment
+  api:
+    <<: *root-environment

@@ -307,3 +307,50 @@ select {
   background: #133d3466;
   backdrop-filter: blur(3px);
 }
+
+/* API text and identifiers can be longer than the design fixtures. */
+.content h1,
+.content h2,
+.content h3,
+.activity-title,
+.details-list dd {
+  overflow-wrap: anywhere;
+}
+.activity-entry {
+  padding: 0 0 22px;
+  border-bottom: 1px solid var(--line);
+}
+.activity-entry + .activity-entry {
+  padding-top: 12px;
+}
+.activity-entry:last-child {
+  border-bottom: 0;
+}
+button.nav-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+.path-line {
+  flex-wrap: wrap;
+}
+.tag.outline { outline: none; }
+@media (max-width: 700px) {
+  .mobile-nav { gap: 4px; }
+  .mobile-nav a, .mobile-nav button {
+    flex: 1;
+    min-width: 0;
+    padding: 0 2px;
+    justify-content: flex-start;
+  }
+  .mobile-nav span {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.3;
+    min-height: 24px;
+  }
+}

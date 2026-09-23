@@ -207,6 +207,9 @@ describe('Career Quest HTTP end-to-end flow on PostgreSQL', () => {
     const complete = specification.paths['/api/v1/employees/{id}/participations/{pid}/complete'].post;
     expect(complete.parameters).toEqual(expect.arrayContaining([expect.objectContaining({ name: 'Idempotency-Key', in: 'header', required: true })]));
     expect(complete.security?.length).toBeGreaterThan(0);
+    expect(specification.paths['/api/v1/employees/{id}/recommendations/latest'].get.parameters).toEqual(expect.arrayContaining([
+      expect.objectContaining({ name: 'locale', in: 'query', required: false }),
+    ]));
     expect(specification.paths['/api/v1/imports'].post.requestBody?.content?.['multipart/form-data']?.schema).toBeDefined();
     await request(app.getHttpServer()).get('/docs/').expect(200);
   });

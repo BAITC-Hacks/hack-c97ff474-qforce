@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { DomainError } from '../../../../shared/domain/domain-error';
 import { ZodValidationPipe } from '../../../../shared/infrastructure/http/validation.pipe';
@@ -17,6 +17,7 @@ export class RecommendationsController {
   @ApiOperation({summary: 'Generate or reuse 1–3 verified recommendations; rules fallback is explicitly labelled'})
   generate(@Param('id') id: string, @Body(new ZodValidationPipe(generateSchema)) input: z.infer<typeof generateSchema>) { return this.recommendations.generate(id, input); }
   @Get('latest') @ApiOkResponse({schema: recommendationResponseSchema})
+  @ApiQuery({name: 'locale', required: false, enum: ['ru', 'kk', 'en']})
   @ApiOperation({summary: 'Read latest saved set and staleness without calling a model; null if never generated'})
   latest(@Param('id') id: string, @Query(new ZodValidationPipe(latestQuerySchema)) query: z.infer<typeof latestQuerySchema>) { return this.recommendations.latest(id, query.locale); }
   @Get(':setId') @ApiOkResponse({schema: recommendationResponseSchema})

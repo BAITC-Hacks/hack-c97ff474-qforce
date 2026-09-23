@@ -5,9 +5,9 @@ import { pages } from "../utils/pages.js";
   <div>
     <CqHeading
       title="Все экраны QCareer"
-      subtitle="Карта переходов из Career Quest Demo, перенесённая на маршруты Vue."
+      subtitle="Карта разделов Career Quest. Доступ зависит от роли учётной записи."
       ><NuxtLink to="/login" class="btn secondary"
-        >Открыть демо <CqIcon name="arrow" /></NuxtLink
+        >Войти <CqIcon name="arrow" /></NuxtLink
     ></CqHeading>
     <div
       v-for="group in [

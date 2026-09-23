@@ -45,7 +45,7 @@
     <main class="login-form">
       <div class="login-form-inner">
         <div class="login-top">
-          <CqTag color="green">Интерактивный прототип</CqTag><span>RU</span>
+          <CqTag color="green">Career Quest</CqTag><span>RU</span>
         </div>
         <slot />
       </div>

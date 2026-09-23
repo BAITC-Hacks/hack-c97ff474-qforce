@@ -1,0 +1,143 @@
+{
+  "verifiedAt": "2026-09-23T10:32:19.273Z",
+  "environment": "isolated local PostgreSQL career_quest_test, explicit DATA_MODE=fixtures, LLM_PROVIDER=disabled",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hr/overview",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a/recommendations/latest",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/employees/fixture_person_a/recommendations",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/employees/fixture_person_a/recommendations",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a/recommendations/latest?locale=ru",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees?page=2&pageSize=2",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/skills?locale=ru",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/roles?locale=ru",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/activities?pageSize=2",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a/trajectory",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a/history?pageSize=2",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/employees/fixture_person_a/eligible-activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hr/overview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hr/skill-gaps",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hr/needs-attention",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hr/activity-participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/hr/recommendation-coverage",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/imports/dry-run",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/imports",
+      "status": 422
+    }
+  ],
+  "pagination": {
+    "page": 2,
+    "pageSize": 2,
+    "total": 6,
+    "requestId": "d194d07a-9387-419b-940f-f621529a0d35"
+  },
+  "initialRecommendationData": null,
+  "localeSelected": "ru",
+  "dryRunRejectedStatus": "REJECTED",
+  "applyRejectedCode": "IMPORT_REJECTED",
+  "swaggerDiscrepancy": {
+    "operation": "GET /api/v1/employees/{id}/recommendations/latest",
+    "runtimeAcceptsLocale": true,
+    "localeListedBeforeFix": false,
+    "localeListedAfterFix": true,
+    "afterFixVerifiedAt": "2026-09-23T10:34:46.721Z"
+  }
+}

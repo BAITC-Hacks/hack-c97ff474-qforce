@@ -1,26 +1,24 @@
 <script setup>
 import { titles, employeeMenu, hrMenu } from "../utils/pages.js";
-import { initials, date } from "../utils/labels.js";
+import { initials } from "../utils/labels.js";
 const route = useRoute(),
-  { store, employee, selectEmployee, save } = useCareer(),
+  { store, logout } = useCareer(),
   mobileOpen = ref(false);
 const page = computed(() =>
   route.path === "/" ? "dashboard" : route.path.slice(1),
 );
-const hr = computed(
-  () => page.value.startsWith("hr-") || page.value === "import",
-);
+const hr = computed(() => store.user?.role === "HR");
 const menu = computed(() => (hr.value ? hrMenu : employeeMenu));
 watch(
   () => route.path,
   () => {
     mobileOpen.value = false;
-    if (hr.value) {
-      store.state.mode = "hr";
-      save();
-    }
   },
 );
+function signOut() {
+  logout();
+  navigateTo("/login");
+}
 </script>
 <template>
   <a href="#main" class="skip-link">Перейти к содержимому</a>
@@ -50,14 +48,13 @@ watch(
         <strong><CqIcon name="shield" /> Развитие без сравнения</strong>Ваш путь
         — не соревнование. Здесь нет публичных рейтингов сотрудников.
       </div>
-      <NuxtLink
-        to="/settings"
-        class="nav-item"
-        :class="{ active: page === 'settings' }"
+      <NuxtLink to="/settings" class="nav-item"
         ><CqIcon name="settings" />Настройки</NuxtLink
-      ><NuxtLink to="/login" class="nav-item"
-        ><CqIcon name="logout" />Сменить режим</NuxtLink
       >
+      <button v-if="store.user" class="nav-item" @click="signOut">
+        <CqIcon name="logout" />Выйти
+      </button>
+      <NuxtLink v-else to="/login" class="nav-item">Войти</NuxtLink>
     </div>
   </aside>
   <div class="shell">
@@ -71,42 +68,28 @@ watch(
         <CqIcon name="layers" />
       </button>
       <div class="crumb">
-        <NuxtLink to="/" class="hide-mobile">QCareer</NuxtLink
+        <NuxtLink :to="hr ? '/hr-dashboard' : '/dashboard'" class="hide-mobile"
+          >QCareer</NuxtLink
         ><span class="hide-mobile">/</span
         ><span>{{ titles[page] || "Обзор" }}</span>
       </div>
       <div class="top-controls">
-        <div class="role-toggle" aria-label="Режим демонстрации">
-          <NuxtLink :class="{ selected: !hr }" to="/dashboard"
-            >Сотрудник</NuxtLink
-          ><NuxtLink :class="{ selected: hr }" to="/hr-dashboard">HR</NuxtLink>
+        <CqTag color="green">{{ hr ? "HR" : "Сотрудник" }}</CqTag
+        ><span class="lang small muted">RU</span>
+        <div class="avatar">
+          {{
+            initials(
+              hr ? { fullName: store.user?.username || "HR" } : store.profile,
+            )
+          }}
         </div>
-        <span class="lang small muted">RU</span>
-        <div class="avatar">{{ initials(employee) }}</div>
-        <select
-          class="employee-select"
-          :value="employee.employee_id"
-          aria-label="Демонстрационный выбор сотрудника"
-          @change="selectEmployee($event.target.value)"
-        >
-          <option
-            v-for="e in store.data.employees"
-            :key="e.employee_id"
-            :value="e.employee_id"
-          >
-            {{ e.full_name }} · {{ e.employee_id }}
-          </option>
-        </select>
       </div>
     </header>
     <main id="main" class="content" tabindex="-1">
       <slot />
       <footer class="bottom-note">
-        <span>QCareer · концепт для HackAlem · синтетические данные</span
-        ><span
-          >Срез {{ date(store.state.asOf) }} · демо без LLM и серверной
-          авторизации</span
-        >
+        <span>QCareer · развитие в своём темпе</span
+        ><span>Данные и прогресс сохраняются на сервере</span>
       </footer>
     </main>
   </div>
@@ -117,7 +100,8 @@ watch(
       :to="'/' + item[0]"
       :class="{ active: page === item[0] }"
       ><CqIcon :name="item[2]" /><span>{{ item[1] }}</span></NuxtLink
-    ><button @click="mobileOpen = true">
+    >
+    <button @click="mobileOpen = true">
       <CqIcon name="layers" /><span>Ещё</span>
     </button>
   </nav>

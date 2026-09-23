@@ -1,49 +1,87 @@
 <script setup>
-import { eventTitle, formats, date } from "../utils/labels.js";
-defineProps({
-  rec: Object,
+import { formats } from "../utils/labels.js";
+const props = defineProps({
+  rec: { type: Object, required: true },
   index: { type: Number, default: 0 },
   compact: Boolean,
 });
-const { store, skillName } = useCareer();
+const { store, skillName, activityName, notify } = useCareer();
+const { request, session } = useApi();
+const activity = computed(() =>
+  store.activities.find((a) => a.id === props.rec.activityId),
+);
+const busy = ref(false),
+  error = ref("");
+async function feedback(rating) {
+  if (busy.value || !store.profile || !store.recommendations) return;
+  const employeeId = store.profile.id,
+    setId = store.recommendations.recommendationSetId,
+    sessionVersion = session.version;
+  busy.value = true;
+  error.value = "";
+  try {
+    await request(
+      `/employees/${encodeURIComponent(employeeId)}/recommendations/${encodeURIComponent(setId)}/feedback`,
+      { method: "POST", body: { activityId: props.rec.activityId, rating } },
+    );
+    const latest = await request(
+      `/employees/${encodeURIComponent(employeeId)}/recommendations/latest`,
+      { query: { locale: "ru" } },
+    );
+    if (
+      session.version === sessionVersion &&
+      store.profile?.id === employeeId &&
+      store.recommendations?.recommendationSetId === setId
+    ) {
+      store.recommendations = latest.data;
+      notify("Обратная связь сохранена.");
+    }
+  } catch (e) {
+    error.value = e.message;
+  } finally {
+    busy.value = false;
+  }
+}
 </script>
 <template>
   <article class="panel rec-card" :class="{ primary: index === 0 }">
     <div class="rec-top">
-      <div class="rec-number">0{{ index + 1 }}</div>
+      <div class="rec-number">0{{ rec.rank }}</div>
       <CqTag :color="index === 0 ? 'green' : 'outline'">{{
         index === 0 ? "Приоритетный шаг" : "Альтернатива"
       }}</CqTag>
     </div>
-    <h3>{{ eventTitle(rec.event) }}</h3>
-    <div class="tags">
-      <CqTag>{{ formats[rec.event.format] }}</CqTag
-      ><CqTag>{{ rec.event.duration_hours }} ч</CqTag
-      ><CqTag color="green">{{
-        rec.resume ? "Продолжить начатое" : "Добровольно"
-      }}</CqTag>
+    <h3>{{ activityName(rec.activityId) }}</h3>
+    <div v-if="activity" class="tags">
+      <CqTag>{{ formats[activity.format] || activity.format }}</CqTag
+      ><CqTag>{{ activity.durationHours }} ч</CqTag>
     </div>
-    <p class="desc">
-      {{
-        rec.nextSession === store.state.asOf &&
-        rec.event.format === "self_paced"
-          ? "Можно начать сегодня"
-          : "Ближайшая сессия: " + date(rec.nextSession)
-      }}
-    </p>
-    <div class="tags">
+    <div class="tags section">
       <CqTag
-        v-for="s in rec.changes.filter((s) => s.closure > 0).slice(0, 2)"
-        :key="s.skill_id"
+        v-for="skill in rec.expectedSkillChanges"
+        :key="skill.skillId"
         color="green"
-        >{{ skillName(s.skill_id) }} +{{ s.delta }}</CqTag
+        >{{ skillName(skill.skillId) }} +{{ skill.actualGain }}</CqTag
       >
     </div>
-    <CqEvidence :rec="rec" :compact="compact" /><NuxtLink
+    <CqEvidence :rec="rec" :compact="compact" />
+    <NuxtLink
       class="btn"
       :class="{ secondary: index !== 0 }"
-      :to="{ path: '/event', query: { id: rec.event.event_id } }"
+      :to="{ path: '/event', query: { id: rec.activityId } }"
       >Подробнее о шаге <CqIcon name="arrow"
     /></NuxtLink>
+    <div v-if="!compact" class="actions section">
+      <button class="btn ghost" :disabled="busy" @click="feedback('HELPFUL')">
+        Полезно</button
+      ><button
+        class="btn ghost"
+        :disabled="busy"
+        @click="feedback('NOT_HELPFUL')"
+      >
+        Не подходит
+      </button>
+    </div>
+    <CqNotice v-if="error" color="red" role="alert">{{ error }}</CqNotice>
   </article>
 </template>

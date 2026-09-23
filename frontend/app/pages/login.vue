@@ -1,68 +1,72 @@
 <script setup>
 definePageMeta({ layout: "auth" });
-const { store, selectEmployee, save } = useCareer(),
-  employeeId = ref(store.state.employeeId),
-  mode = ref(store.state.mode);
-function submit() {
-  selectEmployee(employeeId.value);
-  store.state.mode = mode.value;
-  save();
-  navigateTo(mode.value === "hr" ? "/hr-dashboard" : "/dashboard");
+const { login, session } = useApi();
+const { logout } = useCareer();
+const username = ref(""),
+  password = ref(""),
+  busy = ref(false),
+  error = ref("");
+async function submit() {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = "";
+  logout();
+  try {
+    const user = await login(username.value.trim(), password.value);
+    password.value = "";
+    await navigateTo(user.role === "HR" ? "/hr-dashboard" : "/dashboard");
+  } catch (e) {
+    error.value = e.message;
+  } finally {
+    busy.value = false;
+  }
 }
 </script>
 <template>
   <div>
     <div class="eyebrow text-primary">Начните с вашего профиля</div>
     <h2>Добро пожаловать</h2>
-    <p>
-      Исследуйте карьерный навигатор на синтетических данных стартового набора.
-    </p>
+    <p>Войдите в свою учётную запись Career Quest.</p>
     <form @submit.prevent="submit">
       <div class="field">
-        <label for="loginEmployee">Демонстрационный сотрудник</label
-        ><select id="loginEmployee" v-model="employeeId" class="select">
-          <option
-            v-for="e in store.data.employees"
-            :key="e.employee_id"
-            :value="e.employee_id"
-          >
-            {{ e.full_name }} · {{ e.grade }}
-          </option>
-        </select>
+        <label for="username">Имя пользователя</label
+        ><input
+          id="username"
+          v-model="username"
+          class="input"
+          autocomplete="username"
+          required
+          :disabled="busy"
+        />
       </div>
       <div class="field">
-        <label for="loginRole">Режим просмотра</label
-        ><select id="loginRole" v-model="mode" class="select">
-          <option value="employee">Сотрудник — мой путь развития</option>
-          <option value="hr">HR — обзор развития команды</option>
-        </select>
+        <label for="password">Пароль</label
+        ><input
+          id="password"
+          v-model="password"
+          class="input"
+          type="password"
+          autocomplete="current-password"
+          required
+          :disabled="busy"
+        />
       </div>
-      <button type="submit" class="btn wide">
-        Открыть демо <CqIcon name="arrow" />
+      <CqNotice v-if="error || session.error" color="red" role="alert">{{
+        error || session.error
+      }}</CqNotice>
+      <button type="submit" class="btn wide section" :disabled="busy">
+        {{ busy ? "Входим…" : "Войти" }} <CqIcon name="arrow" />
       </button>
     </form>
     <div class="section">
       <CqNotice
-        >Корпоративный пароль не нужен и не запрашивается. Это макет входа, а не
-        настоящая авторизация.</CqNotice
+        >Доступ к профилю и HR-разделам определяется вашей учётной
+        записью.</CqNotice
       >
     </div>
     <div class="auth-return">
-      Нужен новый профиль?
-      <NuxtLink to="/register" class="auth-link">Создать в демо</NuxtLink>
-    </div>
-    <div class="login-divider">
-      {{ store.data.employees.length }} профилей ·
-      {{ store.data.events.length }} активностей ·
-      {{ store.data.skills.length }} навыков<br />Дата исходного набора: 1
-      октября 2026 года
-    </div>
-    <div class="actions section">
-      <NuxtLink to="/ui-kit" class="btn ghost"
-        >Дизайн-система <CqIcon name="layers" /></NuxtLink
-      ><NuxtLink to="/screens" class="btn ghost"
-        >Все экраны <CqIcon name="arrow"
-      /></NuxtLink>
+      Нет учётной записи?
+      <NuxtLink to="/register" class="auth-link">Как получить доступ</NuxtLink>
     </div>
   </div>
 </template>

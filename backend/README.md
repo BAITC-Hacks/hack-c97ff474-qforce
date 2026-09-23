@@ -1,10 +1,10 @@
 # Career Quest Backend
 
-Рабочий модульный монолит NestJS + PostgreSQL + Prisma: импорт → профиль → траектория → рекомендация → выполнение → изменение навыков → новая рекомендация → HR. Frontend не изменяется.
+Рабочий модульный монолит NestJS + PostgreSQL + Prisma: импорт → профиль → траектория → рекомендация → выполнение → изменение навыков → новая рекомендация → HR. Общий запуск с frontend описан в [корневом README](../README.md).
 
 ## Запуск
 
-Нужны Docker Engine с Compose v2 и свободный порт 3001. Образы закреплены: Node 22.20.0, PostgreSQL 17.6. Локальная разработка: Node 22.16–24, npm и отдельная PostgreSQL 17.
+Нужны Docker Engine с Compose 2.24+ и свободный порт 3001. Образы закреплены: Node 22.20.0, PostgreSQL 17.6. Локальная разработка: Node 22.16–24, npm и отдельная PostgreSQL 17.
 
 ```bash
 cd backend
@@ -15,6 +15,8 @@ docker compose up --build
 ```
 
 PowerShell: `Copy-Item .env.example .env`, `New-Item -ItemType Directory -Force data/input`. Если запрещён npm.ps1, используйте `npm.cmd`.
+
+Для свежего локального окружения Compose также работает без `.env`: читает публичные локальные значения из `.env.example`, включая fixtures и demo accounts. `.env` необязателен и переопределяет их. API привязан к loopback, PostgreSQL не публикует порт. При корневом запуске дополнительно применяется корневой `.env`; существующий volume и `backend/.env` сохраняются.
 
 `.env.example` явно выбирает `DATA_MODE=fixtures`: 6 собственных синтетических профилей, не исходный комплект и не данные жюри. Demo-login: `employee` и `hr`, пароли — только из вашего `.env`; сотрудник `fixture_person_a`.
 
@@ -88,7 +90,7 @@ Default `LLM_PROVIDER=disabled`: настоящий многофакторный
 |---|---|
 | DATABASE_URL | Обязательный PostgreSQL URL; Compose строит из POSTGRES_* |
 | POSTGRES_USER, POSTGRES_DB | Compose: career_quest |
-| POSTGRES_PASSWORD | Обязателен для Compose |
+| POSTGRES_PASSWORD | Локальный default `change-this-local-database-password`; замените перед работой с приватными данными |
 | TEST_DATABASE_URL | Только integration/e2e, имя БД оканчивается `_test` |
 | NODE_ENV | development; test/production |
 | PORT | 3001 |

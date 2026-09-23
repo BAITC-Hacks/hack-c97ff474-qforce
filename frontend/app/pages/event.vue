@@ -1,197 +1,257 @@
 <script setup>
-import { eventTitle, formats, date } from "../utils/labels.js";
+import { date, formats, reasonLabel } from "../utils/labels.js";
 const route = useRoute(),
-  {
-    store,
-    employee,
-    selected: r,
-    selectEvent,
-    skillName,
-    enroll,
-  } = useCareer();
-const valid = ref(true);
-watch(
-  () => route.query.id,
-  (id) => {
-    valid.value = !id || selectEvent(String(id));
-  },
-  { immediate: true },
+  { request } = useApi();
+const { store, loadEmployee, skillName } = useCareer();
+const activity = ref(null),
+  loading = ref(true),
+  error = ref(""),
+  actionError = ref(""),
+  busy = ref(false),
+  sessionDate = ref("");
+const id = computed(() =>
+  typeof route.query.id === "string" ? route.query.id : "",
 );
-const inPlan = computed(() =>
-  store.state.plan.includes(
-    employee.value.employee_id + ":" + r.value.event.event_id,
+const participation = computed(() =>
+  store.history.find(
+    (row) =>
+      row.activityId === id.value &&
+      (activity.value?.format === "self_paced" ||
+        !sessionDate.value ||
+        row.date === sessionDate.value) &&
+      ["registered", "in_progress", "overdue"].includes(row.status),
   ),
 );
+const recommendation = computed(() =>
+  store.recommendations?.recommendations.find(
+    (row) => row.activityId === id.value,
+  ),
+);
+const eligibility = computed(() =>
+  store.eligible?.eligible.find((row) => row.activity.id === id.value),
+);
+const excluded = computed(
+  () =>
+    store.eligible?.excluded.find((row) => row.activityId === id.value)
+      ?.reasons || [],
+);
+const sessions = computed(() =>
+  (activity.value?.upcomingSessions || []).filter(
+    (value) => value >= (store.eligible?.asOfDate || ""),
+  ),
+);
+let version = 0;
+async function load() {
+  const current = ++version;
+  loading.value = true;
+  error.value = "";
+  activity.value = null;
+  if (!id.value) {
+    error.value = "Активность не указана. Выберите её в каталоге.";
+    loading.value = false;
+    return;
+  }
+  try {
+    const [result] = await Promise.all([
+      request("/activities/" + encodeURIComponent(id.value), {
+        query: { locale: "ru" },
+      }),
+      loadEmployee(),
+    ]);
+    if (current !== version) return;
+    activity.value = result.data;
+    sessionDate.value =
+      result.data.upcomingSessions.find(
+        (value) => value >= (store.eligible?.asOfDate || ""),
+      ) || "";
+    if (store.error) error.value = store.error;
+  } catch (e) {
+    if (current === version) error.value = e.message;
+  } finally {
+    if (current === version) loading.value = false;
+  }
+}
+watch(id, load, { immediate: true });
+async function enroll() {
+  if (busy.value || !store.profile) return;
+  busy.value = true;
+  actionError.value = "";
+  try {
+    await request(
+      "/employees/" + encodeURIComponent(store.profile.id) + "/participations",
+      {
+        method: "POST",
+        body: {
+          activityId: id.value,
+          ...(activity.value.format !== "self_paced" && sessionDate.value
+            ? { sessionDate: sessionDate.value }
+            : {}),
+        },
+      },
+    );
+    await loadEmployee();
+    if (store.error)
+      actionError.value =
+        "Запись сохранена, но обновить профиль не удалось: " + store.error;
+    else await navigateTo("/activities");
+  } catch (e) {
+    actionError.value = e.message;
+  } finally {
+    busy.value = false;
+  }
+}
 </script>
 <template>
-  <div v-if="valid">
-    <CqHeading
-      :title="eventTitle(r.event)"
-      :subtitle="`${r.event.title} · ${r.event.event_id}`"
-      ><NuxtLink to="/recommendations" class="btn secondary"
-        >К рекомендациям <CqIcon name="back" /></NuxtLink
-    ></CqHeading>
-    <div class="grid main-aside">
-      <div class="stack">
-        <section class="panel">
-          <div class="event-cover">
-            <div>
-              <div class="eyebrow text-primary">Развивающая активность</div>
-              <h2 class="my-2.5">От обучения —<br />к конкретному навыку</h2>
-              <div class="tags">
-                <CqTag color="green">{{ formats[r.event.format] }}</CqTag
-                ><CqTag color="outline">{{ r.event.type }}</CqTag>
+  <CqAsync :loading="loading" :error="error" @retry="load"
+    ><div v-if="activity">
+      <CqHeading :title="activity.title" :subtitle="activity.id"
+        ><NuxtLink to="/catalog" class="btn secondary"
+          >К каталогу <CqIcon name="back" /></NuxtLink
+      ></CqHeading>
+      <div class="grid main-aside">
+        <div class="stack">
+          <section class="panel">
+            <div class="event-cover">
+              <div>
+                <div class="eyebrow text-primary">Развивающая активность</div>
+                <h2 class="my-2.5">От обучения —<br />к конкретному навыку</h2>
+                <div class="tags">
+                  <CqTag color="green">{{ formats[activity.format] }}</CqTag
+                  ><CqTag color="outline">{{ activity.type }}</CqTag>
+                </div>
+              </div>
+              <div class="cover-icon"><CqIcon name="layers" /></div>
+            </div>
+            <h2>Об активности</h2>
+            <p class="small muted section">{{ activity.description }}</p>
+            <div class="event-facts">
+              <div>
+                <small>Трудозатраты</small
+                ><strong>{{ activity.durationHours }} часов</strong>
+              </div>
+              <div>
+                <small>Формат</small
+                ><strong>{{ formats[activity.format] }}</strong>
+              </div>
+              <div>
+                <small>Начало</small
+                ><strong>{{
+                  activity.format === "self_paced"
+                    ? "В своём темпе"
+                    : date(sessionDate)
+                }}</strong>
               </div>
             </div>
-            <div class="cover-icon"><CqIcon name="layers" /></div>
-          </div>
-          <h2>Об активности</h2>
-          <p class="small muted section">{{ r.event.description }}</p>
-          <div class="event-facts">
-            <div>
-              <small>Трудозатраты</small
-              ><strong>{{ r.event.duration_hours }} часов</strong>
-            </div>
-            <div>
-              <small>Формат</small
-              ><strong>{{ formats[r.event.format] }}</strong>
-            </div>
-            <div>
-              <small>Ближайший старт</small
-              ><strong>{{
-                r.event.format === "self_paced"
-                  ? "В любой момент"
-                  : date(r.nextSession)
-              }}</strong>
-            </div>
-          </div>
-          <h3>Изменение навыков</h3>
-          <div v-for="s in r.changes" :key="s.skill_id" class="line-item">
-            <div>
-              <strong>{{ skillName(s.skill_id) }}</strong>
-              <div class="small muted">
-                Потолок активности: {{ s.max_level }} · прирост по правилу:
-                {{ s.gain }}
-              </div>
-            </div>
-            <div class="tags">
-              <CqTag :color="s.delta ? 'green' : 'outline'"
-                >{{ s.current }} → {{ s.after }}</CqTag
-              ><CqTag :color="s.delta ? 'green' : 'outline'">{{
-                s.delta ? "+" + s.delta : "Без роста"
-              }}</CqTag>
-            </div>
-          </div>
-          <CqNotice v-if="!r.changes.length" color="gold"
-            >Эта активность не начисляет уровни навыков.</CqNotice
-          >
-          <div class="section">
-            <CqNotice
-              >Показан прирост с учётом потолка активности. Навык никогда не
-              уменьшается, даже если уже выше этого потолка.</CqNotice
-            >
-          </div>
-        </section>
-        <section class="panel">
-          <div class="panel-head">
-            <h2>Почему этот шаг?</h2>
-            <CqTag color="green">3+ фактора</CqTag>
-          </div>
-          <CqEvidence :rec="r" />
-        </section>
-      </div>
-      <div class="stack">
-        <section class="panel">
-          <h2>
-            {{
-              r.event.mandatory
-                ? "Назначение HR"
-                : r.eligible
-                  ? "Шаг доступен"
-                  : "Сейчас недоступно"
-            }}
-          </h2>
-          <p class="small muted section">
-            {{
-              r.event.mandatory
-                ? "Обязательное назначение не участвует в персональном рекомендательном блоке."
-                : r.eligible
-                  ? "Вы выбираете, когда продолжить развитие. Можно добавить активность в личный план."
-                  : "Проверены аудитория, история, входные навыки и расписание."
-            }}
-          </p>
-          <div class="section">
-            <CqNotice v-for="reason in r.why" :key="reason" color="gold">{{
-              reason
-            }}</CqNotice>
-          </div>
-          <template v-if="r.eligible"
-            ><div class="section">
-              <button class="btn wide" :disabled="inPlan" @click="enroll">
-                {{ inPlan ? "Уже в плане" : "Добавить в мой план" }}
-                <CqIcon name="check" />
-              </button>
-            </div>
-            <NuxtLink
-              :to="{ path: '/completion', query: { id: r.event.event_id } }"
-              class="btn secondary wide mt-2"
-              >Симуляция результата <CqIcon name="chart" /></NuxtLink
-          ></template>
-          <div class="section small muted">
-            Никаких баллов за обязательные процессы и сравнений с коллегами.
-          </div>
-        </section>
-        <section class="panel">
-          <h3>Входные требования</h3>
-          <div
-            v-for="(n, id) in r.event.prerequisites"
-            :key="id"
-            class="line-item"
-          >
-            <div>
-              <strong>{{ skillName(id) }}</strong>
-              <div class="small muted">
-                Нужно {{ n }}, сейчас {{ r.profile.actual.levels[id] || 0 }}
-              </div>
-            </div>
-            <CqIcon
-              :name="(r.profile.actual.levels[id] || 0) >= n ? 'check' : 'lock'"
-            />
-          </div>
-          <p
-            v-if="!Object.keys(r.event.prerequisites).length"
-            class="small muted section"
-          >
-            Дополнительных требований к навыкам нет.
-          </p>
-          <div class="source section">
-            events.{{ r.event.event_id }}.prerequisites
-          </div>
-        </section>
-        <section class="panel">
-          <h3>Доступные сессии</h3>
-          <p v-if="r.event.format === 'self_paced'" class="small muted section">
-            Самостоятельное обучение: доступно без расписания.
-          </p>
-          <template v-else
-            ><div
-              v-for="d in r.event.upcoming_sessions.filter(
-                (d) => d >= store.state.asOf,
-              )"
-              :key="d"
+            <h3>Навыки и правила активности</h3>
+            <div
+              v-for="effect in activity.effects"
+              :key="effect.skillId"
               class="line-item"
             >
-              <span class="small">{{ date(d) }}</span
-              ><CqIcon name="calendar" />
+              <div>
+                <strong>{{ skillName(effect.skillId) }}</strong>
+                <div class="small muted">
+                  Прирост по правилу: {{ effect.gain }} · потолок:
+                  {{ effect.maxLevel }}
+                </div>
+              </div>
             </div>
-            <p v-if="!r.nextSession" class="small muted section">
-              Будущие сессии не запланированы.
-            </p></template
-          >
-          <div class="source section">upcoming_sessions ≥ as_of_date</div>
-        </section>
+            <p v-if="!activity.effects.length" class="empty-inline">
+              Изменение навыков для активности не задано.
+            </p>
+            <div
+              v-for="change in eligibility?.expectedSkillChanges || []"
+              :key="change.skillId"
+              class="line-item"
+            >
+              <span>{{ skillName(change.skillId) }}</span
+              ><CqTag color="green"
+                >{{ change.before }} → {{ change.after }} (+{{
+                  change.actualGain
+                }})</CqTag
+              >
+            </div>
+            <CqNotice
+              >Фактическое изменение навыков сохраняется после завершения и
+              учитывает ваш текущий уровень.</CqNotice
+            >
+          </section>
+        <section v-if="recommendation" class="panel">
+          <h2>Почему этот шаг?</h2>
+          <CqNotice v-if="store.recommendations?.stale" color="gold">
+            Это объяснение из предыдущего подбора. Обновите рекомендации с учётом текущего профиля.
+          </CqNotice>
+          <CqEvidence :rec="recommendation" />
+          </section>
+        </div>
+        <div class="stack">
+          <section class="panel">
+            <h2>
+              {{
+                activity.mandatory
+                  ? "Обязательное обучение"
+                  : "Участие в активности"
+              }}
+            </h2>
+            <div v-if="activity.format !== 'self_paced'" class="field">
+              <label for="sessionDate">Дата сессии</label
+              ><select
+                id="sessionDate"
+                v-model="sessionDate"
+                class="select"
+                :disabled="busy"
+              >
+                <option value="" disabled>Нет доступной сессии</option>
+                <option v-for="value in sessions" :key="value" :value="value">
+                  {{ date(value) }}
+                </option>
+              </select>
+            </div>
+            <CqNotice v-if="excluded.length" color="gold"
+              >Не включена в рекомендации:
+              {{ excluded.map(reasonLabel).join(" · ") }}. Возможность записи
+              дополнительно проверяется при отправке.</CqNotice
+            >
+            <CqNotice v-if="actionError" color="red" role="alert">{{
+              actionError
+            }}</CqNotice>
+            <NuxtLink
+              v-if="participation"
+              to="/activities"
+              class="btn wide section"
+              >Открыть моё участие</NuxtLink
+            >
+            <button
+              v-else
+              class="btn wide section"
+              :disabled="
+                busy ||
+                !store.profile ||
+                (activity.format !== 'self_paced' && !sessionDate)
+              "
+              @click="enroll"
+            >
+              {{ busy ? "Сохраняем…" : "Записаться" }} <CqIcon name="check" />
+            </button>
+          </section>
+          <section class="panel">
+            <h3>Входные требования</h3>
+            <p
+              v-for="(level, skill) in activity.prerequisites"
+              :key="skill"
+              class="small section"
+            >
+              {{ skillName(skill) }}: {{ level }}
+            </p>
+            <p
+              v-if="!Object.keys(activity.prerequisites).length"
+              class="small muted section"
+            >
+              Требования к навыкам не заданы.
+            </p>
+          </section>
+        </div>
       </div>
-    </div>
-  </div>
-  <CqState v-else kind="not-found" />
+    </div></CqAsync
+  >
 </template>

@@ -1,176 +1,408 @@
 <script setup>
-const { store, importData } = useCareer(),
-  files = shallowRef([]),
+const { request } = useApi();
+const route = useRoute(),
+  router = useRouter();
+const files = shallowRef([]),
   result = ref(null),
   busy = ref(false),
-  dragging = ref(false),
-  input = ref(null);
+  loading = ref(false);
+const dragging = ref(false),
+  input = ref(null),
+  error = ref(""),
+  reportWarning = ref("");
+const validated = ref(false);
+const fieldNames = {
+  "skills.json": "skills",
+  "employees.json": "employees",
+  "events.json": "events",
+  "activity_history.csv": "history",
+  "dataset-rules.json": "rules",
+};
+const canApply = computed(
+  () =>
+    validated.value && files.value.length > 0 && !busy.value && !loading.value,
+);
+const runLabels = {
+  VALIDATED: "Проверка пройдена",
+  APPLIED: "Импорт применён",
+  REJECTED: "Пакет отклонён",
+  RUNNING: "Обработка",
+};
 function choose(list) {
-  files.value = Array.from(list);
+  if (busy.value || loading.value) return;
+  files.value = Array.from(list || []);
   result.value = null;
+  error.value = "";
+  reportWarning.value = "";
+  validated.value = false;
+  const names = new Set();
+  for (const file of files.value) {
+    if (!Object.hasOwn(fieldNames, file.name)) {
+      error.value =
+        "Неизвестный файл: " +
+        file.name +
+        ". Используйте названия из списка справа.";
+      break;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      error.value = "Файл " + file.name + " превышает ограничение 8 МиБ.";
+      break;
+    }
+    if (names.has(file.name)) {
+      error.value = "Повторное имя файла: " + file.name;
+      break;
+    }
+    names.add(file.name);
+  }
+  router.replace({ query: {} });
 }
-function drop(e) {
+function drop(event) {
   dragging.value = false;
-  choose(e.dataTransfer.files);
+  choose(event.dataTransfer.files);
 }
 function clear() {
-  files.value = [];
-  result.value = null;
+  choose([]);
   if (input.value) input.value.value = "";
 }
-async function run() {
-  busy.value = true;
-  result.value = await importData(files.value);
-  busy.value = false;
+function body() {
+  const form = new FormData();
+  for (const file of files.value)
+    form.append(fieldNames[file.name], file, file.name);
+  return form;
 }
-const datasets = computed(() => [
-  ["employees.json", store.data.employees.length + " профилей"],
-  ["events.json", store.data.events.length + " активностей"],
-  [
-    "skills.json",
-    store.data.skills.length +
-      " навыков / " +
-      store.data.role_profiles.length +
-      " матрицы",
-  ],
-  ["activity_history.csv", store.data.history.length + " записей"],
-]);
+async function readRun(id) {
+  const response = await request("/imports/" + encodeURIComponent(id));
+  result.value = response.data;
+}
+async function run(apply = false) {
+  if (
+    busy.value ||
+    loading.value ||
+    !files.value.length ||
+    (apply && !canApply.value)
+  )
+    return;
+  busy.value = true;
+  error.value = "";
+  reportWarning.value = "";
+  validated.value = false;
+  try {
+    const response = await request(apply ? "/imports" : "/imports/dry-run", {
+      method: "POST",
+      body: body(),
+    });
+    result.value = response.data;
+    validated.value =
+      !apply &&
+      result.value.status === "VALIDATED" &&
+      result.value.report.valid;
+    await router.replace({ query: { run: response.data.id } });
+    try {
+      await readRun(response.data.id);
+    } catch (cause) {
+      reportWarning.value =
+        "Операция завершена, но повторно получить сохранённый отчёт не удалось: " +
+        cause.message;
+    }
+  } catch (cause) {
+    error.value = cause.message || "Не удалось выполнить импорт.";
+    if (cause.details?.report && cause.details?.id) {
+      result.value = cause.details;
+      await router.replace({ query: { run: cause.details.id } });
+    } else if (apply) {
+      result.value = null;
+    }
+  } finally {
+    busy.value = false;
+  }
+}
+async function loadSaved() {
+  const id = typeof route.query.run === "string" ? route.query.run : "";
+  if (!id) return;
+  loading.value = true;
+  error.value = "";
+  try {
+    await readRun(id);
+  } catch (cause) {
+    error.value = cause.message || "Не удалось загрузить отчёт импорта.";
+  } finally {
+    loading.value = false;
+  }
+}
+onMounted(loadSaved);
 </script>
 <template>
   <div>
     <CqHeading
       title="Импорт профилей и истории"
-      subtitle="Проверочные данные жюри загружаются в той же схеме, что и стартовый набор."
-      ><CqTag color="green">Только локальный браузер</CqTag></CqHeading
+      subtitle="Проверьте пакет данных, затем примените его к общему набору."
     >
+      <CqTag color="green">Сохранение на сервере</CqTag>
+    </CqHeading>
     <div class="grid main-aside">
       <div class="stack">
-        <section class="panel">
+        <section class="panel" :aria-busy="busy || loading">
           <div class="panel-head">
-            <h2>Добавить проверочные данные</h2>
+            <h2>Добавить данные</h2>
             <CqTag color="outline">JSON + CSV</CqTag>
           </div>
           <div
             class="file-drop"
-            :class="{ dragging }"
+            :class="{ dragging: dragging && !busy && !loading }"
             @dragover.prevent="dragging = true"
             @dragleave.prevent="dragging = false"
             @drop.prevent="drop"
           >
             <CqIcon name="upload" />
-            <h3>Выберите файлы профилей и истории</h3>
+            <h3>Выберите файлы профилей, каталога и истории</h3>
             <p>
-              employees.json и activity_history.csv · до 3 МБ на файл<br />Можно
-              перетащить файлы сюда. ZIP предварительно распакуйте.
+              До 5 файлов, до 8 МиБ каждый. Можно загрузить полный пакет или
+              отдельные файлы. ZIP предварительно распакуйте.
             </p>
-            <button class="btn" type="button" @click="input.click()">
-              Выбрать файлы <CqIcon name="file" /></button
-            ><input
+            <button
+              class="btn"
+              type="button"
+              :disabled="busy || loading"
+              @click="input.click()"
+            >
+              Выбрать файлы <CqIcon name="file" />
+            </button>
+            <input
               ref="input"
               type="file"
               class="sr-only"
-              aria-label="Файлы профилей и истории"
+              aria-label="Файлы для импорта"
               accept=".json,.csv"
               multiple
+              :disabled="busy || loading"
               @change="choose($event.target.files)"
             />
           </div>
-          <div v-for="(f, i) in files" :key="i" class="file-row">
+          <div v-for="(file, index) in files" :key="index" class="file-row">
             <span class="mini-icon"><CqIcon name="file" /></span>
             <div>
-              <strong>{{ f.name }}</strong>
-              <div class="small muted">{{ (f.size / 1024).toFixed(1) }} КБ</div>
+              <strong>{{ file.name }}</strong>
+              <div class="small muted">
+                {{ (file.size / 1024).toFixed(1) }} КиБ
+              </div>
             </div>
-            <CqTag color="green">Выбран</CqTag>
+            <CqTag color="outline">Выбран</CqTag>
           </div>
           <div class="actions section">
-            <button class="btn" :disabled="busy || !files.length" @click="run">
-              {{ busy ? "Проверяем…" : "Проверить и загрузить" }}
-              <CqIcon name="upload" /></button
-            ><button
+            <button
               class="btn secondary"
-              :disabled="busy || !files.length"
+              :disabled="busy || loading || !files.length || !!error"
+              @click="run(false)"
+            >
+              {{ busy ? "Обрабатываем…" : "1. Проверить пакет" }}
+              <CqIcon name="check" />
+            </button>
+            <button class="btn" :disabled="!canApply" @click="run(true)">
+              2. Применить импорт <CqIcon name="upload" />
+            </button>
+            <button
+              class="btn ghost"
+              :disabled="busy || loading || !files.length"
               @click="clear"
             >
-              Очистить выбор <CqIcon name="x" />
+              Очистить <CqIcon name="x" />
             </button>
           </div>
-          <div
-            v-if="result"
-            class="section"
-            :role="result.ok ? 'status' : 'alert'"
-          >
-            <CqNotice v-if="result.ok" icon="check"
-              ><strong>Загрузка завершена.</strong> Профилей:
-              {{ result.profiles }}; новых записей: {{ result.added }};
-              идентичных повторов пропущено: {{ result.skipped }}. Рекомендации
-              и HR-сводка пересчитаны.</CqNotice
-            ><template v-else
-              ><CqNotice color="red"
-                ><strong>Ничего не импортировано.</strong> Исправьте ошибки;
-                текущие данные сохранены.</CqNotice
-              >
-              <ul class="import-errors">
-                <li v-for="(error, i) in result.errors.slice(0, 15)" :key="i">
-                  {{ error }}
-                </li>
-              </ul></template
+          <p class="small muted section">
+            Проверка не изменяет профили и историю. Применение доступно после
+            успешной проверки выбранных файлов.
+          </p>
+          <div v-if="loading" class="empty-inline" role="status">
+            Получаем сохранённый отчёт…
+          </div>
+          <div v-if="error" class="section" role="alert">
+            <CqNotice color="red">{{ error }}</CqNotice>
+            <button
+              v-if="!files.length && route.query.run"
+              class="btn secondary section"
+              :disabled="loading"
+              @click="loadSaved"
+            >
+              Повторить загрузку отчёта
+            </button>
+            <button
+              v-else-if="files.length && !busy"
+              class="btn secondary section"
+              @click="choose(files)"
+            >
+              Проверить выбор файлов заново
+            </button>
+          </div>
+          <CqNotice v-if="reportWarning" color="gold" class="section">{{
+            reportWarning
+          }}</CqNotice>
+        </section>
+        <section
+          v-if="result"
+          class="panel"
+          :role="result.status === 'REJECTED' ? 'alert' : 'status'"
+        >
+          <div class="panel-head">
+            <h2>{{ runLabels[result.status] || result.status }}</h2>
+            <CqTag
+              :color="
+                result.status === 'APPLIED' || result.status === 'VALIDATED'
+                  ? 'green'
+                  : 'gold'
+              "
+              >{{ result.status }}</CqTag
             >
           </div>
-        </section>
-        <section class="panel">
-          <h2>Загруженный стартовый набор</h2>
-          <div v-for="[file, count] in datasets" :key="file" class="file-row">
-            <span class="mini-icon"><CqIcon name="file" /></span>
-            <div>
-              <strong>{{ file }}</strong>
-              <div class="small muted">{{ count }}</div>
-            </div>
-            <div class="tags"><CqTag color="green">Загружено</CqTag></div>
+          <p v-if="result.status === 'APPLIED'">
+            Данные сохранены. Профили, каталог и HR-сводки используют
+            обновлённый набор.
+          </p>
+          <p v-else-if="result.status === 'VALIDATED'">
+            Пакет прошёл проверку. Бизнес-данные ещё не изменены.
+          </p>
+          <p v-else-if="result.status === 'REJECTED'">
+            Ничего не импортировано. Исправьте указанные ошибки и выберите файлы
+            заново.
+          </p>
+          <div class="grid four section">
+            <CqMetric
+              label="Создание"
+              :value="result.report.counts.create"
+              caption="Записей"
+              icon="file"
+            />
+            <CqMetric
+              label="Обновление"
+              :value="result.report.counts.update"
+              caption="Записей"
+              icon="refresh"
+            />
+            <CqMetric
+              label="Пропущено"
+              :value="result.report.counts.skip"
+              caption="Повторные записи"
+              icon="check"
+            />
+            <CqMetric
+              label="Конфликты"
+              :value="result.report.counts.conflict"
+              caption="Требуют исправления"
+              icon="file"
+            />
+          </div>
+          <p class="small muted section">
+            ID отчёта: {{ result.id }} · Дата среза:
+            {{ result.report.rules.asOfDate }}
+          </p>
+          <div
+            v-for="(count, filename) in result.report.records"
+            :key="filename"
+            class="legend-row"
+          >
+            <span>{{ filename }}</span
+            ><strong>{{ count }}</strong>
+          </div>
+          <div
+            v-if="result.report.diagnostics.length"
+            class="table-wrap section"
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Файл / строка</th>
+                  <th>Поле / код</th>
+                  <th>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(diagnostic, index) in result.report.diagnostics"
+                  :key="index"
+                >
+                  <td>
+                    {{ diagnostic.file }}
+                    <div class="sub">
+                      {{
+                        diagnostic.row != null
+                          ? "Строка " + diagnostic.row
+                          : diagnostic.recordId || ""
+                      }}
+                    </div>
+                  </td>
+                  <td>
+                    {{ diagnostic.field }}
+                    <div class="sub">{{ diagnostic.code }}</div>
+                  </td>
+                  <td>{{ diagnostic.message }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div v-if="result.status === 'APPLIED'" class="actions section">
+            <NuxtLink to="/hr-people" class="btn"
+              >Открыть сотрудников <CqIcon name="people" /></NuxtLink
+            ><NuxtLink to="/hr-dashboard" class="btn secondary"
+              >Обновлённая сводка <CqIcon name="chart"
+            /></NuxtLink>
           </div>
         </section>
       </div>
       <div class="stack">
         <section class="panel">
+          <h2>Поддерживаемые файлы</h2>
+          <div
+            v-for="[filename, description] in [
+              ['skills.json', 'Каталог навыков, ролей, грейдов и требований'],
+              ['employees.json', 'Профили сотрудников и уровни навыков'],
+              ['events.json', 'Каталог развивающих активностей'],
+              ['activity_history.csv', 'История участия'],
+              ['dataset-rules.json', 'Дата среза и правила набора'],
+            ]"
+            :key="filename"
+            class="file-row"
+          >
+            <span class="mini-icon"><CqIcon name="file" /></span>
+            <div>
+              <strong>{{ filename }}</strong>
+              <div class="small muted">{{ description }}</div>
+            </div>
+          </div>
+        </section>
+        <section class="panel">
           <h2>Что проверяем</h2>
           <div
-            v-for="([title, desc], i) in [
+            v-for="([title, description], index) in [
               [
                 'Схема и типы',
-                'Корневой объект employees, навыки 0–5, известные роли и грейды.',
+                'Структура файлов, уровни навыков, допустимые роли и грейды.',
               ],
               [
                 'Связи и статусы',
-                'employee_id, event_id, manager_id и допустимые статусы участия.',
+                'Ссылки на сотрудников, руководителей и активности.',
               ],
               [
                 'Даты и конфликты',
-                'Нет будущих записей относительно среза; конфликт record_id отклоняется.',
+                'Соответствие дате среза, повторные записи и конфликты идентификаторов.',
               ],
               [
                 'Атомарность',
-                'При ошибке не применяется ни один из выбранных файлов.',
+                'При отклонении пакета бизнес-данные не меняются.',
               ],
             ]"
-            :key="i"
+            :key="title"
             class="timeline-step section"
           >
-            <div class="num">{{ i + 1 }}</div>
+            <div class="num">{{ index + 1 }}</div>
             <div>
               <h3>{{ title }}</h3>
-              <p>{{ desc }}</p>
+              <p>{{ description }}</p>
             </div>
           </div>
         </section>
         <CqNotice color="gold"
-          >Исходные файлы не меняются. Импорт сохраняется в localStorage. Для
-          рабочей системы нужен серверный импорт с авторизацией и
-          аудитом.</CqNotice
+          >Импорт доступен HR. Отчёт сохраняется на сервере; ссылку на текущую
+          страницу можно открыть повторно после обновления браузера.</CqNotice
         >
-        <div class="source">
-          Дата набора: 2026-10-01<br />meta.as_of_date — бизнес-дата, не часы
-          устройства.
-        </div>
       </div>
     </div>
   </div>

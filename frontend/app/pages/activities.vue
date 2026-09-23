@@ -1,162 +1,165 @@
 <script setup>
-import { eventTitle, date, statuses } from "../utils/labels.js";
-const { store, employee, current } = useCareer(),
-  status = ref("all");
+import { date, statuses } from "../utils/labels.js";
+const { store, loadEmployee, activityName, notify } = useCareer(),
+  { request } = useApi();
+const filter = ref(""),
+  busy = ref(""),
+  actionError = ref("");
+const keys = new Map();
 const rows = computed(() =>
-  current.value.history
-    .filter((r) => status.value === "all" || r.status === status.value)
+  store.history
+    .filter((row) => !filter.value || row.status === filter.value)
     .slice()
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .map((r) => ({
-      ...r,
-      event: store.data.events.find((e) => e.event_id === r.event_id),
-    })),
+    .sort((a, b) => b.date.localeCompare(a.date)),
 );
-const planned = computed(() =>
-  store.state.plan
-    .filter((k) => k.startsWith(employee.value.employee_id + ":"))
-    .map((k) => store.data.events.find((e) => e.event_id === k.split(":")[1]))
-    .filter(Boolean),
-);
+const canComplete = (row) =>
+  ["registered", "in_progress", "overdue"].includes(row.status);
+const scheduledFuture = (row) =>
+  store.activities.find((a) => a.id === row.activityId)?.format !==
+    "self_paced" && row.date > store.eligible?.asOfDate;
+onMounted(() => loadEmployee());
+async function act(row, status) {
+  if (busy.value) return;
+  const employeeId = store.profile.id;
+  busy.value = row.id;
+  actionError.value = "";
+  try {
+    const base =
+      "/employees/" +
+      encodeURIComponent(employeeId) +
+      "/participations/" +
+      encodeURIComponent(row.id);
+    if (status === "completed") {
+      if (!keys.has(row.id)) keys.set(row.id, crypto.randomUUID());
+      const result = await request(base + "/complete", {
+        method: "POST",
+        body: {},
+        headers: { "Idempotency-Key": keys.get(row.id) },
+      });
+      store.lastCompletion = result.data;
+    } else
+      await request(base + "/status", { method: "PATCH", body: { status } });
+    await loadEmployee(employeeId);
+    if (store.error)
+      actionError.value =
+        "Изменение сохранено, но перечитать данные не удалось: " + store.error;
+    else if (status === "completed")
+      await navigateTo({ path: "/completion", query: { id: row.id } });
+    else notify("Статус участия сохранён.");
+  } catch (e) {
+    actionError.value = e.message;
+  } finally {
+    busy.value = "";
+  }
+}
 </script>
 <template>
   <div>
     <CqHeading
       title="Мои активности"
-      subtitle="История развития и обязательные назначения — раздельно по смыслу."
+      subtitle="План и история участия сохраняются в вашем профиле."
       ><NuxtLink to="/catalog" class="btn secondary"
         >Найти следующий шаг <CqIcon name="book" /></NuxtLink
     ></CqHeading>
-    <div class="grid four">
-      <CqMetric
-        label="Завершено"
-        :value="current.history.filter((r) => r.status === 'completed').length"
-        caption="Все записи участия"
-        icon="check"
-      /><CqMetric
-        label="В процессе"
-        :value="
-          current.history.filter((r) => r.status === 'in_progress').length
-        "
-        caption="Можно продолжить"
-        icon="clock"
-      /><CqMetric
-        label="В личном плане"
-        :value="planned.length"
-        caption="Добавлено в демо"
-        icon="calendar"
-      /><CqMetric
-        label="Всего записей"
-        :value="current.history.length"
-        caption="История из датасета"
-        icon="file"
-      />
-    </div>
-    <section v-if="planned.length" class="panel section">
-      <div class="panel-head">
-        <h2>Мой план</h2>
-        <CqTag color="green">{{ planned.length }} активностей</CqTag>
+    <CqNotice v-if="actionError" color="red" role="alert">{{
+      actionError
+    }}</CqNotice>
+    <CqAsync
+      :loading="store.loading"
+      :error="store.error"
+      :empty="!store.profile"
+      @retry="loadEmployee()"
+    >
+      <div class="filters">
+        <select v-model="filter" class="select" aria-label="Статус участия">
+          <option value="">Все статусы</option>
+          <option v-for="(label, key) in statuses" :key="key" :value="key">
+            {{ label[0] }}
+          </option>
+        </select>
       </div>
-      <div v-for="event in planned" :key="event.event_id" class="line-item">
-        <strong>{{ eventTitle(event) }}</strong
-        ><NuxtLink
-          :to="{ path: '/event', query: { id: event.event_id } }"
-          class="btn ghost"
-          >Продолжить <CqIcon name="arrow"
-        /></NuxtLink>
-      </div>
-    </section>
-    <div class="filters" aria-label="Фильтр статуса">
-      <button
-        class="filter-btn"
-        :class="{ active: status === 'all' }"
-        :aria-pressed="status === 'all'"
-        @click="status = 'all'"
-      >
-        Все</button
-      ><button
-        v-for="(s, key) in statuses"
-        :key="key"
-        class="filter-btn"
-        :class="{ active: status === key }"
-        :aria-pressed="status === key"
-        @click="status = key"
-      >
-        {{ s[0] }}
-      </button>
-    </div>
-    <section class="panel">
-      <div class="panel-head">
-        <h2>История участия</h2>
-        <CqTag color="outline">{{ rows.length }} записей</CqTag>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Активность</th>
-              <th>Дата записи</th>
-              <th>Статус</th>
-              <th>Прохождение</th>
-              <th>Инициатор</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="r in rows" :key="r.record_id">
-              <td>
-                <NuxtLink :to="{ path: '/event', query: { id: r.event_id } }"
-                  ><strong>{{ eventTitle(r.event) }}</strong></NuxtLink
-                >
-                <div class="sub">
-                  {{
-                    r.event.mandatory
-                      ? "Обязательное назначение"
-                      : "Развивающая активность"
-                  }}
-                  · {{ r.event_id }}
-                </div>
-              </td>
-              <td>
-                {{ date(r.date) }}
-                <div v-if="r.completed_at" class="sub">
-                  Завершено {{ date(r.completed_at) }}
-                </div>
-                <div v-else-if="r.event.format === 'self_paced'" class="sub">
-                  Дата зачисления, не завершения
-                </div>
-              </td>
-              <td>
-                <CqTag :color="statuses[r.status][1]">{{
-                  statuses[r.status][0]
-                }}</CqTag>
-              </td>
-              <td>
-                {{ r.completion_pct }}%
-                <div class="bar mt-1.5 max-w-24">
-                  <span :style="{ width: Number(r.completion_pct) + '%' }" />
-                </div>
-              </td>
-              <td>
-                {{
-                  { self: "Самостоятельно", manager: "Руководитель", hr: "HR" }[
-                    r.assigned_by
-                  ]
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div v-if="!rows.length" class="empty-inline">
-          Нет записей для выбранного статуса.
+      <section class="panel">
+        <div v-for="row in rows" :key="row.id" class="activity-entry">
+          <div class="activity-line">
+            <span class="mini-icon"><CqIcon name="book" /></span>
+            <div>
+              <NuxtLink
+                class="activity-title"
+                :to="{ path: '/event', query: { id: row.activityId } }"
+                >{{ activityName(row.activityId) }}</NuxtLink
+              >
+              <div class="activity-date">
+                {{ date(row.date) }} · {{ row.completionPct }}%
+              </div>
+            </div>
+            <CqTag :color="statuses[row.status]?.[1]">{{
+              statuses[row.status]?.[0] || row.status
+            }}</CqTag>
+          </div>
+          <div class="actions">
+            <button
+              v-if="['registered', 'overdue'].includes(row.status)"
+              class="btn secondary"
+              :disabled="!!busy"
+              @click="act(row, 'in_progress')"
+            >
+              Начать
+            </button>
+            <button
+              v-if="canComplete(row)"
+              class="btn"
+              :disabled="!!busy || scheduledFuture(row)"
+              @click="act(row, 'completed')"
+            >
+              {{ busy === row.id ? "Сохраняем…" : "Завершить" }}
+            </button>
+            <button
+              v-if="['registered', 'overdue'].includes(row.status)"
+              class="btn ghost"
+              :disabled="!!busy"
+              @click="act(row, 'declined')"
+            >
+              Отказаться
+            </button>
+            <button
+              v-if="['in_progress', 'overdue'].includes(row.status)"
+              class="btn ghost"
+              :disabled="!!busy"
+              @click="act(row, 'dropped')"
+            >
+              Прервать
+            </button>
+            <button
+              v-if="
+                row.status === 'registered' &&
+                !scheduledFuture(row) &&
+                store.activities.find((a) => a.id === row.activityId)
+                  ?.format !== 'self_paced'
+              "
+              class="btn ghost"
+              :disabled="!!busy"
+              @click="act(row, 'no_show')"
+            >
+              Не участвовал
+            </button>
+            <NuxtLink
+              v-if="row.status === 'completed'"
+              :to="{ path: '/completion', query: { id: row.id } }"
+              class="btn ghost"
+              >Результат выполнения <CqIcon name="arrow"
+            /></NuxtLink>
+          </div>
+          <p
+            v-if="canComplete(row) && scheduledFuture(row)"
+            class="small muted section"
+          >
+            Завершение станет доступно после даты сессии.
+          </p>
         </div>
-      </div>
-    </section>
-    <div class="section">
-      <CqNotice color="gold"
-        >Процент прохождения курса — не уровень навыка. Навык меняется только
-        при completed. У добровольных активностей нет due_date: оценить «в срок»
-        нельзя.</CqNotice
-      >
-    </div>
+        <p v-if="!rows.length" class="empty-inline">
+          Участий с таким статусом пока нет.
+        </p>
+      </section>
+    </CqAsync>
   </div>
 </template>

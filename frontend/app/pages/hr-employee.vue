@@ -1,16 +1,10 @@
 <script setup>
-const route = useRoute(),
-  { store, selectEmployee } = useCareer(),
-  valid = ref(true);
-watch(
-  () => route.query.id,
-  (id) => {
-    valid.value = !id || store.data.employees.some((e) => e.employee_id === id);
-    if (id && valid.value) selectEmployee(id);
-  },
-  { immediate: true },
+const route = useRoute();
+const employeeId = computed(() =>
+  typeof route.query.id === "string" ? route.query.id : "",
 );
 </script>
 <template>
-  <CqProfile v-if="valid" hr /><CqState v-else kind="not-found" />
+  <CqProfile v-if="employeeId" :key="employeeId" :employee-id="employeeId" hr />
+  <CqState v-else kind="not-found" />
 </template>
