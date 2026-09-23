@@ -1,0 +1,73 @@
+{
+  "time": "2026-09-23T12:09:21.837Z",
+  "baseURL": "http://127.0.0.1:3000",
+  "build": "997ab392 (root-confirmed merge image)",
+  "employeeId": "E0090",
+  "pageErrors": [],
+  "businessPosts": [],
+  "checks": [
+    {
+      "locale": "de",
+      "apiLocale": "en",
+      "selectedLocaleSetExists": false,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": "hr-E0090-de-desktop.png"
+    },
+    {
+      "locale": "en",
+      "apiLocale": "en",
+      "selectedLocaleSetExists": false,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": null
+    },
+    {
+      "locale": "ru",
+      "apiLocale": "ru",
+      "selectedLocaleSetExists": true,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": null
+    },
+    {
+      "locale": "zh",
+      "apiLocale": "en",
+      "selectedLocaleSetExists": false,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": "hr-E0090-zh-mobile.png"
+    },
+    {
+      "locale": "kk",
+      "apiLocale": "kk",
+      "selectedLocaleSetExists": false,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": "hr-E0090-kk-mobile.png"
+    },
+    {
+      "locale": "pt",
+      "apiLocale": "en",
+      "selectedLocaleSetExists": false,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": null
+    },
+    {
+      "locale": "es",
+      "apiLocale": "en",
+      "selectedLocaleSetExists": false,
+      "savedCards": 3,
+      "employeeActionButtons": 0,
+      "overflow": false,
+      "screenshot": null
+    }
+  ]
+}

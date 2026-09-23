@@ -58,7 +58,7 @@ test('failed recommendations stay inside their block and profile remains visible
  await page.goto('/profile');
  await expect(page.getByRole('heading',{name:'Мой профиль и навыки',exact:true})).toBeVisible();
  const block=page.locator('[data-error-block="recommendations"]');
- await expect(block).toContainText('Recommendation storage unavailable');
+ await expect(block).toContainText('TEST_UNAVAILABLE');
  await page.unroute(pattern);
  await block.getByRole('button',{name:'Повторить загрузку блока',exact:true}).click();
  await expect(block).toHaveCount(0);

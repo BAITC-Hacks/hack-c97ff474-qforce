@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import { session, clearSession, onSessionChange } from "../utils/session.js";
-import { localeState, adoptPreferredLocale, t } from '../utils/i18n.js';
+import { apiLocale, adoptPreferredLocale, catalogText, uiError } from '../utils/i18n.js';
 import { ApiError } from "../utils/api-client.js";
 
 const store = reactive({
@@ -62,9 +62,9 @@ export function useCareer() {
     const version = ++catalogVersion,
       sessionVersion = session.version;
     const [skills, roles, activities] = await Promise.all([
-      request("/skills", { query: { locale: localeState.locale } }),
-      request("/roles", { query: { locale: localeState.locale } }),
-      allPages("/activities", { locale: localeState.locale }),
+      request("/skills", { query: { locale: apiLocale() } }),
+      request("/roles", { query: { locale: apiLocale() } }),
+      allPages("/activities", { locale: apiLocale() }),
     ]);
     if (version === catalogVersion && sessionVersion === session.version) {
       store.skills = skills.data;
@@ -80,9 +80,14 @@ export function useCareer() {
     // Read first, commit only if both the employee and the session are still current.
     const readers = {
       history: () => allPages(`${path}/history`),
-      recommendations: async () => (await request(`${path}/recommendations/latest`, { query: { locale: localeState.locale } })).data,
+      recommendations: async () => {
+        const selected = await request(`${path}/recommendations/latest`, { query: { locale: apiLocale() } });
+        // A language switch can reuse saved evidence in another language.
+        // Rendering translates the same facts without a new model call.
+        return selected.data === null ? (await request(`${path}/recommendations/latest`)).data : selected.data;
+      },
       eligible: async () => (await request(`${path}/eligible-activities`)).data,
-      grades: async () => (await request(`/roles/${encodeURIComponent(store.profile.roleId)}/grades`, { query: { locale: localeState.locale } })).data,
+      grades: async () => (await request(`/roles/${encodeURIComponent(store.profile.roleId)}/grades`, { query: { locale: apiLocale() } })).data,
       catalogs: loadCatalogs,
     };
     if (!readers[key] || !current()) return;
@@ -92,7 +97,7 @@ export function useCareer() {
       const data = await readers[key]();
       if (current() && key !== 'catalogs') store[key] = data;
     } catch (cause) {
-      if (current()) store.blockErrors[key] = cause.message;
+      if (current()) store.blockErrors[key] = uiError(cause);
     } finally {
       if (current()) store.blockLoading[key] = false;
     }
@@ -112,7 +117,7 @@ export function useCareer() {
       const optional = Promise.all(['history', 'recommendations', 'eligible', 'grades', 'catalogs'].map(key => loadBlock(key, id, version)));
       if (waitForOptional) await optional;
     } catch (error) {
-      if (current()) store.error = error.message;
+      if (current()) store.error = uiError(error);
     } finally {
       if (current()) store.loading = false;
     }
@@ -126,7 +131,7 @@ export function useCareer() {
       `/employees/${encodeURIComponent(id)}/recommendations`,
       {
         method: "POST",
-        body: { locale: localeState.locale, force: true },
+        body: { locale: apiLocale(), force: true },
       },
     );
     if (
@@ -155,11 +160,11 @@ export function useCareer() {
     generateRecommendations,
     logout,
     notify,
-    skillName: (id) => store.skills.find((s) => s.id === id)?.name ?? id,
-    roleName: (id) => store.roles.find((r) => r.id === id)?.name ?? id,
+    skillName: (id) => catalogText(store.skills.find((s) => s.id === id), "name", id),
+    roleName: (id) => catalogText(store.roles.find((r) => r.id === id), "name", id),
     gradeName: (id) =>
-      store.grades.find((g) => g.id === id)?.name ?? id ?? "Не определён",
+      catalogText(store.grades.find((g) => g.id === id), "name", id ?? "Не определён"),
     activityName: (id) =>
-      store.activities.find((a) => a.id === id)?.title ?? id,
+      catalogText(store.activities.find((a) => a.id === id), "title", id),
   };
 }

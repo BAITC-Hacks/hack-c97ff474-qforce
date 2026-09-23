@@ -337,10 +337,197 @@ button.nav-item {
 .path-line {
   flex-wrap: wrap;
 }
-.tag.outline { outline: none; }
+.tag.outline {
+  outline: none;
+}
+
+/* Language controls share the green / frosted surface palette. */
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #ffffffb8;
+  color: var(--primary, #087f6b);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+.language-switcher svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+.language-switcher select {
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  border: 0;
+  min-height: 30px;
+  max-width: 120px;
+  cursor: pointer;
+}
+.language-switcher:focus-within {
+  outline: 2px solid #087f6b;
+  outline-offset: 3px;
+}
+.language-switcher select:focus {
+  outline: none;
+}
+.language-grid {
+  border: 0;
+  padding: 0;
+  margin: 20px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 13px;
+  background: #ffffffa8;
+  cursor: pointer;
+  font-size: 13px;
+}
+.language-option:hover {
+  border-color: #84b8a9;
+}
+.language-option.selected {
+  border-color: #087f6b;
+  color: #087f6b;
+  background: #eaf6f0;
+  box-shadow: inset 0 0 0 1px #087f6b;
+}
+.language-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.language-option:has(input:focus-visible) {
+  outline: 2px solid #087f6b;
+  outline-offset: 3px;
+}
+.language-option .icon {
+  width: 16px;
+  margin-left: auto;
+}
+.language-code {
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  padding: 3px;
+  min-width: 28px;
+  text-align: center;
+}
+.nav-item,
+.btn,
+.tag {
+  white-space: normal;
+}
+.nav-item {
+  line-height: 1.4;
+}
+.nav-item .icon,
+.btn .icon {
+  flex-shrink: 0;
+}
+.tag {
+  overflow-wrap: anywhere;
+}
+.top-controls {
+  flex-shrink: 0;
+}
+.crumb {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.login-copy h1 {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  font-size: clamp(34px, 3.3vw, 52px);
+}
+.login-journey svg {
+  overflow: visible;
+}
+html:lang(zh) body {
+  font-family:
+    "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+}
+html:lang(zh) h1,
+html:lang(zh) h2,
+html:lang(zh) h3,
+html:lang(zh) .eyebrow {
+  letter-spacing: 0;
+}
+html:lang(zh) p {
+  line-height: 1.8;
+}
+html:lang(de) .content h1,
+html:lang(de) .content h2,
+html:lang(de) .content h3 {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
 @media (max-width: 700px) {
-  .mobile-nav { gap: 4px; }
-  .mobile-nav a, .mobile-nav button {
+  .topbar {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .top-controls {
+    gap: 7px;
+    margin-left: auto;
+  }
+  .top-controls > .tag {
+    display: none;
+  }
+  .language-switcher {
+    padding: 3px 6px;
+    gap: 4px;
+  }
+  .language-switcher select {
+    max-width: 95px;
+    font-size: 11px;
+  }
+  .crumb {
+    flex: 1;
+    font-size: 12px;
+  }
+  .login-top {
+    position: static;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .language-grid {
+    grid-template-columns: 1fr;
+  }
+  .mobile-nav span {
+    font-size: 10px;
+    hyphens: auto;
+  }
+  .bottom-note {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+@media (max-width: 700px) {
+  .mobile-nav {
+    gap: 4px;
+  }
+  .mobile-nav a,
+  .mobile-nav button {
     flex: 1;
     min-width: 0;
     padding: 0 2px;
@@ -353,4 +540,8 @@ button.nav-item {
     line-height: 1.3;
     min-height: 24px;
   }
+}
+
+.auth-return .auth-link {
+  margin-inline-start: 0.35em;
 }

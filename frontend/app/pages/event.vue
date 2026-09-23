@@ -1,6 +1,5 @@
 <script setup>
-import { t } from '../utils/i18n.js';
-import { localeState } from "../utils/i18n.js";
+import { t, localeState, apiLocale, catalogText, uiError, message, unit } from "../utils/i18n.js";
 import { date, formats, reasonLabel } from "../utils/labels.js";
 const route = useRoute(),
   { request } = useApi();
@@ -48,7 +47,7 @@ const sessions = computed(() =>
 watch(sessions, values => { if (!values.includes(sessionDate.value)) sessionDate.value = values[0] || ''; });
 async function loadEventCatalog() {
   catalogError.value = '';
-  try { await loadCatalogs(); } catch (cause) { catalogError.value = cause.message; }
+  try { await loadCatalogs(); } catch (cause) { catalogError.value = uiError(cause); }
 }
 let version = 0;
 async function load() {
@@ -64,7 +63,7 @@ async function load() {
   try {
     const [result] = await Promise.all([
       request("/activities/" + encodeURIComponent(id.value), {
-        query: { locale: localeState.locale },
+        query: { locale: apiLocale() },
       }),
       employeeId.value ? loadEmployee(employeeId.value, { waitForOptional: false }) : Promise.resolve(),
     ]);
@@ -77,7 +76,7 @@ async function load() {
       ) || "";
     if (employeeId.value && store.error) error.value = store.error;
   } catch (e) {
-    if (current === version) error.value = e.message;
+    if (current === version) error.value = uiError(e);
   } finally {
     if (current === version) loading.value = false;
   }
@@ -103,10 +102,10 @@ async function enroll() {
     await loadEmployee();
     if (store.error)
       actionError.value =
-        "Запись сохранена, но обновить профиль не удалось: " + store.error;
+        message("Запись сохранена, но обновить профиль не удалось: {p0}", { p0: store.error });
     else await navigateTo("/activities");
   } catch (e) {
-    actionError.value = e.message;
+    actionError.value = uiError(e);
   } finally {
     busy.value = false;
   }
@@ -115,7 +114,7 @@ async function enroll() {
 <template>
   <CqAsync :loading="loading" :error="error" @retry="load"
     ><div v-if="activity">
-      <CqHeading :title="activity.title" :subtitle="activity.id"
+      <CqHeading :title="catalogText(activity, 'title')" :subtitle="activity.id"
         ><NuxtLink :to="hr ? (employeeId ? { path: '/hr-employee', query: { id: employeeId } } : '/hr-events') : '/catalog'" class="btn secondary"
           >{{ t(hr ? 'Назад' : 'К каталогу') }} <CqIcon name="back" /></NuxtLink
       ></CqHeading>
@@ -130,17 +129,17 @@ async function enroll() {
                 <h2 class="my-2.5"> {{ t("От обучения —") }} <br /> {{ t("к конкретному навыку") }} </h2>
                 <div class="tags">
                   <CqTag color="green">{{ t(formats[activity.format]) }}</CqTag
-                  ><CqTag color="outline">{{ activity.type }}</CqTag>
+                  ><CqTag color="outline">{{ t(activity.type) }}</CqTag>
                 </div>
               </div>
               <div class="cover-icon"><CqIcon name="layers" /></div>
             </div>
             <h2> {{ t("Об активности") }} </h2>
-            <p class="small muted section">{{ activity.description }}</p>
+            <p class="small muted section">{{ catalogText(activity, "description") }}</p>
             <div class="event-facts">
               <div>
                 <small> {{ t("Трудозатраты") }} </small
-                ><strong>{{ activity.durationHours }} {{ t("часов") }} </strong>
+                ><strong>{{ unit(activity.durationHours, "hour") }} </strong>
               </div>
               <div>
                 <small> {{ t("Формат") }} </small

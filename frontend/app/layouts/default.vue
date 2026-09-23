@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '../utils/i18n.js';
+const { t } = useLocale();
 import { titles, employeeMenu, hrMenu } from "../utils/pages.js";
 import { initials } from "../utils/labels.js";
 const route = useRoute(),
@@ -22,7 +22,7 @@ function signOut() {
 }
 </script>
 <template>
-  <a href="#main" class="skip-link"> {{ t("Перейти к содержимому") }} </a>
+  <a href="#main" class="skip-link">{{ t("Перейти к содержимому") }}</a>
   <div v-if="mobileOpen" class="nav-overlay" @click="mobileOpen = false" />
   <aside class="sidebar" :class="{ 'mobile-open': mobileOpen }">
     <CqBrand /><button
@@ -46,13 +46,21 @@ function signOut() {
     >
     <div class="sidebar-bottom">
       <div class="side-note">
-        <strong><CqIcon name="shield" /> {{ t("Развитие без сравнения") }} </strong> {{ t("Ваш путь — не соревнование. Здесь нет публичных рейтингов сотрудников.") }} </div>
+        <strong
+          ><CqIcon name="shield" />{{ t("Развитие без сравнения") }}</strong
+        >{{
+          t(
+            "Ваш путь — не соревнование. Здесь нет публичных рейтингов сотрудников.",
+          )
+        }}
+      </div>
       <NuxtLink to="/settings" class="nav-item"
-        ><CqIcon name="settings" /> {{ t("Настройки") }} </NuxtLink
+        ><CqIcon name="settings" />{{ t("Настройки") }}</NuxtLink
       >
       <button v-if="store.user" class="nav-item" @click="signOut">
-        <CqIcon name="logout" /> {{ t("Выйти") }} </button>
-      <NuxtLink v-else to="/login" class="nav-item"> {{ t("Войти") }} </NuxtLink>
+        <CqIcon name="logout" />{{ t("Выйти") }}
+      </button>
+      <NuxtLink v-else to="/login" class="nav-item">{{ t("Войти") }}</NuxtLink>
     </div>
   </aside>
   <div class="shell">
@@ -73,7 +81,7 @@ function signOut() {
       </div>
       <div class="top-controls">
         <CqTag color="green">{{ t(hr ? "HR" : "Сотрудник") }}</CqTag
-        ><CqLanguage />
+        ><CqLanguageSwitcher />
         <div class="avatar">
           {{
             initials(
@@ -86,8 +94,8 @@ function signOut() {
     <main id="main" class="content" tabindex="-1">
       <slot />
       <footer class="bottom-note">
-        <span> {{ t("QCareer · развитие в своём темпе") }} </span
-        ><span> {{ t("Данные и прогресс сохраняются на сервере") }} </span>
+        <span>{{ t("QCareer · развитие в своём темпе") }}</span
+        ><span>{{ t("Данные и прогресс сохраняются на сервере") }}</span>
       </footer>
     </main>
   </div>
@@ -100,7 +108,7 @@ function signOut() {
       ><CqIcon :name="item[2]" /><span>{{ t(item[1]) }}</span></NuxtLink
     >
     <button @click="mobileOpen = true">
-      <CqIcon name="layers" /><span> {{ t("Ещё") }} </span>
+      <CqIcon name="layers" /><span>{{ t("Ещё") }}</span>
     </button>
   </nav>
 </template>

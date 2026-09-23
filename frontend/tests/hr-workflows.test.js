@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { File } from "node:buffer";
 import { test } from "node:test";
 import { computed, ref, shallowRef } from "vue";
+import { useLocale } from "../app/composables/useLocale.js";
+import { translate as t } from "../app/utils/i18n.js";
 
 // Exercise the script used by the actual screen with a transport stub. These
 // tests guard import sequencing; backend integration tests validate the payload.
@@ -18,6 +20,7 @@ function importScreen(request) {
     },
   };
   const build = new Function(
+    "useLocale",
     "useApi",
     "useRoute",
     "useRouter",
@@ -30,6 +33,7 @@ function importScreen(request) {
   );
   return {
     ...build(
+      useLocale,
       () => ({ request }),
       () => route,
       () => router,
@@ -172,6 +176,6 @@ test("report refresh failure preserves a confirmed applied result without preten
   await screen.run(false);
   await screen.run(true);
   assert.equal(screen.result.value.status, "APPLIED");
-  assert.match(screen.reportWarning.value, /Report unavailable/);
+  assert.match(t(screen.reportWarning.value), /Отчёт недоступен/);
   assert.equal(screen.error.value, "");
 });

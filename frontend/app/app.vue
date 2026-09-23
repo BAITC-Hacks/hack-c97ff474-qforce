@@ -1,7 +1,8 @@
 <script setup>
+const { t, locale, initLocale } = useLocale();
+initLocale();
 import { titles } from "./utils/pages.js";
-import { initializeLocale, t, localeState } from './utils/i18n.js';
-initializeLocale();
+import { localeState } from './utils/i18n.js';
 const { store, loadEmployee, loadCatalogs } = useCareer();
 const route = useRoute();
 watch(() => localeState.locale, () => {
@@ -13,9 +14,15 @@ watch(() => localeState.locale, () => {
   }
 });
 useHead({
+  htmlAttrs: { lang: () => locale.value },
+  meta: [
+    {
+      name: "description",
+      content: () => t("Ваше личное пространство развития."),
+    },
+  ],
   title: () =>
     `${t(titles[route.path === "/" ? "dashboard" : route.path.slice(1)] || "QCareer")} · QCareer`,
-  htmlAttrs: { lang: () => localeState.locale },
 });
 </script>
 <template>

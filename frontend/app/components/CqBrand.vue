@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '../utils/i18n.js';
+const { t } = useLocale();
 </script>
 <template>
   <NuxtLink to="/" class="brand" :aria-label="t('QCareer — главная')"
@@ -21,7 +21,7 @@ import { t } from '../utils/i18n.js';
     </svg>
     <div>
       <div class="wordmark">QCareer</div>
-      <div class="brand-sub"> {{ t("Ваш следующий шаг") }} </div>
+      <div class="brand-sub">{{ t("Ваш следующий шаг") }}</div>
     </div></NuxtLink
   >
 </template>

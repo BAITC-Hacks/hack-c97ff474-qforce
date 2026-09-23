@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '../utils/i18n.js';
+const { t } = useLocale();
 defineProps({
   label: String,
   value: [String, Number],

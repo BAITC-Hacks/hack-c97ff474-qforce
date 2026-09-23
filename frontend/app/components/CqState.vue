@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '../utils/i18n.js';
+const { t } = useLocale();
 const props = defineProps({ kind: String });
 const options = {
   error: {
@@ -43,11 +43,13 @@ const config = computed(() => options[props.kind] || options["not-found"]);
 <template>
   <div>
     <CqHeading
-      :title="config.title"
+      :title="t(config.title)"
       :subtitle="
-        kind === 'not-found'
-          ? 'Проверьте адрес страницы.'
-          : 'Вернитесь к доступному разделу.'
+        t(
+          kind === 'not-found'
+            ? 'Проверьте адрес страницы.'
+            : 'Вернитесь к доступному разделу.',
+        )
       "
     />
     <div v-if="config.note" class="test-state">

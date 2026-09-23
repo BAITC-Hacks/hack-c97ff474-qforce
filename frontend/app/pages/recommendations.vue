@@ -1,4 +1,5 @@
 <script setup>
+import {  } from "../utils/i18n.js";
 const { store, loadEmployee } = useCareer();
 onMounted(() => loadEmployee());
 </script>

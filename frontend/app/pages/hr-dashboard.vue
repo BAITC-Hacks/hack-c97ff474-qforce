@@ -1,7 +1,6 @@
 <script setup>
-import { t } from '../utils/i18n.js';
-import { localeState } from "../utils/i18n.js";
-import { date } from "../utils/labels.js";
+import { t, localeState, apiLocale, catalogText, uiError, number as n } from "../utils/i18n.js";
+import { date, percent } from "../utils/labels.js";
 const { request } = useApi();
 const department = ref(""),
   dateFrom = ref(""),
@@ -28,9 +27,9 @@ const attentionPages = computed(() =>
   Math.max(1, Math.ceil(attentionMeta.value.total / pageSize)),
 );
 const nameOf = (catalog, id) =>
-  catalog.find((item) => item.id === id)?.name || id;
+  catalogText(catalog.find((item) => item.id === id), "name", id);
 const percentage = (value) =>
-  value == null ? "—" : Math.round(value * 100) + "%";
+  value == null ? "—" : percent(value * 100);
 const reasons = {
   INCOMPLETE_REQUIREMENTS_OR_LEVELS: "Не хватает требований или оценок навыков",
   NO_ELIGIBLE_ACTIVITIES: "Нет доступных активностей",
@@ -75,7 +74,7 @@ async function load() {
     coverage.value = recommendations.meta.counts;
   } catch (cause) {
     if (current === generation)
-      error.value = cause.message || "Не удалось загрузить аналитику.";
+      error.value = uiError(cause) || "Не удалось загрузить аналитику.";
   } finally {
     if (current === generation) loading.value = false;
   }
@@ -101,8 +100,8 @@ async function initialize() {
   catalogError.value = "";
   const results = await Promise.allSettled([
     load(),
-    request("/skills", { query: { locale: localeState.locale } }),
-    request("/roles", { query: { locale: localeState.locale } }),
+    request("/skills", { query: { locale: apiLocale() } }),
+    request("/roles", { query: { locale: apiLocale() } }),
   ]);
   if (version !== catalogGeneration) return;
   if (results[1].status === "fulfilled") skills.value = results[1].value.data;
@@ -118,12 +117,17 @@ watch(() => localeState.locale, initialize);
   <div>
     <CqHeading
       :title="t('Команда растёт. Вы видите — как.')"
-      :subtitle="t('Разрывы по компетенциям, доступность развития и участие — без рейтингов людей.')"
+      :subtitle="
+        t(
+          'Разрывы по компетенциям, доступность развития и участие — без рейтингов людей.',
+        )
+      "
     />
     <form class="filters" @submit.prevent="applyFilters">
       <CqDepartment v-model="department" :disabled="loading" />
       <label class="small"
-        > {{ t("С") }} <input
+        >{{ t("С")
+        }}<input
           v-model="dateFrom"
           type="date"
           class="input"
@@ -132,7 +136,8 @@ watch(() => localeState.locale, initialize);
           :disabled="loading"
       /></label>
       <label class="small"
-        > {{ t("По") }} <input
+        >{{ t("По")
+        }}<input
           v-model="dateTo"
           type="date"
           class="input"
@@ -140,18 +145,29 @@ watch(() => localeState.locale, initialize);
           :min="dateFrom || undefined"
           :disabled="loading"
       /></label>
-      <button class="btn secondary" :disabled="loading"> {{ t("Применить") }} <CqIcon name="search" />
+      <button class="btn secondary" :disabled="loading">
+        {{ t("Применить") }}<CqIcon name="search" />
       </button>
     </form>
     <CqNotice v-if="catalogError" color="gold">{{ t(catalogError) }}</CqNotice>
-    <div v-if="loading" class="panel empty-inline section" role="status"> {{ t("Загружаем HR-аналитику…") }} </div>
+    <div v-if="loading" class="panel empty-inline section" role="status">
+      {{ t("Загружаем HR-аналитику…") }}
+    </div>
     <section v-else-if="error" class="panel section" role="alert">
       <CqNotice color="red">{{ t(error) }}</CqNotice>
-      <button class="btn secondary section" @click="load"> {{ t("Повторить") }} <CqIcon name="refresh" />
+      <button class="btn secondary section" @click="load">
+        {{ t("Повторить") }}<CqIcon name="refresh" />
       </button>
     </section>
     <template v-else-if="overview">
-      <p class="small muted section"> {{ t("Период:") }} {{ date(overview.dateFrom) }} — {{ date(overview.dateTo) }} {{ t("· Дата среза:") }} {{ date(overview.asOfDate) }}
+      <p class="small muted section">
+        {{
+          t("Период: {p0} — {p1} · Дата среза: {p2}", {
+            p0: date(overview.dateFrom),
+            p1: date(overview.dateTo),
+            p2: date(overview.asOfDate),
+          })
+        }}
       </p>
       <div class="grid four section">
         <CqMetric
@@ -176,10 +192,10 @@ watch(() => localeState.locale, initialize);
           :label="t('Завершение участия')"
           :value="percentage(overview.completionRate)"
           :caption="
-            overview.completedParticipations +
-            ' из ' +
-            overview.participationCount +
-            ' записей'
+            t('Завершено {completed} из {total} записей', {
+              completed: overview.completedParticipations,
+              total: overview.participationCount,
+            })
           "
           icon="check"
         />
@@ -187,10 +203,14 @@ watch(() => localeState.locale, initialize);
       <div class="grid main-aside section">
         <section class="panel">
           <div class="panel-head">
-            <h2> {{ t("Разрывы по навыкам") }} </h2>
-            <CqTag color="outline">{{ gapMeta.total }} {{ t("групп") }} </CqTag>
+            <h2>{{ t("Разрывы по навыкам") }}</h2>
+            <CqTag color="outline">{{
+              t("{p0} групп", { p0: gapMeta.total })
+            }}</CqTag>
           </div>
-          <div v-if="!gaps.length" class="empty-inline"> {{ t("Нет требований для анализа в этой выборке.") }} </div>
+          <div v-if="!gaps.length" class="empty-inline">
+            {{ t("Нет требований для анализа в этой выборке.") }}
+          </div>
           <div
             v-for="row in gaps"
             :key="
@@ -205,10 +225,11 @@ watch(() => localeState.locale, initialize);
           >
             <div class="chart-row">
               <div>
-                {{ nameOf(skills, row.skillId) }}
+                {{ t(nameOf(skills, row.skillId)) }}
                 <div class="sub">
-                  {{ nameOf(roles, row.roleId) }} · {{ row.currentGradeId }} →
-                  {{ row.targetGradeId }}
+                  {{ t(nameOf(roles, row.roleId)) }} ·
+                  {{ t(row.currentGradeId) }} →
+                  {{ t(row.targetGradeId) }}
                 </div>
               </div>
               <div class="bar">
@@ -220,14 +241,31 @@ watch(() => localeState.locale, initialize);
                   }"
                 />
               </div>
-              <strong>{{ percentage(row.deficitShare) }}</strong>
+              <strong>{{ t(percentage(row.deficitShare)) }}</strong>
             </div>
-            <p class="small muted"> {{ t("Разрыв:") }} {{ row.employeesWithGap }} {{ t("из") }} {{ row.knownLevelEmployees }} {{ t("сотрудников с известным уровнем. Нет оценки:") }} {{ row.incompleteDataEmployees }}.
+            <p class="small muted">
+              {{
+                t(
+                  "Разрыв: {p0} из {p1} сотрудников с известным уровнем. Нет оценки: {p2}.",
+                  {
+                    p0: row.employeesWithGap,
+                    p1: row.knownLevelEmployees,
+                    p2: row.incompleteDataEmployees,
+                  },
+                )
+              }}
             </p>
           </div>
-          <p class="small muted section"> {{ t("Доля относится к сотрудникам с применимым требованием и известным уровнем навыка. Требования не заданы для") }} {{ gapMeta.employeesWithoutTargetRequirements }} {{ t("сотрудников со следующим грейдом.") }} </p>
+          <p class="small muted section">
+            {{
+              t(
+                "Доля относится к сотрудникам с применимым требованием и известным уровнем навыка. Требования не заданы для {p0} сотрудников со следующим грейдом.",
+                { p0: gapMeta.employeesWithoutTargetRequirements },
+              )
+            }}
+          </p>
           <div v-if="gapPages > 1" class="pagination">
-            <span>{{ gapPage }} / {{ gapPages }}</span>
+            <span>{{ t(gapPage) }} / {{ t(gapPages) }}</span>
             <div class="actions">
               <button
                 class="btn secondary"
@@ -250,16 +288,22 @@ watch(() => localeState.locale, initialize);
         </section>
         <div class="stack">
           <section class="panel bg-[#EDF5E8]">
-            <div class="section-kicker"> {{ t("Внимание HR") }} </div>
-            <h2> {{ t("У развития бывают препятствия") }} </h2>
-            <p class="small muted section"> {{ t("Отсутствие рекомендации может означать пробел в каталоге, ограничения аудитории или неполные данные. Эти сигналы не оценивают мотивацию сотрудника.") }} </p>
+            <div class="section-kicker">{{ t("Внимание HR") }}</div>
+            <h2>{{ t("У развития бывают препятствия") }}</h2>
+            <p class="small muted section">
+              {{
+                t(
+                  "Отсутствие рекомендации может означать пробел в каталоге, ограничения аудитории или неполные данные. Эти сигналы не оценивают мотивацию сотрудника.",
+                )
+              }}
+            </p>
             <NuxtLink to="/hr-people" class="btn section"
-              > {{ t("Посмотреть сотрудников") }} <CqIcon name="people"
+              >{{ t("Посмотреть сотрудников") }}<CqIcon name="people"
             /></NuxtLink>
           </section>
           <section class="panel">
             <div class="panel-head">
-              <h2> {{ t("Доступность рекомендаций") }} </h2>
+              <h2>{{ t("Доступность рекомендаций") }}</h2>
               <CqIcon name="chart" />
             </div>
             <div
@@ -268,35 +312,37 @@ watch(() => localeState.locale, initialize);
               class="legend-row"
             >
               <span class="small">{{ t(label) }}</span
-              ><strong>{{ coverage[status] }}</strong>
+              ><strong>{{ t(coverage[status]) }}</strong>
             </div>
           </section>
         </div>
       </div>
       <section class="panel section">
         <div class="panel-head">
-          <h2> {{ t("Сигналы для внимания HR") }} </h2>
-          <CqTag color="outline">{{ attentionMeta.total }} {{ t("сотрудников") }} </CqTag>
+          <h2>{{ t("Сигналы для внимания HR") }}</h2>
+          <CqTag color="outline">{{
+            t("{p0} сотрудников", { p0: attentionMeta.total })
+          }}</CqTag>
         </div>
         <div class="table-wrap">
           <table v-if="attention.length">
             <thead>
               <tr>
-                <th> {{ t("Сотрудник") }} </th>
-                <th> {{ t("Роль / грейд") }} </th>
-                <th> {{ t("Наблюдаемые сигналы") }} </th>
-                <th> {{ t("Участий") }} </th>
-                <th> {{ t("Действие") }} </th>
+                <th>{{ t("Сотрудник") }}</th>
+                <th>{{ t("Роль / грейд") }}</th>
+                <th>{{ t("Наблюдаемые сигналы") }}</th>
+                <th>{{ t("Участий") }}</th>
+                <th>{{ t("Действие") }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="row in attention" :key="row.employeeId">
                 <td>
-                  <strong>{{ row.employeeId }}</strong>
+                  <strong>{{ t(row.employeeId) }}</strong>
                 </td>
                 <td>
-                  {{ nameOf(roles, row.roleId) }}
-                  <div class="sub">{{ row.gradeId }}</div>
+                  {{ t(nameOf(roles, row.roleId)) }}
+                  <div class="sub">{{ t(row.gradeId) }}</div>
                 </td>
                 <td>
                   <div
@@ -308,10 +354,11 @@ watch(() => localeState.locale, initialize);
                   </div>
                 </td>
                 <td>
-                  {{ row.recordedParticipations }}
-                  <div class="sub"> {{ t("Пропусков:") }} {{ row.skippedParticipations }}
-                    · {{ t('Прерываний:') }} {{ row.droppedParticipations ?? 0 }}
-                    · {{ t('Отказов:') }} {{ row.declinedParticipations ?? 0 }}
+                  {{ t(row.recordedParticipations) }}
+                  <div class="sub">
+                    {{
+                      t("Пропусков: {p0}", { p0: row.skippedParticipations })
+                    }} · {{ t("Прерываний:") }} {{ n(row.droppedParticipations ?? 0) }} · {{ t("Отказов:") }} {{ n(row.declinedParticipations ?? 0) }}
                   </div>
                 </td>
                 <td>
@@ -321,36 +368,47 @@ watch(() => localeState.locale, initialize);
                       query: { id: row.employeeId },
                     }"
                     class="btn ghost"
-                    > {{ t("Открыть") }} <CqIcon name="arrow"
+                    >{{ t("Открыть") }}<CqIcon name="arrow"
                   /></NuxtLink>
                 </td>
               </tr>
             </tbody>
           </table>
-          <div v-else class="empty-inline"> {{ t("В выбранной выборке нет сигналов для внимания HR.") }} </div>
+          <div v-else class="empty-inline">
+            {{ t("В выбранной выборке нет сигналов для внимания HR.") }}
+          </div>
         </div>
         <div class="pagination">
-          <span> {{ t("Страница") }} {{ attentionPage }} {{ t("из") }} {{ attentionPages }}</span>
+          <span>{{
+            t("Страница {p0} из {p1}", {
+              p0: attentionPage,
+              p1: attentionPages,
+            })
+          }}</span>
           <div class="actions">
             <button
               class="btn secondary"
               :disabled="attentionPage <= 1"
               @click="paginate('attention', attentionPage - 1)"
             >
-              <CqIcon name="back" /> {{ t("Назад") }} </button>
+              <CqIcon name="back" />{{ t("Назад") }}
+            </button>
             <button
               class="btn secondary"
               :disabled="attentionPage >= attentionPages"
               @click="paginate('attention', attentionPage + 1)"
-            > {{ t("Далее") }} <CqIcon name="arrow" />
+            >
+              {{ t("Далее") }}<CqIcon name="arrow" />
             </button>
           </div>
         </div>
       </section>
       <div class="section">
-        <CqNotice
-          > {{ t("Доля завершений рассчитана по всем записям участия за период, включая обязательные активности и незавершённые записи. Это описание участия, а не оценка эффективности сотрудника.") }} </CqNotice
-        >
+        <CqNotice>{{
+          t(
+            "Доля завершений рассчитана по всем записям участия за период, включая обязательные активности и незавершённые записи. Это описание участия, а не оценка эффективности сотрудника.",
+          )
+        }}</CqNotice>
       </div>
     </template>
   </div>

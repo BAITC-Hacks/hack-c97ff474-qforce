@@ -1,6 +1,6 @@
 <script setup>
-import { t } from '../utils/i18n.js';
-import { localeState } from "../utils/i18n.js";
+const { t, uiError, unit } = useLocale();
+import { apiLocale } from '../utils/i18n.js';
 import { formats } from "../utils/labels.js";
 const props = defineProps({
   rec: { type: Object, required: true },
@@ -29,7 +29,7 @@ async function feedback(rating) {
     );
     const latest = await request(
       `/employees/${encodeURIComponent(employeeId)}/recommendations/latest`,
-      { query: { locale: localeState.locale } },
+      { query: { locale: apiLocale() } },
     );
     if (
       session.version === sessionVersion &&
@@ -40,7 +40,7 @@ async function feedback(rating) {
       notify("Обратная связь сохранена.");
     }
   } catch (e) {
-    error.value = e.message;
+    error.value = uiError(e);
   } finally {
     busy.value = false;
   }
@@ -49,22 +49,22 @@ async function feedback(rating) {
 <template>
   <article class="panel rec-card" :class="{ primary: index === 0 }">
     <div class="rec-top">
-      <div class="rec-number">0{{ rec.rank }}</div>
+      <div class="rec-number">0{{ t(rec.rank) }}</div>
       <CqTag :color="index === 0 ? 'green' : 'outline'">{{
-        t('Шаг') + ' ' + rec.rank
+        t('Шаг {rank}', { rank: rec.rank })
       }}</CqTag>
     </div>
-    <h3>{{ activityName(rec.activityId) }}</h3>
+    <h3>{{ t(activityName(rec.activityId)) }}</h3>
     <div v-if="activity" class="tags">
       <CqTag>{{ t(formats[activity.format] || activity.format) }}</CqTag
-      ><CqTag>{{ activity.durationHours }} {{ t("ч") }} </CqTag>
+      ><CqTag>{{ unit(activity.durationHours, "hour") }}</CqTag>
     </div>
     <div class="tags section">
       <CqTag
         v-for="skill in rec.expectedSkillChanges"
         :key="skill.skillId"
         color="green"
-        >{{ skillName(skill.skillId) }} +{{ skill.actualGain }}</CqTag
+        >{{ t(skillName(skill.skillId)) }} +{{ t(skill.actualGain) }}</CqTag
       >
     </div>
     <CqEvidence :rec="rec" :compact="compact" />
@@ -80,7 +80,9 @@ async function feedback(rating) {
         class="btn ghost"
         :disabled="busy"
         @click="feedback('NOT_HELPFUL')"
-      > {{ t("Не подходит") }} </button>
+      >
+        {{ t("Не подходит") }}
+      </button>
     </div>
     <CqNotice v-if="error" color="red" role="alert">{{ t(error) }}</CqNotice>
   </article>

@@ -275,7 +275,7 @@ test("HR server failure is visible and retry loads real data (injected transport
   );
   await page.goto("/hr-people");
   await expect(page.getByRole("alert")).toContainText(
-    "E2E: каталог сотрудников недоступен",
+    "TEST_UNAVAILABLE",
   );
   await expect(page.locator("tbody tr")).toHaveCount(0);
   await page.unroute(pattern);

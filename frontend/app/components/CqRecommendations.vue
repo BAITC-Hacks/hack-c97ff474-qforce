@@ -2,12 +2,12 @@
 import { reasonLabel } from '../utils/labels.js';
 defineProps({ hr: Boolean });
 const { store, generateRecommendations, activityName } = useCareer();
-const { t } = useLocale();
+const { t, uiError } = useLocale();
 const busy = ref(false), error = ref('');
 async function refresh() {
   if (busy.value) return;
   busy.value = true; error.value = '';
-  try { await generateRecommendations(); } catch (cause) { error.value = cause.message; } finally { busy.value = false; }
+  try { await generateRecommendations(); } catch (cause) { error.value = uiError(cause); } finally { busy.value = false; }
 }
 </script>
 <template>
@@ -33,7 +33,7 @@ async function refresh() {
       <section v-if="store.recommendations?.diagnostics?.excluded?.length" class="panel section">
         <h3>{{ t('Почему не другие активности?') }}</h3>
         <div class="table-wrap"><table><thead><tr><th>{{ t('Активность') }}</th><th>{{ t('Ограничения') }}</th></tr></thead>
-          <tbody><tr v-for="row in store.recommendations.diagnostics.excluded" :key="row.activityId"><td>{{ activityName(row.activityId) }}</td><td>{{ row.reasons.map(reasonLabel).join(' · ') }}</td></tr></tbody>
+          <tbody><tr v-for="row in store.recommendations.diagnostics.excluded" :key="row.activityId"><td>{{ activityName(row.activityId) }}</td><td>{{ row.reasons.map(reason => t(reasonLabel(reason))).join(' · ') }}</td></tr></tbody>
         </table></div>
       </section>
     </template>

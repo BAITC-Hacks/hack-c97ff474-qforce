@@ -238,7 +238,7 @@ test("empty catalog, real not-found, loading and injected service error recover 
     page.getByRole("status").filter({ hasText: "Загружаем" }),
   ).toBeVisible();
   await expect(page.getByRole("alert")).toContainText(
-    "Проверка недоступности сервера",
+    "TEST_UNAVAILABLE",
   );
   await page.unroute("**/api/v1/employees/*/trajectory");
   await page
@@ -263,7 +263,7 @@ test("failed enrollment shows an error and leaves saved history unchanged", asyn
     body: JSON.stringify({ code: 'TEST_CONFLICT', message: 'Участие не сохранено: проверка ошибки', details: null, requestId: 'e2e' }),
   }));
   await page.getByRole('button', { name: 'Записаться', exact: false }).click();
-  await expect(page.getByRole('alert')).toContainText('Участие не сохранено');
+  await expect(page.getByRole('alert')).toContainText('Данные изменились или действие уже выполнено');
   await expect(page).toHaveURL(/\/event\?id=/);
   await expect(page.locator('.app-toast')).toHaveCount(0);
   expect(await get(page, base + '/history?pageSize=100', headers)).toEqual(history);

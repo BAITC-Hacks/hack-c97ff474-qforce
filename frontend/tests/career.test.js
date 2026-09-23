@@ -32,6 +32,24 @@ test('a slow optional response cannot overwrite the next selected HR employee', 
   assert.equal(career.store.profile.id,'b');assert.equal(career.store.recommendations.employeeId,'b');clearSession();delete globalThis.useApi;
 });
 
+test('a language without its own saved set reuses existing evidence without generating a new plan', async () => {
+  const calls=[];
+  const saved={employeeId:'localized',locale:'ru',recommendations:[{activityId:'known',rank:1}]};
+  globalThis.useApi=()=>({request:async(path,options)=>{
+    calls.push({path,options});
+    if(path==='/employees/localized')return {data:{id:'localized',roleId:'role'}};
+    if(path.endsWith('/recommendations/latest'))return {data:options?.query?.locale ? null : saved};
+    return {data:[]};
+  },allPages:async()=>[]});
+  saveToken('hr');session.user={role:'HR'};setLocale('de');
+  const career=useCareer();await career.loadEmployee('localized');
+  assert.deepEqual(career.store.recommendations,saved);
+  const reads=calls.filter(call=>call.path.endsWith('/recommendations/latest'));
+  assert.equal(reads.length,2);assert.equal(reads[0].options.query.locale,'en');assert.equal(reads[1].options,undefined);
+  assert.ok(calls.every(call=>!call.options?.method || call.options.method==='GET'));
+  clearSession();setLocale('ru');delete globalThis.useApi;
+});
+
 test('profile language is a default; explicit RU/KK choice persists and overrides it',()=>{
   const values=new Map();globalThis.localStorage={getItem:key=>values.get(key),setItem:(key,value)=>values.set(key,value)};
   localeState.explicit=false;localeState.locale='ru';adoptPreferredLocale('kk');assert.equal(t('Войти'),'Кіру');

@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '../utils/i18n.js';
+const { t, uiError } = useLocale();
 definePageMeta({ layout: "auth" });
 const { login, session } = useApi();
 const { logout } = useCareer();
@@ -9,6 +9,10 @@ const username = ref(""),
   error = ref("");
 async function submit() {
   if (busy.value) return;
+  if (!username.value.trim() || !password.value) {
+    error.value = "Введите имя пользователя и пароль.";
+    return;
+  }
   busy.value = true;
   error.value = "";
   logout();
@@ -17,7 +21,7 @@ async function submit() {
     password.value = "";
     await navigateTo(user.role === "HR" ? "/hr-dashboard" : "/dashboard");
   } catch (e) {
-    error.value = e.message;
+    error.value = uiError(e);
   } finally {
     busy.value = false;
   }
@@ -25,12 +29,12 @@ async function submit() {
 </script>
 <template>
   <div>
-    <div class="eyebrow text-primary"> {{ t("Начните с вашего профиля") }} </div>
-    <h2> {{ t("Добро пожаловать") }} </h2>
-    <p> {{ t("Войдите в свою учётную запись Career Quest.") }} </p>
-    <form @submit.prevent="submit">
+    <div class="eyebrow text-primary">{{ t("Начните с вашего профиля") }}</div>
+    <h2>{{ t("Добро пожаловать") }}</h2>
+    <p>{{ t("Войдите в свою учётную запись Career Quest.") }}</p>
+    <form novalidate @submit.prevent="submit">
       <div class="field">
-        <label for="username"> {{ t("Имя пользователя") }} </label
+        <label for="username">{{ t("Имя пользователя") }}</label
         ><input
           id="username"
           v-model="username"
@@ -41,7 +45,7 @@ async function submit() {
         />
       </div>
       <div class="field">
-        <label for="password"> {{ t("Пароль") }} </label
+        <label for="password">{{ t("Пароль") }}</label
         ><input
           id="password"
           v-model="password"
@@ -60,11 +64,15 @@ async function submit() {
       </button>
     </form>
     <div class="section">
-      <CqNotice
-        > {{ t("Доступ к профилю и HR-разделам определяется вашей учётной записью.") }} </CqNotice
-      >
+      <CqNotice>{{
+        t("Доступ к профилю и HR-разделам определяется вашей учётной записью.")
+      }}</CqNotice>
     </div>
-    <div class="auth-return"> {{ t("Нет учётной записи?") }} <NuxtLink to="/register" class="auth-link"> {{ t("Как получить доступ") }} </NuxtLink>
+    <div class="auth-return">
+      {{ t("Нет учётной записи?")
+      }}<NuxtLink to="/register" class="auth-link">{{
+        t("Как получить доступ")
+      }}</NuxtLink>
     </div>
   </div>
 </template>
