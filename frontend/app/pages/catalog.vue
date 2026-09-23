@@ -1,4 +1,5 @@
 <script setup>
+const { t, uiError, catalogText, unit } = useLocale();
 import { formats } from "../utils/labels.js";
 const { request } = useApi();
 const { store, loadEmployee } = useCareer();
@@ -27,7 +28,7 @@ async function load() {
       total.value = result.meta.total;
     }
   } catch (e) {
-    if (current === version) error.value = e.message;
+    if (current === version) error.value = uiError(e);
   } finally {
     if (current === version) loading.value = false;
   }
@@ -45,17 +46,21 @@ onMounted(() => {
 <template>
   <div>
     <CqHeading
-      title="Каталог развития"
-      subtitle="Изучайте возможности обучения и развития."
+      :title="t('Каталог развития')"
+      :subtitle="t('Изучайте возможности обучения и развития.')"
     />
     <form class="filters" @submit.prevent="load">
-      <select v-model="format" class="select" aria-label="Формат активности">
-        <option value="">Все форматы</option>
+      <select
+        v-model="format"
+        class="select"
+        :aria-label="t('Формат активности')"
+      >
+        <option value="">{{ t("Все форматы") }}</option>
         <option v-for="(name, key) in formats" :key="key" :value="key">
-          {{ name }}
+          {{ t(name) }}
         </option></select
       ><button class="btn secondary" :disabled="loading">
-        Обновить <CqIcon name="refresh" />
+        {{ t("Обновить") }}<CqIcon name="refresh" />
       </button>
     </form>
     <CqAsync :loading="loading" :error="error" @retry="load">
@@ -68,15 +73,15 @@ onMounted(() => {
           <div class="rec-top">
             <span class="mini-icon"><CqIcon name="book" /></span
             ><CqTag :color="activity.mandatory ? 'gold' : 'green'">{{
-              activity.mandatory ? "Обязательная" : "Добровольная"
+              t(activity.mandatory ? "Обязательная" : "Добровольная")
             }}</CqTag>
           </div>
-          <h3>{{ activity.title }}</h3>
+          <h3>{{ catalogText(activity, "title") }}</h3>
           <div class="tags">
-            <CqTag>{{ formats[activity.format] }}</CqTag
-            ><CqTag>{{ activity.durationHours }} ч</CqTag>
+            <CqTag>{{ t(formats[activity.format]) }}</CqTag
+            ><CqTag>{{ unit(activity.durationHours, "hour") }}</CqTag>
           </div>
-          <p class="desc">{{ activity.description }}</p>
+          <p class="desc">{{ catalogText(activity, "description") }}</p>
           <CqTag
             v-if="
               store.eligible?.eligible.some(
@@ -84,28 +89,30 @@ onMounted(() => {
               )
             "
             color="green"
-            >Подходит для развития</CqTag
+            >{{ t("Подходит для развития") }}</CqTag
           ><NuxtLink
             :to="{ path: '/event', query: { id: activity.id } }"
             class="btn secondary section"
-            >Посмотреть <CqIcon name="arrow"
+            >{{ t("Посмотреть") }}<CqIcon name="arrow"
           /></NuxtLink>
         </article>
       </div>
       <div v-if="!rows.length" class="panel empty-inline">
-        Активностей с такими фильтрами нет.
+        {{ t("Активностей с такими фильтрами нет.") }}
       </div>
       <div class="pagination">
-        <span>Страница {{ page }} · всего {{ total }}</span>
+        <span>{{
+          t("Страница {p0} · всего {p1}", { p0: page, p1: total })
+        }}</span>
         <div class="actions">
           <button class="btn secondary" :disabled="page <= 1" @click="page--">
-            Назад</button
+            {{ t("Назад") }}</button
           ><button
             class="btn secondary"
             :disabled="page * 9 >= total"
             @click="page++"
           >
-            Далее
+            {{ t("Далее") }}
           </button>
         </div>
       </div>

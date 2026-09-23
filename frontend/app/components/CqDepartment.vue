@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLocale();
 defineProps({ modelValue: { type: String, default: "" }, disabled: Boolean });
 defineEmits(["update:modelValue"]);
 </script>
@@ -7,8 +8,8 @@ defineEmits(["update:modelValue"]);
     :value="modelValue"
     :disabled="disabled"
     class="input"
-    aria-label="Подразделение: точное название"
-    placeholder="Подразделение: точное название"
+    :aria-label="t('Подразделение: точное название')"
+    :placeholder="t('Подразделение: точное название')"
     maxlength="200"
     @input="$emit('update:modelValue', $event.target.value)"
   />

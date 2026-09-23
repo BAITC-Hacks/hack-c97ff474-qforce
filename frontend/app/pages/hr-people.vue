@@ -1,4 +1,5 @@
 <script setup>
+const { t, uiError, catalogText } = useLocale();
 const { request } = useApi();
 const department = ref(""),
   roleId = ref(""),
@@ -14,7 +15,12 @@ const filters = ref({}),
   pageSize = 20;
 const pages = computed(() => Math.max(1, Math.ceil(total.value / pageSize)));
 let generation = 0;
-const roleName = (id) => roles.value.find((role) => role.id === id)?.name || id;
+const roleName = (id) =>
+  catalogText(
+    roles.value.find((role) => role.id === id),
+    "name",
+    id,
+  );
 const initials = (name) =>
   name
     .split(/\s+/)
@@ -34,7 +40,7 @@ async function load() {
     total.value = response.meta.total;
   } catch (cause) {
     if (current === generation)
-      error.value = cause.message || "Не удалось загрузить сотрудников.";
+      error.value = uiError(cause) || "Не удалось загрузить сотрудников.";
   } finally {
     if (current === generation) loading.value = false;
   }
@@ -66,11 +72,13 @@ onMounted(async () => {
 <template>
   <div>
     <CqHeading
-      title="Сотрудники"
-      subtitle="Рабочий список HR. Без публичного ранжирования по результативности."
+      :title="t('Сотрудники')"
+      :subtitle="
+        t('Рабочий список HR. Без публичного ранжирования по результативности.')
+      "
     >
       <NuxtLink to="/import" class="btn secondary"
-        >Импортировать профили <CqIcon name="upload"
+        >{{ t("Импортировать профили") }}<CqIcon name="upload"
       /></NuxtLink>
     </CqHeading>
     <form class="filters" @submit.prevent="applyFilters">
@@ -78,43 +86,47 @@ onMounted(async () => {
       <select
         v-model="roleId"
         class="select"
-        aria-label="Роль"
+        :aria-label="t('Роль')"
         :disabled="loading"
       >
-        <option value="">Все роли</option>
+        <option value="">{{ t("Все роли") }}</option>
         <option v-for="role in roles" :key="role.id" :value="role.id">
-          {{ role.name }}
+          {{ catalogText(role, "name") }}
         </option>
       </select>
       <input
         v-model="gradeId"
         class="input"
-        placeholder="Грейд: точный ID"
-        aria-label="Грейд: точный ID"
+        :placeholder="t('Грейд: точный ID')"
+        :aria-label="t('Грейд: точный ID')"
         :disabled="loading"
       />
       <button type="submit" class="btn secondary" :disabled="loading">
-        Применить <CqIcon name="search" />
+        {{ t("Применить") }}<CqIcon name="search" />
       </button>
     </form>
     <p class="small muted section">
-      Фильтры используют точное совпадение. Поиск по имени пока недоступен.
+      {{
+        t(
+          "Фильтры используют точное совпадение. Поиск по имени пока недоступен.",
+        )
+      }}
     </p>
-    <CqNotice v-if="catalogError" color="gold">{{ catalogError }}</CqNotice>
+    <CqNotice v-if="catalogError" color="gold">{{ t(catalogError) }}</CqNotice>
     <section class="panel section" :aria-busy="loading">
       <div class="panel-head">
-        <h2>Профили развития</h2>
-        <CqTag v-if="!loading && !error" color="outline"
-          >{{ total }} сотрудников</CqTag
-        >
+        <h2>{{ t("Профили развития") }}</h2>
+        <CqTag v-if="!loading && !error" color="outline">{{
+          t("{p0} сотрудников", { p0: total })
+        }}</CqTag>
       </div>
       <div v-if="loading" class="empty-inline" role="status">
-        Загружаем сотрудников…
+        {{ t("Загружаем сотрудников…") }}
       </div>
       <div v-else-if="error" role="alert">
-        <CqNotice color="red">{{ error }}</CqNotice>
+        <CqNotice color="red">{{ t(error) }}</CqNotice>
         <button class="btn secondary section" @click="load">
-          Повторить <CqIcon name="refresh" />
+          {{ t("Повторить") }}<CqIcon name="refresh" />
         </button>
       </div>
       <template v-else>
@@ -122,11 +134,11 @@ onMounted(async () => {
           <table v-if="rows.length">
             <thead>
               <tr>
-                <th>Сотрудник</th>
-                <th>Подразделение</th>
-                <th>Роль / грейд</th>
-                <th>Карьерная цель</th>
-                <th>Профиль</th>
+                <th>{{ t("Сотрудник") }}</th>
+                <th>{{ t("Подразделение") }}</th>
+                <th>{{ t("Роль / грейд") }}</th>
+                <th>{{ t("Карьерная цель") }}</th>
+                <th>{{ t("Профиль") }}</th>
               </tr>
             </thead>
             <tbody>
@@ -137,67 +149,73 @@ onMounted(async () => {
                     class="row-name"
                   >
                     <span class="avatar">{{
-                      initials(employee.fullName)
+                      t(initials(employee.fullName))
                     }}</span>
                     <div>
                       <strong class="text-primary">{{
-                        employee.fullName
+                        t(employee.fullName)
                       }}</strong>
-                      <div class="sub">{{ employee.id }}</div>
+                      <div class="sub">{{ t(employee.id) }}</div>
                     </div>
                   </NuxtLink>
                 </td>
-                <td>{{ employee.department }}</td>
+                <td>{{ t(employee.department) }}</td>
                 <td>
-                  {{ roleName(employee.roleId) }}
-                  <div class="sub">{{ employee.gradeId }}</div>
+                  {{ t(roleName(employee.roleId)) }}
+                  <div class="sub">{{ t(employee.gradeId) }}</div>
                 </td>
                 <td v-if="employee.careerGoal">
-                  {{ roleName(employee.careerGoal.target_role) }}
-                  <div class="sub">{{ employee.careerGoal.target_grade }}</div>
+                  {{ t(roleName(employee.careerGoal.target_role)) }}
+                  <div class="sub">
+                    {{ t(employee.careerGoal.target_grade) }}
+                  </div>
                 </td>
-                <td v-else><span class="muted">Не указана</span></td>
+                <td v-else>
+                  <span class="muted">{{ t("Не указана") }}</span>
+                </td>
                 <td>
                   <NuxtLink
                     :to="{ path: '/hr-employee', query: { id: employee.id } }"
                     class="btn ghost"
-                    >Открыть <CqIcon name="arrow"
+                    >{{ t("Открыть") }}<CqIcon name="arrow"
                   /></NuxtLink>
                 </td>
               </tr>
             </tbody>
           </table>
           <div v-else class="empty-inline">
-            Сотрудники не найдены. Измените фильтры.
+            {{ t("Сотрудники не найдены. Измените фильтры.") }}
           </div>
         </div>
         <div class="pagination">
-          <span>Страница {{ page }} из {{ pages }} · порядок по ID</span>
+          <span>{{
+            t("Страница {p0} из {p1} · порядок по ID", { p0: page, p1: pages })
+          }}</span>
           <div class="actions">
             <button
               class="btn secondary"
               :disabled="page <= 1"
               @click="turnPage(page - 1)"
             >
-              <CqIcon name="back" /> Назад
+              <CqIcon name="back" />{{ t("Назад") }}
             </button>
             <button
               class="btn secondary"
               :disabled="page >= pages"
               @click="turnPage(page + 1)"
             >
-              Далее <CqIcon name="arrow" />
+              {{ t("Далее") }}<CqIcon name="arrow" />
             </button>
           </div>
         </div>
       </template>
     </section>
     <div class="section">
-      <CqNotice color="gold"
-        >Покрытие навыков и следующий шаг доступны в профиле сотрудника.
-        Проценты для разных целей не образуют общий рейтинг
-        эффективности.</CqNotice
-      >
+      <CqNotice color="gold">{{
+        t(
+          "Покрытие навыков и следующий шаг доступны в профиле сотрудника. Проценты для разных целей не образуют общий рейтинг эффективности.",
+        )
+      }}</CqNotice>
     </div>
   </div>
 </template>

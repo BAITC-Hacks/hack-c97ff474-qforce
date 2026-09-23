@@ -1,5 +1,8 @@
+<script setup>
+const { t } = useLocale();
+</script>
 <template>
-  <NuxtLink to="/" class="brand" aria-label="QCareer — главная"
+  <NuxtLink to="/" class="brand" :aria-label="t('QCareer — главная')"
     ><svg class="q-symbol" viewBox="0 0 40 40" aria-hidden="true">
       <circle
         cx="18"
@@ -18,7 +21,7 @@
     </svg>
     <div>
       <div class="wordmark">QCareer</div>
-      <div class="brand-sub">Ваш следующий шаг</div>
+      <div class="brand-sub">{{ t("Ваш следующий шаг") }}</div>
     </div></NuxtLink
   >
 </template>

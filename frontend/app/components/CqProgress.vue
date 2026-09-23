@@ -1,4 +1,6 @@
 <script setup>
+const { t } = useLocale();
+import { percent } from "../utils/labels.js";
 defineProps({ profile: Object });
 const { gradeName } = useCareer();
 const circ = 2 * Math.PI * 57;
@@ -7,7 +9,12 @@ const circ = 2 * Math.PI * 57;
   <svg
     viewBox="0 0 330 175"
     role="img"
-    :aria-label="`Соответствие навыков: ${profile.readinessPercent === null ? 'нет данных' : profile.readinessPercent + ' процентов'}. Следующий грейд: ${gradeName(profile.nextGradeId)}`"
+    :aria-label="
+      t('Соответствие навыков: {p0}. Следующий грейд: {p1}', {
+        p0: percent(profile.readinessPercent),
+        p1: gradeName(profile.nextGradeId),
+      })
+    "
   >
     <path
       d="M0 137C49 137 26 41 81 41S126 140 165 140"
@@ -40,18 +47,14 @@ const circ = 2 * Math.PI * 57;
       transform="rotate(-90 228 84)"
     />
     <text x="228" y="90" text-anchor="middle" class="ring-value">
-      {{
-        profile.readinessPercent === null
-          ? "—"
-          : Number(profile.readinessPercent.toFixed(1)) + "%"
-      }}
+      {{ percent(profile.readinessPercent) }}
     </text>
     <text x="228" y="110" text-anchor="middle" fill="#BDDBCE" font-size="10">
-      соответствие навыков
+      {{ t("соответствие навыков") }}
     </text>
-    <text x="27" y="153" fill="#BFDBCE" font-size="11">сейчас</text>
+    <text x="27" y="153" fill="#BFDBCE" font-size="11">{{ t("сейчас") }}</text>
     <text x="228" y="174" text-anchor="middle" fill="#E2ECCB" font-size="11">
-      Цель: {{ gradeName(profile.nextGradeId) }}
+      {{ t("Цель: {p0}", { p0: gradeName(profile.nextGradeId) }) }}
     </text>
   </svg>
 </template>

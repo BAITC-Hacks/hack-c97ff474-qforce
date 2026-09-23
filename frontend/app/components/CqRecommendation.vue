@@ -1,4 +1,5 @@
 <script setup>
+const { t, uiError, unit } = useLocale();
 import { formats } from "../utils/labels.js";
 const props = defineProps({
   rec: { type: Object, required: true },
@@ -37,7 +38,7 @@ async function feedback(rating) {
       notify("Обратная связь сохранена.");
     }
   } catch (e) {
-    error.value = e.message;
+    error.value = uiError(e);
   } finally {
     busy.value = false;
   }
@@ -46,22 +47,22 @@ async function feedback(rating) {
 <template>
   <article class="panel rec-card" :class="{ primary: index === 0 }">
     <div class="rec-top">
-      <div class="rec-number">0{{ rec.rank }}</div>
+      <div class="rec-number">0{{ t(rec.rank) }}</div>
       <CqTag :color="index === 0 ? 'green' : 'outline'">{{
-        index === 0 ? "Приоритетный шаг" : "Альтернатива"
+        t(index === 0 ? "Приоритетный шаг" : "Альтернатива")
       }}</CqTag>
     </div>
-    <h3>{{ activityName(rec.activityId) }}</h3>
+    <h3>{{ t(activityName(rec.activityId)) }}</h3>
     <div v-if="activity" class="tags">
-      <CqTag>{{ formats[activity.format] || activity.format }}</CqTag
-      ><CqTag>{{ activity.durationHours }} ч</CqTag>
+      <CqTag>{{ t(formats[activity.format] || activity.format) }}</CqTag
+      ><CqTag>{{ unit(activity.durationHours, "hour") }}</CqTag>
     </div>
     <div class="tags section">
       <CqTag
         v-for="skill in rec.expectedSkillChanges"
         :key="skill.skillId"
         color="green"
-        >{{ skillName(skill.skillId) }} +{{ skill.actualGain }}</CqTag
+        >{{ t(skillName(skill.skillId)) }} +{{ t(skill.actualGain) }}</CqTag
       >
     </div>
     <CqEvidence :rec="rec" :compact="compact" />
@@ -69,19 +70,19 @@ async function feedback(rating) {
       class="btn"
       :class="{ secondary: index !== 0 }"
       :to="{ path: '/event', query: { id: rec.activityId } }"
-      >Подробнее о шаге <CqIcon name="arrow"
+      >{{ t("Подробнее о шаге") }}<CqIcon name="arrow"
     /></NuxtLink>
     <div v-if="!compact" class="actions section">
       <button class="btn ghost" :disabled="busy" @click="feedback('HELPFUL')">
-        Полезно</button
+        {{ t("Полезно") }}</button
       ><button
         class="btn ghost"
         :disabled="busy"
         @click="feedback('NOT_HELPFUL')"
       >
-        Не подходит
+        {{ t("Не подходит") }}
       </button>
     </div>
-    <CqNotice v-if="error" color="red" role="alert">{{ error }}</CqNotice>
+    <CqNotice v-if="error" color="red" role="alert">{{ t(error) }}</CqNotice>
   </article>
 </template>

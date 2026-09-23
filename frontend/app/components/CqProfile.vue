@@ -1,4 +1,5 @@
 <script setup>
+const { t, unit } = useLocale();
 import { date, initials, percent } from "../utils/labels.js";
 const props = defineProps({ hr: Boolean, employeeId: String });
 const { store, loadEmployee, roleName, gradeName } = useCareer();
@@ -19,59 +20,68 @@ watch(
   >
     <div v-if="store.profile">
       <CqHeading
-        :title="hr ? store.profile.fullName : 'Мой профиль и навыки'"
-        subtitle="Актуальные навыки, карьерная цель и история развития."
+        :title="t(hr ? store.profile.fullName : 'Мой профиль и навыки')"
+        :subtitle="t('Актуальные навыки, карьерная цель и история развития.')"
         ><NuxtLink :to="hr ? '/hr-people' : '/path'" class="btn secondary"
-          >{{ hr ? "К списку сотрудников" : "Карьерная траектория" }}
+          >{{ t(hr ? "К списку сотрудников" : "Карьерная траектория") }}
           <CqIcon name="arrow" /></NuxtLink
       ></CqHeading>
       <div class="grid aside-main">
         <div class="stack">
           <section class="panel profile-info">
-            <div class="avatar big">{{ initials(store.profile) }}</div>
-            <h2>{{ store.profile.fullName }}</h2>
-            <p class="role">{{ roleName(store.profile.roleId) }}</p>
+            <div class="avatar big">{{ t(initials(store.profile)) }}</div>
+            <h2>{{ t(store.profile.fullName) }}</h2>
+            <p class="role">{{ t(roleName(store.profile.roleId)) }}</p>
             <div class="tags">
-              <CqTag color="green">{{ gradeName(store.profile.gradeId) }}</CqTag
-              ><CqTag color="outline">{{ store.profile.id }}</CqTag>
+              <CqTag color="green">{{
+                t(gradeName(store.profile.gradeId))
+              }}</CqTag
+              ><CqTag color="outline">{{ t(store.profile.id) }}</CqTag>
             </div>
             <dl class="details-list">
               <div>
-                <dt>Стаж</dt>
-                <dd>{{ store.profile.tenureMonths }} мес.</dd>
+                <dt>{{ t("Стаж") }}</dt>
+                <dd>
+                  {{ unit(store.profile.tenureMonths, "month") }}
+                </dd>
               </div>
               <div>
-                <dt>Формат работы</dt>
+                <dt>{{ t("Формат работы") }}</dt>
                 <dd>
                   {{
-                    { office: "Офис", hybrid: "Гибрид", remote: "Удалённо" }[
-                      store.profile.workFormat
-                    ] || store.profile.workFormat
+                    t(
+                      { office: "Офис", hybrid: "Гибрид", remote: "Удалённо" }[
+                        store.profile.workFormat
+                      ] || store.profile.workFormat,
+                    )
                   }}
                 </dd>
               </div>
               <div>
-                <dt>Оценка навыков</dt>
-                <dd>{{ date(store.profile.lastReviewDate) }}</dd>
+                <dt>{{ t("Оценка навыков") }}</dt>
+                <dd>{{ t(date(store.profile.lastReviewDate)) }}</dd>
               </div>
               <div>
-                <dt>Подразделение</dt>
-                <dd>{{ store.profile.department }}</dd>
+                <dt>{{ t("Подразделение") }}</dt>
+                <dd>{{ t(store.profile.department) }}</dd>
               </div>
               <div>
-                <dt>Руководитель (ID)</dt>
-                <dd>{{ store.profile.managerId || "Не назначен" }}</dd>
+                <dt>{{ t("Руководитель (ID)") }}</dt>
+                <dd>{{ t(store.profile.managerId || "Не назначен") }}</dd>
               </div>
             </dl>
           </section>
-          <CqNotice
-            >Уровни навыков учитывают сохранённые завершения. Автоматического
-            повышения грейда нет.</CqNotice
-          >
+          <CqNotice>{{
+            t(
+              "Уровни навыков учитывают сохранённые завершения. Автоматического повышения грейда нет.",
+            )
+          }}</CqNotice>
           <section class="panel">
-            <div class="section-kicker">Соответствие следующему грейду</div>
+            <div class="section-kicker">
+              {{ t("Соответствие следующему грейду") }}
+            </div>
             <div class="big-progress">
-              {{ percent(store.trajectory.readinessPercent) }}
+              {{ t(percent(store.trajectory.readinessPercent)) }}
             </div>
           </section>
         </div>
@@ -79,7 +89,11 @@ watch(
           <section class="panel">
             <div class="panel-head">
               <h2>
-                Навыки для грейда {{ gradeName(store.trajectory.nextGradeId) }}
+                {{
+                  t("Навыки для грейда {p0}", {
+                    p0: gradeName(store.trajectory.nextGradeId),
+                  })
+                }}
               </h2>
             </div>
             <CqSkill
@@ -88,30 +102,36 @@ watch(
               :gap="gap"
             />
             <p v-if="!store.trajectory.gaps.length" class="empty-inline">
-              Требования для следующего грейда не заданы.
+              {{ t("Требования для следующего грейда не заданы.") }}
             </p>
           </section>
           <section class="panel">
-            <h2>Карьерная цель</h2>
+            <h2>{{ t("Карьерная цель") }}</h2>
             <p class="section">
               {{
-                store.profile.careerGoal
-                  ? store.profile.careerGoal.target_role +
-                    " · " +
-                    store.profile.careerGoal.target_grade
-                  : "Цель не указана"
+                t(
+                  store.profile.careerGoal
+                    ? roleName(store.profile.careerGoal.target_role) +
+                        " · " +
+                        gradeName(store.profile.careerGoal.target_grade)
+                    : "Цель не указана",
+                )
               }}
             </p>
             <p class="small muted">
-              Траектория API рассчитывается для следующего грейда текущей роли.
+              {{
+                t(
+                  "Траектория API рассчитывается для следующего грейда текущей роли.",
+                )
+              }}
             </p>
           </section>
           <section class="panel">
             <div class="panel-head">
-              <h2>История участия</h2>
-              <NuxtLink v-if="!hr" to="/activities" class="inline-link"
-                >Все записи</NuxtLink
-              >
+              <h2>{{ t("История участия") }}</h2>
+              <NuxtLink v-if="!hr" to="/activities" class="inline-link">{{
+                t("Все записи")
+              }}</NuxtLink>
             </div>
             <CqRecent
               :history="store.history"

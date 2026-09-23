@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLocale();
 defineProps({
   label: String,
   value: [String, Number],
@@ -9,8 +10,8 @@ defineProps({
 <template>
   <div class="metric">
     <div class="metric-icon"><CqIcon :name="icon" /></div>
-    <div class="label">{{ label }}</div>
-    <div class="value">{{ value }}</div>
-    <div class="caption">{{ caption }}</div>
+    <div class="label">{{ t(label) }}</div>
+    <div class="value">{{ t(value) }}</div>
+    <div class="caption">{{ t(caption) }}</div>
   </div>
 </template>

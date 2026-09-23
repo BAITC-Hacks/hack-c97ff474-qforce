@@ -1,3 +1,4 @@
+import { catalogText, uiError } from "../utils/i18n.js";
 import { reactive } from "vue";
 import { session, clearSession, onSessionChange } from "../utils/session.js";
 import { ApiError } from "../utils/api-client.js";
@@ -105,7 +106,7 @@ export function useCareer() {
         grades: grades.data,
       });
     } catch (error) {
-      if (version === loadVersion) store.error = error.message;
+      if (version === loadVersion) store.error = uiError(error);
     } finally {
       if (version === loadVersion) store.loading = false;
     }
@@ -146,11 +147,29 @@ export function useCareer() {
     generateRecommendations,
     logout,
     notify,
-    skillName: (id) => store.skills.find((s) => s.id === id)?.name ?? id,
-    roleName: (id) => store.roles.find((r) => r.id === id)?.name ?? id,
+    skillName: (id) =>
+      catalogText(
+        store.skills.find((s) => s.id === id),
+        "name",
+        id,
+      ),
+    roleName: (id) =>
+      catalogText(
+        store.roles.find((r) => r.id === id),
+        "name",
+        id,
+      ),
     gradeName: (id) =>
-      store.grades.find((g) => g.id === id)?.name ?? id ?? "Не определён",
+      catalogText(
+        store.grades.find((g) => g.id === id),
+        "name",
+        id ?? "Не определён",
+      ),
     activityName: (id) =>
-      store.activities.find((a) => a.id === id)?.title ?? id,
+      catalogText(
+        store.activities.find((a) => a.id === id),
+        "title",
+        id,
+      ),
   };
 }

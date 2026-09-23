@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLocale();
 const props = defineProps({ kind: String });
 const options = {
   error: {
@@ -42,28 +43,30 @@ const config = computed(() => options[props.kind] || options["not-found"]);
 <template>
   <div>
     <CqHeading
-      :title="config.title"
+      :title="t(config.title)"
       :subtitle="
-        kind === 'not-found'
-          ? 'Проверьте адрес страницы.'
-          : 'Вернитесь к доступному разделу.'
+        t(
+          kind === 'not-found'
+            ? 'Проверьте адрес страницы.'
+            : 'Вернитесь к доступному разделу.',
+        )
       "
     />
     <div v-if="config.note" class="test-state">
-      {{ config.note }}
+      {{ t(config.note) }}
     </div>
     <section class="panel state-panel">
       <div class="state-icon"><CqIcon :name="config.icon" /></div>
-      <h2>{{ config.title }}</h2>
-      <p>{{ config.description }}</p>
+      <h2>{{ t(config.title) }}</h2>
+      <p>{{ t(config.description) }}</p>
       <div class="actions">
         <NuxtLink :to="config.to" class="btn"
-          >{{ config.button }} <CqIcon name="arrow" /></NuxtLink
+          >{{ t(config.button) }} <CqIcon name="arrow" /></NuxtLink
         ><NuxtLink
           :to="kind === 'no-recommendations' ? '/catalog' : '/profile'"
           class="btn secondary"
           >{{
-            kind === "no-recommendations" ? "Открыть каталог" : "К профилю"
+            t(kind === "no-recommendations" ? "Открыть каталог" : "К профилю")
           }}
           <CqIcon name="arrow"
         /></NuxtLink>
@@ -88,8 +91,8 @@ const config = computed(() => options[props.kind] || options["not-found"]);
         :key="title"
         class="panel"
       >
-        <h3>{{ title }}</h3>
-        <p class="small muted section">{{ desc }}</p>
+        <h3>{{ t(title) }}</h3>
+        <p class="small muted section">{{ t(desc) }}</p>
       </section>
     </div>
   </div>

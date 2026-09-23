@@ -1,3 +1,4 @@
+import { uiError } from "../utils/i18n.js";
 import { ApiError, createApiClient } from "../utils/api-client.js";
 import { session, clearSession, saveToken } from "../utils/session.js";
 let initialization;
@@ -41,7 +42,7 @@ export function useApi() {
         session.initialized = true;
         session.error = "";
       } catch (error) {
-        if (version === session.version) session.error = error.message;
+        if (version === session.version) session.error = uiError(error);
       } finally {
         if (initialization === entry) initialization = undefined;
       }

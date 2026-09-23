@@ -1,4 +1,5 @@
 <script setup>
+const { t, message, uiError, catalogText, unit } = useLocale();
 import { date, formats, reasonLabel } from "../utils/labels.js";
 const route = useRoute(),
   { request } = useApi();
@@ -66,7 +67,7 @@ async function load() {
       ) || "";
     if (store.error) error.value = store.error;
   } catch (e) {
-    if (current === version) error.value = e.message;
+    if (current === version) error.value = uiError(e);
   } finally {
     if (current === version) loading.value = false;
   }
@@ -91,11 +92,13 @@ async function enroll() {
     );
     await loadEmployee();
     if (store.error)
-      actionError.value =
-        "Запись сохранена, но обновить профиль не удалось: " + store.error;
+      actionError.value = message(
+        "Запись сохранена, но обновить профиль не удалось: {error}",
+        { error: store.error },
+      );
     else await navigateTo("/activities");
   } catch (e) {
-    actionError.value = e.message;
+    actionError.value = uiError(e);
   } finally {
     busy.value = false;
   }
@@ -104,122 +107,146 @@ async function enroll() {
 <template>
   <CqAsync :loading="loading" :error="error" @retry="load"
     ><div v-if="activity">
-      <CqHeading :title="activity.title" :subtitle="activity.id"
+      <CqHeading
+        :title="catalogText(activity, 'title')"
+        :subtitle="t(activity.id)"
         ><NuxtLink to="/catalog" class="btn secondary"
-          >К каталогу <CqIcon name="back" /></NuxtLink
+          >{{ t("К каталогу") }}<CqIcon name="back" /></NuxtLink
       ></CqHeading>
       <div class="grid main-aside">
         <div class="stack">
           <section class="panel">
             <div class="event-cover">
               <div>
-                <div class="eyebrow text-primary">Развивающая активность</div>
-                <h2 class="my-2.5">От обучения —<br />к конкретному навыку</h2>
+                <div class="eyebrow text-primary">
+                  {{ t("Развивающая активность") }}
+                </div>
+                <h2 class="my-2.5">
+                  {{ t("От обучения —") }}<br />{{ t("к конкретному навыку") }}
+                </h2>
                 <div class="tags">
-                  <CqTag color="green">{{ formats[activity.format] }}</CqTag
-                  ><CqTag color="outline">{{ activity.type }}</CqTag>
+                  <CqTag color="green">{{ t(formats[activity.format]) }}</CqTag
+                  ><CqTag color="outline">{{ t(activity.type) }}</CqTag>
                 </div>
               </div>
               <div class="cover-icon"><CqIcon name="layers" /></div>
             </div>
-            <h2>Об активности</h2>
-            <p class="small muted section">{{ activity.description }}</p>
+            <h2>{{ t("Об активности") }}</h2>
+            <p class="small muted section">
+              {{ catalogText(activity, "description") }}
+            </p>
             <div class="event-facts">
               <div>
-                <small>Трудозатраты</small
-                ><strong>{{ activity.durationHours }} часов</strong>
-              </div>
-              <div>
-                <small>Формат</small
-                ><strong>{{ formats[activity.format] }}</strong>
-              </div>
-              <div>
-                <small>Начало</small
+                <small>{{ t("Трудозатраты") }}</small
                 ><strong>{{
-                  activity.format === "self_paced"
-                    ? "В своём темпе"
-                    : date(sessionDate)
+                  unit(activity.durationHours, "hour", "long")
+                }}</strong>
+              </div>
+              <div>
+                <small>{{ t("Формат") }}</small
+                ><strong>{{ t(formats[activity.format]) }}</strong>
+              </div>
+              <div>
+                <small>{{ t("Начало") }}</small
+                ><strong>{{
+                  t(
+                    activity.format === "self_paced"
+                      ? "В своём темпе"
+                      : date(sessionDate),
+                  )
                 }}</strong>
               </div>
             </div>
-            <h3>Навыки и правила активности</h3>
+            <h3>{{ t("Навыки и правила активности") }}</h3>
             <div
               v-for="effect in activity.effects"
               :key="effect.skillId"
               class="line-item"
             >
               <div>
-                <strong>{{ skillName(effect.skillId) }}</strong>
+                <strong>{{ t(skillName(effect.skillId)) }}</strong>
                 <div class="small muted">
-                  Прирост по правилу: {{ effect.gain }} · потолок:
-                  {{ effect.maxLevel }}
+                  {{
+                    t("Прирост по правилу: {p0} · потолок: {p1}", {
+                      p0: effect.gain,
+                      p1: effect.maxLevel,
+                    })
+                  }}
                 </div>
               </div>
             </div>
             <p v-if="!activity.effects.length" class="empty-inline">
-              Изменение навыков для активности не задано.
+              {{ t("Изменение навыков для активности не задано.") }}
             </p>
             <div
               v-for="change in eligibility?.expectedSkillChanges || []"
               :key="change.skillId"
               class="line-item"
             >
-              <span>{{ skillName(change.skillId) }}</span
+              <span>{{ t(skillName(change.skillId)) }}</span
               ><CqTag color="green"
-                >{{ change.before }} → {{ change.after }} (+{{
-                  change.actualGain
+                >{{ t(change.before) }} → {{ t(change.after) }} (+{{
+                  t(change.actualGain)
                 }})</CqTag
               >
             </div>
-            <CqNotice
-              >Фактическое изменение навыков сохраняется после завершения и
-              учитывает ваш текущий уровень.</CqNotice
-            >
+            <CqNotice>{{
+              t(
+                "Фактическое изменение навыков сохраняется после завершения и учитывает ваш текущий уровень.",
+              )
+            }}</CqNotice>
           </section>
-        <section v-if="recommendation" class="panel">
-          <h2>Почему этот шаг?</h2>
-          <CqNotice v-if="store.recommendations?.stale" color="gold">
-            Это объяснение из предыдущего подбора. Обновите рекомендации с учётом текущего профиля.
-          </CqNotice>
-          <CqEvidence :rec="recommendation" />
+          <section v-if="recommendation" class="panel">
+            <h2>{{ t("Почему этот шаг?") }}</h2>
+            <CqNotice v-if="store.recommendations?.stale" color="gold">{{
+              t(
+                "Это объяснение из предыдущего подбора. Обновите рекомендации с учётом текущего профиля.",
+              )
+            }}</CqNotice>
+            <CqEvidence :rec="recommendation" />
           </section>
         </div>
         <div class="stack">
           <section class="panel">
             <h2>
               {{
-                activity.mandatory
-                  ? "Обязательное обучение"
-                  : "Участие в активности"
+                t(
+                  activity.mandatory
+                    ? "Обязательное обучение"
+                    : "Участие в активности",
+                )
               }}
             </h2>
             <div v-if="activity.format !== 'self_paced'" class="field">
-              <label for="sessionDate">Дата сессии</label
+              <label for="sessionDate">{{ t("Дата сессии") }}</label
               ><select
                 id="sessionDate"
                 v-model="sessionDate"
                 class="select"
                 :disabled="busy"
               >
-                <option value="" disabled>Нет доступной сессии</option>
+                <option value="" disabled>
+                  {{ t("Нет доступной сессии") }}
+                </option>
                 <option v-for="value in sessions" :key="value" :value="value">
-                  {{ date(value) }}
+                  {{ t(date(value)) }}
                 </option>
               </select>
             </div>
-            <CqNotice v-if="excluded.length" color="gold"
-              >Не включена в рекомендации:
-              {{ excluded.map(reasonLabel).join(" · ") }}. Возможность записи
-              дополнительно проверяется при отправке.</CqNotice
-            >
+            <CqNotice v-if="excluded.length" color="gold">{{
+              t(
+                "Не включена в рекомендации: {p0}. Возможность записи дополнительно проверяется при отправке.",
+                { p0: excluded.map(reasonLabel).join(" · ") },
+              )
+            }}</CqNotice>
             <CqNotice v-if="actionError" color="red" role="alert">{{
-              actionError
+              t(actionError)
             }}</CqNotice>
             <NuxtLink
               v-if="participation"
               to="/activities"
               class="btn wide section"
-              >Открыть моё участие</NuxtLink
+              >{{ t("Открыть моё участие") }}</NuxtLink
             >
             <button
               v-else
@@ -231,23 +258,24 @@ async function enroll() {
               "
               @click="enroll"
             >
-              {{ busy ? "Сохраняем…" : "Записаться" }} <CqIcon name="check" />
+              {{ t(busy ? "Сохраняем…" : "Записаться") }}
+              <CqIcon name="check" />
             </button>
           </section>
           <section class="panel">
-            <h3>Входные требования</h3>
+            <h3>{{ t("Входные требования") }}</h3>
             <p
               v-for="(level, skill) in activity.prerequisites"
               :key="skill"
               class="small section"
             >
-              {{ skillName(skill) }}: {{ level }}
+              {{ t(skillName(skill)) }}: {{ t(level) }}
             </p>
             <p
               v-if="!Object.keys(activity.prerequisites).length"
               class="small muted section"
             >
-              Требования к навыкам не заданы.
+              {{ t("Требования к навыкам не заданы.") }}
             </p>
           </section>
         </div>

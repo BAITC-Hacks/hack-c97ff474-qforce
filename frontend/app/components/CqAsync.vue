@@ -1,5 +1,6 @@
 <script setup>
-defineProps({ loading: Boolean, error: String, empty: Boolean });
+const { t } = useLocale();
+defineProps({ loading: Boolean, error: [String, Object], empty: Boolean });
 defineEmits(["retry"]);
 </script>
 <template>
@@ -9,16 +10,16 @@ defineEmits(["retry"]);
     role="status"
     aria-live="polite"
   >
-    Загружаем данные…
+    {{ t("Загружаем данные…") }}
   </section>
   <section v-else-if="error" class="panel" role="alert">
-    <CqNotice color="red">{{ error }}</CqNotice>
+    <CqNotice color="red">{{ t(error) }}</CqNotice>
     <button class="btn secondary section" @click="$emit('retry')">
-      Повторить запрос <CqIcon name="refresh" />
+      {{ t("Повторить запрос") }}<CqIcon name="refresh" />
     </button>
   </section>
   <section v-else-if="empty" class="panel empty-inline">
-    Данных пока нет.
+    {{ t("Данных пока нет.") }}
   </section>
   <slot v-else />
 </template>
