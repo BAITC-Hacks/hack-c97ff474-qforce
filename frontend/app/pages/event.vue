@@ -99,7 +99,7 @@ async function enroll() {
         },
       },
     );
-    await loadEmployee();
+    await loadEmployee(undefined, { waitForOptional: false });
     if (store.error)
       actionError.value =
         message("Запись сохранена, но обновить профиль не удалось: {p0}", { p0: store.error });

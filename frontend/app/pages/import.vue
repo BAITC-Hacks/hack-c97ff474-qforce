@@ -12,6 +12,7 @@ const dragging = ref(false),
   error = ref(""),
   reportWarning = ref("");
 const validated = ref(false);
+const juryMode = ref(false), namespace = ref("");
 const fieldNames = {
   "skills.json": "skills",
   "employees.json": "employees",
@@ -36,6 +37,7 @@ function choose(list) {
   error.value = "";
   reportWarning.value = "";
   validated.value = false;
+  namespace.value = juryMode.value ? globalThis.crypto.randomUUID() : "";
   const names = new Set();
   for (const file of files.value) {
     if (!Object.hasOwn(fieldNames, file.name)) {
@@ -93,6 +95,7 @@ async function run(apply = false) {
     const response = await request(apply ? "/imports" : "/imports/dry-run", {
       method: "POST",
       body: body(),
+      query: juryMode.value ? {mode:"jury",namespace:namespace.value,...(apply ? {validatedRunId:result.value.id} : {})} : {mode:"normal"},
     });
     result.value = response.data;
     validated.value =
@@ -134,6 +137,7 @@ async function loadSaved() {
   }
 }
 onMounted(loadSaved);
+watch(juryMode, () => choose(files.value));
 </script>
 <template>
   <div>
@@ -152,6 +156,11 @@ onMounted(loadSaved);
             <h2>{{ t("Добавить данные") }}</h2>
             <CqTag color="outline">JSON + CSV</CqTag>
           </div>
+          <label class="section actions">
+            <input v-model="juryMode" type="checkbox" :disabled="busy || loading" />
+            <strong>{{ t("Проверочный пакет жюри: создать отдельные копии профилей") }}</strong>
+          </label>
+          <CqNotice v-if="juryMode" color="gold" class="section">{{ t("Загрузите employees.json и историю этих профилей. Исходные ID сохранятся в отчёте, копии получат новые ID. Каталог и исходные сотрудники не изменятся. Короткий профиль из ТЗ поддерживается; перед применением проверьте допущения ниже.") }}</CqNotice>
           <div
             class="file-drop"
             :class="{ dragging: dragging && !busy && !loading }"
@@ -226,6 +235,20 @@ onMounted(loadSaved);
               )
             }}
           </p>
+          <section v-if="result?.report?.jury" class="section">
+            <h3>{{ t("Проверочные профили и принятые допущения") }}</h3>
+            <CqNotice v-if="result.report.jury.assumptions.length" color="gold">{{ t("Пропущенные поля не являются установленными фактами. Указанная дата оценки означает текущий снимок навыков; история до неё не начисляет рост. Для точного расчёта загрузите полный профиль.") }}</CqNotice>
+            <div v-for="(assumption,index) in result.report.jury.assumptions" :key="index" class="file-row">
+              <div><strong>{{ assumption.employeeId }} · {{ assumption.field }}</strong><div>{{ String(assumption.value ?? '—') }}</div><div class="small muted">{{ t(assumption.reason) }}</div></div>
+            </div>
+            <div v-for="employee in result.report.jury.employees" :key="employee.importedId" class="section">
+              <div class="small" style="overflow-wrap:anywhere">{{ employee.originalId }} → {{ employee.importedId }}</div>
+              <template v-if="result.status === 'APPLIED'">
+                <NuxtLink :to="{path:'/hr-employee',query:{id:employee.importedId}}" class="btn secondary section">{{ t("Открыть профиль и рекомендации") }}<CqIcon name="arrow" /></NuxtLink>
+                <CqEmployeeAccount :employee-id="employee.importedId" />
+              </template>
+            </div>
+          </section>
           <div v-if="loading" class="empty-inline" role="status">
             {{ t("Получаем сохранённый отчёт…") }}
           </div>

@@ -19,7 +19,7 @@ export function overlappingEffectsContext(): DevelopmentContext {
   context.activities[1].effects = [{skillId: 'SYSTEM_DESIGN', gain: 1, maxLevel: 4}, {skillId: 'PUBLIC_SPEAKING', gain: 1, maxLevel: 1}];
   return context;
 }
-export interface EvaluationFixture { id: string; description: string; context: DevelopmentContext; expectedFirst: string | null; acceptableFirst?: string[] }
+export interface EvaluationFixture { id: string; description: string; context: DevelopmentContext; expectedFirst: string | null; acceptableFirst?: string[]; acceptableFirstByBudget?: Record<number, string[]> }
 export function recommendationFixtures(): EvaluationFixture[] {
   const skipped = syntheticContext(); skipped.history = [0, 1, 2].map(i => history('SPEAKING', 'NO_SHOW', i));
   const capped = syntheticContext(); capped.activities = [activity('WRONG_AUDIENCE', 'SYSTEM_DESIGN', 'self_paced', {roleIds: ['SYNTH_OTHER']}), activity('CAPPED', 'SYSTEM_DESIGN', 'online', {effects: [{skillId: 'SYSTEM_DESIGN', gain: 3, maxLevel: 2}]}), activity('VALID_DESIGN', 'SYSTEM_DESIGN', 'self_paced')];
@@ -46,5 +46,36 @@ export function recommendationFixtures(): EvaluationFixture[] {
     {id: 'unrelated-topic-not-preference', description: 'Speaking declines must not penalize design in the same format', context: unrelated, expectedFirst: 'DESIGN_COURSE', acceptableFirst: ['DESIGN_COURSE', 'DESIGN_LAB']},
     {id: 'recent-experience-matters', description: 'Recent success and old drops outweigh old success and recent drops', context: recent, expectedFirst: 'DESIGN_LAB'},
     {id: 'sequential-mixed-effects', description: 'A later mixed activity must not explain growth in an already capped skill', context: overlappingEffectsContext(), expectedFirst: 'DESIGN_COURSE'},
+  ];
+}
+
+/** Audit counterexamples retained separately from the original preference set. */
+export function sequenceFixtures(): EvaluationFixture[] {
+  const cap = syntheticContext(); cap.levels.SYSTEM_DESIGN = 1; cap.requirements = [{skillId: 'SYSTEM_DESIGN', requiredLevel: 4, critical: true}];
+  cap.activities = [activity('FOUNDATION', 'SYSTEM_DESIGN', 'self_paced', {repeatable: false, effects: [{skillId: 'SYSTEM_DESIGN', gain: 1, maxLevel: 2}]}), activity('ADVANCED', 'SYSTEM_DESIGN', 'self_paced', {repeatable: false, effects: [{skillId: 'SYSTEM_DESIGN', gain: 2, maxLevel: 4}]})];
+  const prerequisite = structuredClone(cap);
+  prerequisite.levels.FOUNDATIONS = 0;
+  prerequisite.skills.push({id: 'FOUNDATIONS', name: 'Foundations', type: 'hard', category: 'Engineering', description: 'Synthetic prerequisite skill'});
+  prerequisite.activities[0].effects = [{skillId: 'FOUNDATIONS', gain: 1, maxLevel: 1}];
+  prerequisite.activities[1].effects = [{skillId: 'SYSTEM_DESIGN', gain: 3, maxLevel: 4}];
+  prerequisite.activities[1].prerequisites = {FOUNDATIONS: 1};
+  const reversedDates = structuredClone(prerequisite);
+  reversedDates.activities[0].format = 'online'; reversedDates.activities[0].upcomingSessions = ['2025-06-10'];
+  reversedDates.activities[1].format = 'online'; reversedDates.activities[1].upcomingSessions = ['2025-06-05'];
+  reversedDates.activities.push(activity('AVAILABLE_STEP', 'SYSTEM_DESIGN', 'self_paced'));
+  const futureDates = structuredClone(reversedDates); futureDates.activities[1].upcomingSessions.push('2025-06-12');
+  const beyondTen = structuredClone(cap);
+  beyondTen.activities = Array.from({length: 10}, (_, index) => activity(`DECOY_${index}`, 'SYSTEM_DESIGN', 'self_paced', {effects: [{skillId: 'SYSTEM_DESIGN', gain: 2, maxLevel: 3}]}));
+  beyondTen.activities.push(activity('Z_FINISH', 'SYSTEM_DESIGN', 'self_paced', {effects: [{skillId: 'SYSTEM_DESIGN', gain: 2, maxLevel: 4}]}));
+  const cost = structuredClone(cap); cost.activities = [activity('SHORT', 'SYSTEM_DESIGN', 'self_paced', {durationHours: 1}), activity('LONG', 'SYSTEM_DESIGN', 'self_paced', {durationHours: 20})];
+  const shuffled = structuredClone(cap); shuffled.activities.reverse();
+  return [
+    {id: 'cap-order-trap', description: 'A low-cap foundation before an advanced course closes the full gap', context: cap, expectedFirst: 'FOUNDATION', acceptableFirstByBudget: {1: ['ADVANCED'], 3: ['FOUNDATION']}},
+    {id: 'prerequisite-only-bridge', description: 'A prerequisite outside next-grade skills enables the advanced course', context: prerequisite, expectedFirst: 'FOUNDATION', acceptableFirstByBudget: {1: [''], 3: ['FOUNDATION']}},
+    {id: 'reverse-session-dates', description: 'Cannot learn the prerequisite after the only advanced session', context: reversedDates, expectedFirst: 'AVAILABLE_STEP'},
+    {id: 'later-session-unlocks-chain', description: 'A later advanced session makes the prerequisite chain feasible', context: futureDates, expectedFirst: 'FOUNDATION', acceptableFirstByBudget: {1: ['AVAILABLE_STEP'], 3: ['FOUNDATION', 'AVAILABLE_STEP']}},
+    {id: 'beyond-ten-candidates', description: 'A course beyond the old ten-item cutoff is needed to complete the gap', context: beyondTen, expectedFirst: 'Z_FINISH', acceptableFirst: [...beyondTen.activities.map(a => a.id)]},
+    {id: 'equal-gain-different-duration', description: 'Avoid a longer identical one-step course', context: cost, expectedFirst: 'SHORT'},
+    {id: 'catalogue-order-invariance', description: 'Reversing source order must not lose the cap-order solution', context: shuffled, expectedFirst: 'FOUNDATION', acceptableFirstByBudget: {1: ['ADVANCED'], 3: ['FOUNDATION']}},
   ];
 }

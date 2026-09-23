@@ -3,6 +3,7 @@ import { LocalLlmAdapter } from '../../src/modules/recommendations/infrastructur
 import { rankCandidates } from '../../src/modules/recommendations/domain/policies/ranking.policy';
 import { developmentPolicies } from '../../src/modules/recommendations/infrastructure/development-policies.adapter';
 import { syntheticContext } from '../evaluations/recommendation-fixtures';
+import { buildPlans } from '../../src/modules/recommendations/domain/policies/planner.policy';
 
 const input = {locale: 'en' as const, candidates: rankCandidates(syntheticContext(), developmentPolicies).candidates};
 describe('real HTTP adapter contracts with deterministic transports (not live AI)', () => {
@@ -22,6 +23,20 @@ describe('real HTTP adapter contracts with deterministic transports (not live AI
     const call = (http.mock.calls as unknown as [string, RequestInit][])[0];
     expect(call[1].body).not.toContain('Synthetic Example'); expect(call[1].redirect).toBe('error');
     expect(JSON.parse(String(call[1].body)).text.format.strict).toBe(true);
+  });
+  it('constrains v3 output to verified plan IDs and maps canonical evidence on the server', async () => {
+    const planning = buildPlans(syntheticContext(), developmentPolicies);
+    const http = jest.fn(async () => new Response(JSON.stringify({status: 'completed', output: [{type: 'message', content: [{type: 'output_text', text: JSON.stringify({planId: planning.best!.id})}]}]}), {status: 200}));
+    const adapter = new OpenAiAdapter({model: 'test', apiKey: 'synthetic', allowExternal: true}, http);
+    const result = await adapter.select({locale: 'en', candidates: planning.candidates, plans: planning.plans}, new AbortController().signal);
+    expect(result.recommendations.map(r => r.activityId)).toEqual(planning.best!.activityIds);
+    expect(result.recommendations.map(r => r.evidenceIds)).toEqual(planning.best!.stepEvidenceIds);
+    const call = (http.mock.calls as unknown as [string, RequestInit][])[0];
+    const body = JSON.parse(String(call[1].body));
+    expect(body.text.format.schema.properties.planId.enum).toContain(planning.best!.id);
+    expect(body.max_output_tokens).toBe(256);
+    expect(body.input).not.toContain('stepEvidenceIds');
+    expect(body.input).not.toContain('Synthetic Example');
   });
   it('rejects remote local endpoints without consent and verifies capabilities', async () => {
     const http = jest.fn(async () => new Response(JSON.stringify({protocol: 'unknown'}), {status: 200}));

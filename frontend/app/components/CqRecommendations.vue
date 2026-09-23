@@ -29,6 +29,7 @@ async function refresh() {
         <h3>{{ t(store.recommendations ? 'Подходящего шага пока нет' : 'Подбор ещё не выполнялся') }}</h3>
         <p class="small muted section">{{ t(store.recommendations ? ({ NO_ELIGIBLE_ACTIVITIES: 'Каталог не содержит подходящих активностей.', DATA_INCOMPLETE: 'Недостаточно данных о навыках.', NO_NEXT_GRADE: 'Следующий грейд не задан.' }[store.recommendations.status] || 'Список рекомендаций пуст.') : 'Нажмите «Подобрать заново», чтобы получить рекомендации.') }}</p>
         <NuxtLink v-if="!hr" to="/catalog" class="btn ghost">{{ t('Открыть каталог') }}</NuxtLink>
+        <CqRecovery v-if="store.recommendations && ['NO_ELIGIBLE_ACTIVITIES', 'DATA_INCOMPLETE'].includes(store.recommendations.status)" :hr="hr" />
       </section>
       <section v-if="store.recommendations?.diagnostics?.excluded?.length" class="panel section">
         <h3>{{ t('Почему не другие активности?') }}</h3>

@@ -96,6 +96,14 @@ test("employee language changes localize the UI while catalogs and recommendatio
     expect(displayedCount).toBeGreaterThan(0);
     await expect(page.locator(".rec-card")).toHaveCount(displayedCount);
     expect(generationRequests, "Changing language must not regenerate recommendations").toBe(generationCountBeforeSwitch);
+    if (selectedSet === null) {
+      const feedback = page.waitForResponse(response => response.url().endsWith('/feedback') && response.request().method() === 'POST');
+      await page.getByRole('button', { name: label('Полезно', locale), exact: true }).first().click();
+      expect((await feedback).ok()).toBeTruthy();
+      await expect(page.getByRole('button', { name: label('Полезно', locale), exact: true }).first()).toBeEnabled();
+      await expect(page.locator('.rec-card')).toHaveCount(displayedCount);
+      expect(generationRequests, 'Rating a fallback set must not trigger generation').toBe(generationCountBeforeSwitch);
+    }
 
     const catalog = page.waitForResponse((response) => {
       const url = new URL(response.url());

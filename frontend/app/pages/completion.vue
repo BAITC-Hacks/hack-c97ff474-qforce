@@ -29,6 +29,7 @@ const result = computed(() => {
         :subtitle="t('Сохранённый результат участия и изменение навыков.')"
       />
       <section v-if="record" class="panel">
+        <CqNotice v-if="record.source?.toLowerCase() === 'online'">{{ t('Выполнение отмечено вами. Показанный прирост рассчитан по правилам активности и не является независимой оценкой знаний.') }}</CqNotice>
         <div class="section-kicker">{{ t("Завершено") }}</div>
         <h2>{{ t(activityName(record.activityId)) }}</h2>
         <template v-if="result"

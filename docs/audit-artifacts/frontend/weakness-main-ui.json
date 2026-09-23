@@ -1,0 +1,120 @@
+{
+  "at": "2026-09-23T12:48:10.017Z",
+  "baseURL": "http://127.0.0.1:3000",
+  "readOnly": true,
+  "cache": "Authenticated full-document navigation. Request interception disables browser HTTP cache; three sequential samples against a warm server, excluding login.",
+  "errors": [],
+  "timings": [
+    {
+      "route": "/dashboard",
+      "ready": "Critical profile and trajectory rendered; saved latest recommendations (including fallback) and remaining optional reads completed; actual dashboard card count verified.",
+      "samples": [
+        {
+          "ms": 269,
+          "displayedCards": 1,
+          "savedCards": 2,
+          "recommendationStatus": "READY"
+        },
+        {
+          "ms": 297,
+          "displayedCards": 1,
+          "savedCards": 2,
+          "recommendationStatus": "READY"
+        },
+        {
+          "ms": 300,
+          "displayedCards": 1,
+          "savedCards": 2,
+          "recommendationStatus": "READY"
+        }
+      ],
+      "maxMs": 300,
+      "withinTwoSeconds": true
+    },
+    {
+      "route": "/hr-dashboard",
+      "ready": "All four actual HR API blocks completed successfully and displayed, including participation breakdown; loading/error states absent.",
+      "samples": [
+        {
+          "ms": 1635
+        },
+        {
+          "ms": 1212
+        },
+        {
+          "ms": 885
+        }
+      ],
+      "maxMs": 1635,
+      "withinTwoSeconds": true
+    },
+    {
+      "route": "/hr-employee?id=E0090",
+      "ready": "Critical profile and trajectory plus current saved recommendation cards rendered; all optional reads completed, no generation.",
+      "samples": [
+        {
+          "ms": 265,
+          "displayedCards": 3,
+          "savedCards": 3,
+          "recommendationStatus": "READY"
+        },
+        {
+          "ms": 264,
+          "displayedCards": 3,
+          "savedCards": 3,
+          "recommendationStatus": "READY"
+        },
+        {
+          "ms": 209,
+          "displayedCards": 3,
+          "savedCards": 3,
+          "recommendationStatus": "READY"
+        }
+      ],
+      "maxMs": 265,
+      "withinTwoSeconds": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "employee-dashboard-desktop",
+      "overflow": false
+    },
+    {
+      "name": "hr-dashboard-desktop",
+      "overflow": false
+    },
+    {
+      "name": "hr-E0090-desktop",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-ru-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-en-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-kk-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-de-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-zh-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-pt-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-requests-es-mobile",
+      "overflow": false
+    }
+  ]
+}

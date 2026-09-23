@@ -1,7 +1,7 @@
 import { DomainError } from '../../../../shared/domain/domain-error';
 import { LlmInput, LlmRecommendationPort, LlmSelection } from '../../application/ports/recommendation.ports';
 import { HttpTransport, LlmSettings } from './openai.adapter';
-import { parseSelection, responseJsonSchema } from './response.schema';
+import { parseSelection, providerInput, providerResponseSchema } from './response.schema';
 import { selectionInstructions } from './prompts/selection.prompt';
 import { readBoundedJson } from './http-json';
 import { z } from 'zod';
@@ -34,7 +34,7 @@ export class LocalLlmAdapter implements LlmRecommendationPort {
     if (!show.success || !show.data.capabilities.includes('completion')) throw new DomainError('LLM_UNSUPPORTED_PROTOCOL', 'Ollama model must expose completion capability and model metadata');
     if (!this.settings.allowExternal && (show.data.remote_host || show.data.remote_model || show.data.details?.format !== 'gguf' || Object.keys(show.data.model_info).length === 0 || !listed.size || listed.size <= 0)) throw new DomainError('LLM_LOCALITY_UNVERIFIED', 'Configured Ollama model must have local GGUF weights and no remote metadata');
     const response = await this.http(`${base}/api/chat`, {method: 'POST', signal, redirect: 'error', headers, body: JSON.stringify({model: this.model, stream: false,
-      messages: [{role: 'system', content: selectionInstructions}, {role: 'user', content: JSON.stringify(input)}], format: responseJsonSchema, options: {temperature: 0, num_predict: 1500}})});
+      messages: [{role: 'system', content: selectionInstructions}, {role: 'user', content: JSON.stringify(providerInput(input))}], format: providerResponseSchema(input), options: {temperature: 0, num_predict: input.plans ? 256 : 1500}})});
     if (!response.ok) throw new DomainError('LLM_PROVIDER_ERROR', `Local provider returned HTTP ${response.status}`);
     const chat = z.object({done: z.literal(true), done_reason: z.string().optional(), message: z.object({content: z.string()}), remote_host: z.string().optional(), remote_model: z.string().optional()}).safeParse(await readBoundedJson(response));
     if (!chat.success || chat.data.done_reason === 'length') throw new DomainError('LLM_INCOMPLETE', 'Ollama did not return a complete message');

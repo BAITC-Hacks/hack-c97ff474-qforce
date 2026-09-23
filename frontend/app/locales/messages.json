@@ -1,4 +1,5 @@
 {
+  "Логин": {"en":"Username","de":"Benutzername","zh":"用户名","kk":"Логин","pt":"Nome de utilizador","es":"Nombre de usuario"},
   "Запись сохранена, но обновить профиль не удалось: {p0}": {
     "en": "Registration was saved, but the profile could not be refreshed: {p0}",
     "de": "Die Anmeldung wurde gespeichert, aber das Profil konnte nicht aktualisiert werden: {p0}",
@@ -7254,5 +7255,501 @@
     "kk": "Тәжірибенің ықпалы әр {days} күн сайын екі есе азаяды.",
     "pt": "A influência da experiência reduz-se para metade a cada {days} dias.",
     "es": "La influencia de la experiencia se reduce a la mitad cada {days} días."
+  },
+  "Проверочный профиль содержит допущения импорта": {
+    "en": "The test profile includes import assumptions",
+    "de": "Das Testprofil enthält Importannahmen",
+    "zh": "测试资料包含导入假设",
+    "kk": "Тексеру профилінде импорт жорамалдары бар",
+    "pt": "O perfil de teste inclui pressupostos de importação",
+    "es": "El perfil de prueba incluye supuestos de importación"
+  },
+  "Значения ниже нужны для совместимости формата и не являются подтверждёнными фактами о сотруднике.": {
+    "en": "The values below ensure format compatibility and are not verified facts about the employee.",
+    "de": "Die folgenden Werte dienen der Formatkompatibilität und sind keine bestätigten Fakten über den Mitarbeiter.",
+    "zh": "以下值用于保持格式兼容，并非已核实的员工信息。",
+    "kk": "Төмендегі мәндер формат үйлесімділігі үшін қажет және қызметкер туралы расталған деректер емес.",
+    "pt": "Os valores abaixo asseguram a compatibilidade do formato e não são factos verificados sobre o colaborador.",
+    "es": "Los valores siguientes permiten la compatibilidad del formato y no son datos verificados del empleado."
+  },
+  "«Завершить» — ваша отметка о выполнении. Навыки обновляются по правилам активности; проверка знаний или подтверждение LMS здесь не выполняется.": {
+    "en": "Complete records your own confirmation. Skills update according to the activity rules; no knowledge assessment or LMS verification takes place here.",
+    "de": "Mit Abschließen bestätigen Sie die Durchführung selbst. Kompetenzen werden nach den Aktivitätsregeln aktualisiert; eine Wissensprüfung oder LMS-Bestätigung erfolgt hier nicht.",
+    "zh": "“完成”记录的是您本人的确认。技能按活动规则更新；此处不进行知识测评或 LMS 验证。",
+    "kk": "«Аяқтау» — орындалғанын өзіңіз белгілеу. Дағдылар іс-шара ережелері бойынша жаңартылады; мұнда білім тексерілмейді және LMS растауы алынбайды.",
+    "pt": "Concluir regista a sua própria confirmação. As competências são atualizadas segundo as regras da atividade; não há avaliação de conhecimentos nem verificação pelo LMS.",
+    "es": "Completar registra su propia confirmación. Las competencias se actualizan según las reglas de la actividad; aquí no se evalúan conocimientos ni se verifica el LMS."
+  },
+  "Выполнение отмечено вами. Показанный прирост рассчитан по правилам активности и не является независимой оценкой знаний.": {
+    "en": "You marked this activity as completed. The displayed gain follows the activity rules and is not an independent knowledge assessment.",
+    "de": "Sie haben die Aktivität als abgeschlossen markiert. Der angezeigte Zuwachs folgt den Aktivitätsregeln und ist keine unabhängige Wissensbewertung.",
+    "zh": "您已自行标记此活动完成。显示的提升根据活动规则计算，并非独立的知识测评。",
+    "kk": "Орындалғанын өзіңіз белгіледіңіз. Көрсетілген өсім іс-шара ережелері бойынша есептелген және білімнің тәуелсіз бағасы емес.",
+    "pt": "Marcou esta atividade como concluída. O ganho apresentado segue as regras da atividade e não é uma avaliação independente de conhecimentos.",
+    "es": "Ha marcado esta actividad como completada. La mejora mostrada se calcula según sus reglas y no constituye una evaluación independiente de conocimientos."
+  },
+  "Нет записей необязательного обучения за период": {
+    "en": "No nonmandatory learning records in this period",
+    "de": "Keine Einträge zu nicht verpflichtendem Lernen in diesem Zeitraum",
+    "zh": "此期间无非必修学习记录",
+    "kk": "Кезеңде міндетті емес оқу жазбалары жоқ",
+    "pt": "Sem registos de aprendizagem não obrigatória neste período",
+    "es": "No hay registros de formación no obligatoria en este período"
+  },
+  "Необязательное обучение": {
+    "en": "Nonmandatory learning",
+    "de": "Nicht verpflichtendes Lernen",
+    "zh": "非必修学习",
+    "kk": "Міндетті емес оқу",
+    "pt": "Aprendizagem não obrigatória",
+    "es": "Formación no obligatoria"
+  },
+  "Уникальных участников: {count}": {
+    "en": "Unique participants: {count}",
+    "de": "Einzelne Teilnehmende: {count}",
+    "zh": "参与人数：{count}",
+    "kk": "Бірегей қатысушылар: {count}",
+    "pt": "Participantes únicos: {count}",
+    "es": "Participantes únicos: {count}"
+  },
+  "Разрез задан признаком обязательности активности. Необязательная активность могла быть назначена руководителем; эти числа не доказывают добровольный выбор или мотивацию.": {
+    "en": "This breakdown uses the activity's mandatory flag. A manager may have assigned a nonmandatory activity; these counts do not establish voluntary choice or motivation.",
+    "de": "Die Aufteilung richtet sich nach der Pflichtkennzeichnung der Aktivität. Auch eine nicht verpflichtende Aktivität kann zugewiesen worden sein; die Zahlen belegen weder freiwillige Wahl noch Motivation.",
+    "zh": "此分类依据活动的必修标记。非必修活动也可能由主管分配；这些数据不能证明自主选择或学习动机。",
+    "kk": "Бөлу іс-шараның міндеттілік белгісіне негізделген. Міндетті емес іс-шараны да басшы тағайындауы мүмкін; бұл сандар ерікті таңдауды немесе ынтаны дәлелдемейді.",
+    "pt": "A divisão usa o indicador de obrigatoriedade da atividade. Uma atividade não obrigatória pode ter sido atribuída pela chefia; os números não demonstram escolha voluntária nem motivação.",
+    "es": "El desglose usa el indicador de obligatoriedad. Una actividad no obligatoria puede haber sido asignada por un responsable; estas cifras no prueban elección voluntaria ni motivación."
+  },
+  "Записи без доступного типа активности: {count}. Они включены только в общий итог.": {
+    "en": "Records without an available activity type: {count}. They are included only in the overall total.",
+    "de": "Einträge ohne verfügbaren Aktivitätstyp: {count}. Sie sind nur in der Gesamtsumme enthalten.",
+    "zh": "无可用活动类型的记录：{count}。它们仅计入总数。",
+    "kk": "Іс-шара түрі қолжетімсіз жазбалар: {count}. Олар тек жалпы қорытындыға енгізілген.",
+    "pt": "Registos sem tipo de atividade disponível: {count}. São incluídos apenas no total geral.",
+    "es": "Registros sin tipo de actividad disponible: {count}. Se incluyen solo en el total general."
+  },
+  "Необязательных: {voluntary}; обязательных: {mandatory}.": {
+    "en": "Nonmandatory: {voluntary}; mandatory: {mandatory}.",
+    "de": "Nicht verpflichtend: {voluntary}; verpflichtend: {mandatory}.",
+    "zh": "非必修：{voluntary}；必修：{mandatory}。",
+    "kk": "Міндетті емес: {voluntary}; міндетті: {mandatory}.",
+    "pt": "Não obrigatórias: {voluntary}; obrigatórias: {mandatory}.",
+    "es": "No obligatorias: {voluntary}; obligatorias: {mandatory}."
+  },
+  "Если каталог исчерпан, можно запросить помощь HR. Заявка не начисляет навыки и не заменяет обучение.": {
+    "en": "If the catalog has no suitable options left, you can ask HR for help. A request does not award skills or replace learning.",
+    "de": "Wenn der Katalog keine passenden Möglichkeiten mehr bietet, können Sie HR um Hilfe bitten. Eine Anfrage vergibt keine Kompetenzen und ersetzt kein Lernen.",
+    "zh": "如果目录中已无合适选项，可以向 HR 寻求帮助。提交申请不会增加技能，也不能替代学习。",
+    "kk": "Каталогта лайықты мүмкіндік қалмаса, HR көмегін сұрай аласыз. Өтінім дағдыларды арттырмайды және оқуды алмастырмайды.",
+    "pt": "Se não restarem opções adequadas no catálogo, pode pedir ajuda aos RH. O pedido não atribui competências nem substitui a aprendizagem.",
+    "es": "Si el catálogo ya no ofrece opciones adecuadas, puede pedir ayuda a RR. HH. La solicitud no otorga competencias ni sustituye la formación."
+  },
+  "Уже начатое обучение": {
+    "en": "Learning already in progress",
+    "de": "Bereits begonnenes Lernen",
+    "zh": "已开始的学习",
+    "kk": "Басталған оқу",
+    "pt": "Aprendizagem já iniciada",
+    "es": "Formación ya iniciada"
+  },
+  "Продолжить обучение": {
+    "en": "Continue learning",
+    "de": "Lernen fortsetzen",
+    "zh": "继续学习",
+    "kk": "Оқуды жалғастыру",
+    "pt": "Continuar a aprendizagem",
+    "es": "Continuar la formación"
+  },
+  "Заявка сохранена в очереди HR.": {
+    "en": "Your request has been saved in the HR queue.",
+    "de": "Ihre Anfrage wurde in der HR-Warteschlange gespeichert.",
+    "zh": "您的申请已保存到 HR 队列。",
+    "kk": "Өтінім HR кезегінде сақталды.",
+    "pt": "O pedido foi guardado na fila dos RH.",
+    "es": "La solicitud se ha guardado en la cola de RR. HH."
+  },
+  "Ответ HR": {
+    "en": "HR response",
+    "de": "Antwort von HR",
+    "zh": "HR 回复",
+    "kk": "HR жауабы",
+    "pt": "Resposta dos RH",
+    "es": "Respuesta de RR. HH."
+  },
+  "Запросить помощь HR": {
+    "en": "Ask HR for help",
+    "de": "HR um Hilfe bitten",
+    "zh": "向 HR 求助",
+    "kk": "HR көмегін сұрау",
+    "pt": "Pedir ajuda aos RH",
+    "es": "Pedir ayuda a RR. HH."
+  },
+  "Заявки на развитие": {
+    "en": "Development requests",
+    "de": "Entwicklungsanfragen",
+    "zh": "发展申请",
+    "kk": "Даму өтінімдері",
+    "pt": "Pedidos de desenvolvimento",
+    "es": "Solicitudes de desarrollo"
+  },
+  "Помогите сотрудникам, которым не хватает подходящего обучения в каталоге.": {
+    "en": "Help employees who cannot find suitable learning in the catalog.",
+    "de": "Helfen Sie Mitarbeitenden, die im Katalog kein passendes Lernangebot finden.",
+    "zh": "帮助在目录中找不到合适学习项目的员工。",
+    "kk": "Каталогтан лайықты оқу таба алмаған қызметкерлерге көмектесіңіз.",
+    "pt": "Ajude os colaboradores que não encontram aprendizagem adequada no catálogo.",
+    "es": "Ayude a los empleados que no encuentran formación adecuada en el catálogo."
+  },
+  "Открытые заявки": {
+    "en": "Open requests",
+    "de": "Offene Anfragen",
+    "zh": "待处理申请",
+    "kk": "Ашық өтінімдер",
+    "pt": "Pedidos abertos",
+    "es": "Solicitudes abiertas"
+  },
+  "Заявки с ответом": {
+    "en": "Answered requests",
+    "de": "Beantwortete Anfragen",
+    "zh": "已回复申请",
+    "kk": "Жауап берілген өтінімдер",
+    "pt": "Pedidos respondidos",
+    "es": "Solicitudes respondidas"
+  },
+  "Заявок пока нет.": {
+    "en": "No requests yet.",
+    "de": "Noch keine Anfragen.",
+    "zh": "暂无申请。",
+    "kk": "Әзірге өтінімдер жоқ.",
+    "pt": "Ainda não há pedidos.",
+    "es": "Todavía no hay solicitudes."
+  },
+  "Ответ сотруднику": {
+    "en": "Response to the employee",
+    "de": "Antwort an den Mitarbeiter",
+    "zh": "回复员工",
+    "kk": "Қызметкерге жауап",
+    "pt": "Resposta ao colaborador",
+    "es": "Respuesta al empleado"
+  },
+  "Укажите подходящее обучение или следующий согласованный шаг.": {
+    "en": "Specify suitable learning or the next agreed step.",
+    "de": "Nennen Sie ein passendes Lernangebot oder den nächsten vereinbarten Schritt.",
+    "zh": "请注明合适的学习项目或双方商定的下一步。",
+    "kk": "Лайықты оқуды немесе келесі келісілген қадамды көрсетіңіз.",
+    "pt": "Indique uma aprendizagem adequada ou o próximo passo acordado.",
+    "es": "Indique una formación adecuada o el siguiente paso acordado."
+  },
+  "Сохранить ответ": {
+    "en": "Save response",
+    "de": "Antwort speichern",
+    "zh": "保存回复",
+    "kk": "Жауапты сақтау",
+    "pt": "Guardar resposta",
+    "es": "Guardar respuesta"
+  },
+  "Статус": {
+    "en": "Status",
+    "de": "Status",
+    "zh": "状态",
+    "kk": "Мәртебе",
+    "pt": "Estado",
+    "es": "Estado"
+  },
+  "Загрузка…": {
+    "en": "Loading…",
+    "de": "Laden…",
+    "zh": "加载中…",
+    "kk": "Жүктелуде…",
+    "pt": "A carregar…",
+    "es": "Cargando…"
+  },
+  "Дата среза": {
+    "en": "As-of date",
+    "de": "Stichtag",
+    "zh": "数据截止日期",
+    "kk": "Деректер күні",
+    "pt": "Data de referência",
+    "es": "Fecha de referencia"
+  },
+  "Входной навык для следующей активности: {skill}, уровень {current}, требуется {required}; ожидаемый прирост {gain}.": {
+    "en": "Prerequisite skill for the next activity: {skill}, level {current}, required {required}; expected gain {gain}.",
+    "de": "Voraussetzung für die nächste Aktivität: {skill}, Niveau {current}, erforderlich {required}; erwarteter Zuwachs {gain}.",
+    "zh": "下一活动的前置技能：{skill}，当前等级 {current}，要求 {required}；预计提升 {gain}。",
+    "kk": "Келесі іс-шараның кіріс дағдысы: {skill}, деңгейі {current}, талап {required}; күтілетін өсім {gain}.",
+    "pt": "Competência prévia para a próxima atividade: {skill}, nível {current}, necessário {required}; ganho esperado {gain}.",
+    "es": "Competencia previa para la siguiente actividad: {skill}, nivel {current}, requerido {required}; mejora prevista {gain}."
+  },
+  "Открывает доступ к: {activities}.": {
+    "en": "Unlocks access to: {activities}.",
+    "de": "Ermöglicht den Zugang zu: {activities}.",
+    "zh": "可解锁：{activities}。",
+    "kk": "Қолжетімді болатын іс-шаралар: {activities}.",
+    "pt": "Permite o acesso a: {activities}.",
+    "es": "Permite acceder a: {activities}."
+  },
+  "Шаг {step}: ориентировочное начало {start}; следующий шаг не раньше {next}. Даты учитывают длительность и расписание, это не запись на сессию.": {
+    "en": "Step {step}: estimated start {start}; the next step no earlier than {next}. Dates account for duration and schedules; this is not a session booking.",
+    "de": "Schritt {step}: geschätzter Beginn {start}; nächster Schritt frühestens {next}. Die Termine berücksichtigen Dauer und Zeitplan; dies ist keine Sitzungsbuchung.",
+    "zh": "步骤 {step}：预计开始于 {start}；下一步不早于 {next}。日期考虑了时长和安排，但并非课程预约。",
+    "kk": "{step}-қадам: болжамды басталуы {start}; келесі қадам {next} күнінен ерте емес. Күндер ұзақтық пен кестені ескереді, бұл сессияға жазылу емес.",
+    "pt": "Passo {step}: início estimado em {start}; o próximo passo não antes de {next}. As datas consideram a duração e os horários; não constituem uma inscrição numa sessão.",
+    "es": "Paso {step}: inicio estimado {start}; el siguiente paso no antes de {next}. Las fechas consideran la duración y el horario; no son una reserva de sesión."
+  },
+  "План {selected}: закрытие взвешенного разрыва {gain}, {hours} ч. Альтернатива {alternative}: {otherGain}, {otherHours} ч. Критичные разрывы учитываются с двойным весом.": {
+    "en": "Plan {selected}: weighted gap closure {gain}, {hours} h. Alternative {alternative}: {otherGain}, {otherHours} h. Critical gaps carry double weight.",
+    "de": "Plan {selected}: gewichtete Lückenschließung {gain}, {hours} Std. Alternative {alternative}: {otherGain}, {otherHours} Std. Kritische Lücken werden doppelt gewichtet.",
+    "zh": "方案 {selected}：加权差距缩小 {gain}，需 {hours} 小时。备选 {alternative}：{otherGain}，需 {otherHours} 小时。关键差距按双倍权重计算。",
+    "kk": "{selected} жоспары: салмақталған алшақтықты жабу {gain}, {hours} сағ. {alternative} баламасы: {otherGain}, {otherHours} сағ. Маңызды алшақтықтар екі есе салмақпен есептеледі.",
+    "pt": "Plano {selected}: redução ponderada da lacuna {gain}, {hours} h. Alternativa {alternative}: {otherGain}, {otherHours} h. As lacunas críticas têm peso duplo.",
+    "es": "Plan {selected}: reducción ponderada de la brecha {gain}, {hours} h. Alternativa {alternative}: {otherGain}, {otherHours} h. Las brechas críticas tienen el doble de peso."
+  },
+  "Соответствие наблюдаемой истории: {fit} против {alternativeFit}. Это сравнительный сигнал, а не вероятность успеха.": {
+    "en": "Fit to observed history: {fit} versus {alternativeFit}. This is a comparative signal, not a probability of success.",
+    "de": "Übereinstimmung mit dem beobachteten Verlauf: {fit} gegenüber {alternativeFit}. Dies ist ein Vergleichssignal, keine Erfolgswahrscheinlichkeit.",
+    "zh": "与已记录历史的匹配度：{fit}，对比 {alternativeFit}。这只是比较信号，并非成功概率。",
+    "kk": "Бақыланған тарихқа сәйкестік: {fit} және {alternativeFit}. Бұл салыстырмалы белгі, табыс ықтималдығы емес.",
+    "pt": "Adequação ao histórico observado: {fit} face a {alternativeFit}. É um sinal comparativo, não uma probabilidade de sucesso.",
+    "es": "Ajuste al historial observado: {fit} frente a {alternativeFit}. Es una señal comparativa, no una probabilidad de éxito."
+  },
+  "Нет сопоставимого необязательного обучения по собственной записи; предпочтение неизвестно.": {
+    "en": "No comparable nonmandatory learning from self-enrollment is recorded; preference is unknown.",
+    "de": "Kein vergleichbares, selbst gebuchtes, nicht verpflichtendes Lernen verzeichnet; die Präferenz ist unbekannt.",
+    "zh": "没有可比较的自主报名非必修学习记录；偏好未知。",
+    "kk": "Өз бетінше жазылған салыстырмалы міндетті емес оқу жоқ; таңдау белгісіз.",
+    "pt": "Não há aprendizagem não obrigatória comparável por inscrição própria; a preferência é desconhecida.",
+    "es": "No hay formación no obligatoria comparable por inscripción propia; se desconoce la preferencia."
+  },
+  "Сопоставимое обучение по собственной записи: завершений {completed}, пропусков и отказов {missed}, прерываний {dropped}.": {
+    "en": "Comparable self-enrolled learning: {completed} completions, {missed} skips or declines, {dropped} dropped activities.",
+    "de": "Vergleichbares selbst gebuchtes Lernen: {completed} Abschlüsse, {missed} Fehltermine oder Absagen, {dropped} Abbrüche.",
+    "zh": "可比较的自主报名学习：完成 {completed} 次，缺席或拒绝 {missed} 次，中断 {dropped} 次。",
+    "kk": "Өз бетінше жазылған салыстырмалы оқу: аяқталғаны {completed}, өткізіп алғаны не бас тартқаны {missed}, тоқтатылғаны {dropped}.",
+    "pt": "Aprendizagem comparável por inscrição própria: {completed} conclusões, {missed} faltas ou recusas, {dropped} interrupções.",
+    "es": "Formación comparable por inscripción propia: {completed} finalizaciones, {missed} ausencias o rechazos, {dropped} abandonos."
+  },
+  "Сопоставимое необязательное обучение: завершений {completed}, пропусков и отказов {missed}, прерываний {dropped}.": {
+    "en": "Comparable nonmandatory learning: {completed} completions, {missed} skips or declines, {dropped} dropped activities.",
+    "de": "Vergleichbares nicht verpflichtendes Lernen: {completed} Abschlüsse, {missed} Fehltermine oder Absagen, {dropped} Abbrüche.",
+    "zh": "可比较的非必修学习：完成 {completed} 次，缺席或拒绝 {missed} 次，中断 {dropped} 次。",
+    "kk": "Салыстырмалы міндетті емес оқу: аяқталғаны {completed}, өткізіп алғаны не бас тартқаны {missed}, тоқтатылғаны {dropped}.",
+    "pt": "Aprendizagem não obrigatória comparável: {completed} conclusões, {missed} faltas ou recusas, {dropped} interrupções.",
+    "es": "Formación no obligatoria comparable: {completed} finalizaciones, {missed} ausencias o rechazos, {dropped} abandonos."
+  },
+  "Давность считается по дате участия, а не по неизвестной дате завершения.": {
+    "en": "Recency uses the participation date, not an unknown completion date.",
+    "de": "Die Aktualität wird anhand des Teilnahmedatums berechnet, nicht anhand eines unbekannten Abschlussdatums.",
+    "zh": "新近程度按参与日期计算，而非未知的完成日期。",
+    "kk": "Давность қатысу күні бойынша есептеледі, белгісіз аяқтау күні бойынша емес.",
+    "pt": "A atualidade usa a data de participação, não uma data de conclusão desconhecida.",
+    "es": "La antigüedad usa la fecha de participación, no una fecha de finalización desconocida."
+  },
+  "Назначенных другими записей: {count}; они не использованы как предпочтение.": {
+    "en": "Records assigned by others: {count}; excluded from preference inference.",
+    "de": "Von anderen zugewiesene Einträge: {count}; nicht zur Ableitung von Präferenzen verwendet.",
+    "zh": "他人分配的记录：{count}；未用于推断偏好。",
+    "kk": "Басқалар тағайындаған жазбалар: {count}; таңдау белгісі ретінде қолданылмады.",
+    "pt": "Registos atribuídos por terceiros: {count}; não usados para inferir preferências.",
+    "es": "Registros asignados por otros: {count}; no se usan para inferir preferencias."
+  },
+  "Совпадений только по категории навыка: {count}; их влияние слабее прямого совпадения навыков.": {
+    "en": "Matches by skill category only: {count}; these carry less weight than direct skill matches.",
+    "de": "Übereinstimmungen nur nach Kompetenzkategorie: {count}; sie werden schwächer gewichtet als direkte Kompetenzübereinstimmungen.",
+    "zh": "仅技能类别匹配的记录：{count}；其权重低于直接技能匹配。",
+    "kk": "Тек дағды санаты бойынша сәйкестік: {count}; олардың әсері тікелей дағды сәйкестігінен төмен.",
+    "pt": "Correspondências apenas pela categoria da competência: {count}; têm menos peso do que correspondências diretas.",
+    "es": "Coincidencias solo por categoría de competencia: {count}; tienen menos peso que las coincidencias directas."
+  },
+  "Проверочный пакет жюри: создать отдельные копии профилей": {
+    "en": "Jury test package: create separate profile copies",
+    "de": "Jury-Testpaket: separate Profilkopien erstellen",
+    "zh": "评审测试包：创建独立档案副本",
+    "kk": "Қазылар алқасының сынақ пакеті: профильдердің бөлек көшірмелерін жасау",
+    "pt": "Pacote de teste do júri: criar cópias separadas dos perfis",
+    "es": "Paquete de prueba del jurado: crear copias independientes de los perfiles"
+  },
+  "Загрузите employees.json и историю этих профилей. Исходные ID сохранятся в отчёте, копии получат новые ID. Каталог и исходные сотрудники не изменятся. Короткий профиль из ТЗ поддерживается; перед применением проверьте допущения ниже.": {
+    "en": "Upload employees.json and these profiles' history. The report retains original IDs; copies receive new IDs. The catalog and original employees stay unchanged. Short profiles from the specification are supported; review the assumptions below before applying.",
+    "de": "Laden Sie employees.json und die Historie dieser Profile hoch. Ursprüngliche IDs bleiben im Bericht, Kopien erhalten neue IDs. Katalog und ursprüngliche Mitarbeiter bleiben unverändert. Kurzprofile aus der Spezifikation werden unterstützt; prüfen Sie vor dem Anwenden die folgenden Annahmen.",
+    "zh": "上传 employees.json 及这些档案的历史记录。报告保留原始 ID，副本获得新 ID。目录和原始员工数据保持不变。支持需求说明中的简短档案；应用前请检查以下假设。",
+    "kk": "employees.json файлын және осы профильдердің тарихын жүктеңіз. Бастапқы ID есепте сақталады, көшірмелер жаңа ID алады. Каталог пен бастапқы қызметкерлер өзгермейді. Техникалық тапсырмадағы қысқа профильдерге қолдау бар; қолданбас бұрын төмендегі жорамалдарды тексеріңіз.",
+    "pt": "Envie employees.json e o histórico desses perfis. O relatório mantém os IDs originais; as cópias recebem novos IDs. O catálogo e os funcionários originais não mudam. Perfis curtos da especificação são aceitos; revise as suposições abaixo antes de aplicar.",
+    "es": "Suba employees.json y el historial de estos perfiles. El informe conserva los ID originales; las copias reciben nuevos ID. El catálogo y los empleados originales no cambian. Se admiten perfiles breves de la especificación; revise las suposiciones siguientes antes de aplicar."
+  },
+  "Проверочные профили и принятые допущения": {
+    "en": "Test profiles and explicit assumptions",
+    "de": "Testprofile und ausdrücklich angegebene Annahmen",
+    "zh": "测试档案和明确的假设",
+    "kk": "Сынақ профильдері және қабылданған жорамалдар",
+    "pt": "Perfis de teste e suposições explícitas",
+    "es": "Perfiles de prueba y suposiciones explícitas"
+  },
+  "Пропущенные поля не являются установленными фактами. Указанная дата оценки означает текущий снимок навыков; история до неё не начисляет рост. Для точного расчёта загрузите полный профиль.": {
+    "en": "Missing fields are not established facts. The assessment date represents the current skill snapshot; earlier history adds no skill gains. Upload a complete profile for an exact calculation.",
+    "de": "Fehlende Angaben sind keine bestätigten Fakten. Das Bewertungsdatum bezeichnet den aktuellen Kompetenzstand; frühere Historie erhöht die Werte nicht. Laden Sie für eine genaue Berechnung ein vollständiges Profil hoch.",
+    "zh": "缺失字段不是已确认的事实。评估日期表示当前技能快照；此前的历史记录不会增加技能等级。请上传完整档案以进行准确计算。",
+    "kk": "Толтырылмаған өрістер расталған деректер емес. Бағалау күні дағдылардың ағымдағы күйін білдіреді; оған дейінгі тарих өсім қоспайды. Дәл есептеу үшін толық профильді жүктеңіз.",
+    "pt": "Campos ausentes não são fatos confirmados. A data de avaliação representa o estado atual das competências; o histórico anterior não acrescenta ganhos. Envie um perfil completo para um cálculo exato.",
+    "es": "Los campos ausentes no son hechos confirmados. La fecha de evaluación representa el estado actual de las competencias; el historial anterior no añade mejoras. Suba un perfil completo para un cálculo exacto."
+  },
+  "Открыть профиль и рекомендации": {
+    "en": "Open profile and recommendations",
+    "de": "Profil und Empfehlungen öffnen",
+    "zh": "打开档案和推荐",
+    "kk": "Профиль мен ұсыныстарды ашу",
+    "pt": "Abrir perfil e recomendações",
+    "es": "Abrir perfil y recomendaciones"
+  },
+  "Не удалось скопировать. Сохраните данные вручную.": {
+    "en": "Could not copy. Save the details manually.",
+    "de": "Kopieren fehlgeschlagen. Speichern Sie die Angaben manuell.",
+    "zh": "复制失败。请手动保存信息。",
+    "kk": "Көшіру мүмкін болмады. Деректерді қолмен сақтаңыз.",
+    "pt": "Não foi possível copiar. Salve os dados manualmente.",
+    "es": "No se pudo copiar. Guarde los datos manualmente."
+  },
+  "Создаём доступ…": {
+    "en": "Creating access…",
+    "de": "Zugang wird erstellt…",
+    "zh": "正在创建访问权限…",
+    "kk": "Кіру мүмкіндігі жасалуда…",
+    "pt": "Criando acesso…",
+    "es": "Creando acceso…"
+  },
+  "Создать вход сотрудника": {
+    "en": "Create employee login",
+    "de": "Mitarbeiterzugang erstellen",
+    "zh": "创建员工登录账户",
+    "kk": "Қызметкерге кіру деректерін жасау",
+    "pt": "Criar acesso do funcionário",
+    "es": "Crear acceso del empleado"
+  },
+  "Пароль показан только сейчас. Сохраните его перед закрытием. В базе хранится только хеш; существующие аккаунты не изменяются.": {
+    "en": "The password is shown only now. Save it before closing. Only its hash is stored; existing accounts are not changed.",
+    "de": "Das Passwort wird nur jetzt angezeigt. Speichern Sie es vor dem Schließen. Nur der Hash wird gespeichert; bestehende Konten bleiben unverändert.",
+    "zh": "密码仅在此时显示。关闭前请保存。数据库仅存储哈希值；现有账户不会更改。",
+    "kk": "Құпиясөз тек қазір көрсетіледі. Жаппас бұрын сақтаңыз. Базада тек хеші сақталады; бар аккаунттар өзгермейді.",
+    "pt": "A senha é exibida apenas agora. Salve-a antes de fechar. Apenas o hash é armazenado; contas existentes não são alteradas.",
+    "es": "La contraseña solo se muestra ahora. Guárdela antes de cerrar. Solo se almacena su hash; las cuentas existentes no se modifican."
+  },
+  "Скопировать доступ": {
+    "en": "Copy login details",
+    "de": "Zugangsdaten kopieren",
+    "zh": "复制登录信息",
+    "kk": "Кіру деректерін көшіру",
+    "pt": "Copiar dados de acesso",
+    "es": "Copiar datos de acceso"
+  },
+  "Сохранил, скрыть пароль": {
+    "en": "Saved, hide password",
+    "de": "Gespeichert, Passwort ausblenden",
+    "zh": "已保存，隐藏密码",
+    "kk": "Сақталды, құпиясөзді жасыру",
+    "pt": "Salvei, ocultar senha",
+    "es": "Guardado, ocultar contraseña"
+  },
+  "Для проверки пути сотрудника откройте приложение в отдельном приватном окне и войдите с этими данными.": {
+    "en": "To test the employee journey, open the app in a separate private window and sign in with these details.",
+    "de": "Öffnen Sie zum Testen des Mitarbeiterablaufs die Anwendung in einem separaten privaten Fenster und melden Sie sich mit diesen Daten an.",
+    "zh": "要测试员工流程，请在单独的隐私窗口中打开应用并使用这些信息登录。",
+    "kk": "Қызметкер жолын тексеру үшін қолданбаны бөлек құпия терезеде ашып, осы деректермен кіріңіз.",
+    "pt": "Para testar a jornada do funcionário, abra o aplicativo em uma janela privativa separada e entre com esses dados.",
+    "es": "Para probar el recorrido del empleado, abra la aplicación en una ventana privada independiente e inicie sesión con estos datos."
+  },
+  "Доступ создан. Повторно показать пароль невозможно.": {
+    "en": "Access created. The password cannot be displayed again.",
+    "de": "Zugang erstellt. Das Passwort kann nicht erneut angezeigt werden.",
+    "zh": "访问权限已创建。密码无法再次显示。",
+    "kk": "Кіру мүмкіндігі жасалды. Құпиясөзді қайта көрсету мүмкін емес.",
+    "pt": "Acesso criado. A senha não pode ser exibida novamente.",
+    "es": "Acceso creado. La contraseña no se puede volver a mostrar."
+  },
+  "Поиск по ID или имени": {
+    "en": "Search by ID or name",
+    "de": "Nach ID oder Namen suchen",
+    "zh": "按 ID 或姓名搜索",
+    "kk": "ID немесе аты бойынша іздеу",
+    "pt": "Buscar por ID ou nome",
+    "es": "Buscar por ID o nombre"
+  },
+  "Поиск проверяет ID и имя. Подразделение, роль и грейд фильтруются по точному совпадению.": {
+    "en": "Search matches ID and name. Department, role and grade filters use exact matches.",
+    "de": "Die Suche berücksichtigt ID und Namen. Abteilung, Rolle und Stufe werden nach exakter Übereinstimmung gefiltert.",
+    "zh": "搜索匹配 ID 和姓名。部门、角色和职级筛选使用精确匹配。",
+    "kk": "Іздеу ID мен атты тексереді. Бөлім, рөл және грейд дәл сәйкестік бойынша сүзіледі.",
+    "pt": "A busca verifica ID e nome. Os filtros de departamento, função e nível usam correspondência exata.",
+    "es": "La búsqueda comprueba el ID y el nombre. Los filtros de departamento, función y nivel usan coincidencias exactas."
+  },
+  "No name supplied: the original ID is used as the display label.": {
+    "en": "No name supplied: the original ID is used as the display label.",
+    "ru": "Имя не указано: отображается исходный ID.",
+    "de": "Kein Name angegeben: Die ursprüngliche ID wird angezeigt.",
+    "zh": "未提供姓名：显示原始 ID。",
+    "kk": "Аты көрсетілмеген: бастапқы ID көрсетіледі.",
+    "pt": "Nome ausente: o ID original é exibido.",
+    "es": "Nombre ausente: se muestra el ID original."
+  },
+  "Department is unknown; this is a missing-value label, not an organizational unit.": {
+    "en": "Department is unknown; this is a missing-value label, not an organizational unit.",
+    "ru": "Подразделение неизвестно; это отметка об отсутствии данных.",
+    "de": "Abteilung unbekannt; die Angabe kennzeichnet fehlende Daten.",
+    "zh": "部门未知；此标签表示数据缺失。",
+    "kk": "Бөлім белгісіз; бұл деректің жоқтығын білдіреді.",
+    "pt": "Departamento desconhecido; o rótulo indica dados ausentes.",
+    "es": "Departamento desconocido; la etiqueta indica datos ausentes."
+  },
+  "No manager relationship supplied.": {
+    "en": "No manager relationship supplied.",
+    "ru": "Руководитель не указан.",
+    "de": "Keine Führungskraft angegeben.",
+    "zh": "未提供主管关系。",
+    "kk": "Басшы көрсетілмеген.",
+    "pt": "Nenhum gestor informado.",
+    "es": "No se indicó un responsable."
+  },
+  "Work format is unknown; no office/remote preference is inferred.": {
+    "en": "Work format is unknown; no office/remote preference is inferred.",
+    "ru": "Формат работы неизвестен; предпочтение офиса или удалённой работы не предполагается.",
+    "de": "Arbeitsmodell unbekannt; keine Präferenz für Büro oder Fernarbeit wird angenommen.",
+    "zh": "工作方式未知；不推断现场或远程工作偏好。",
+    "kk": "Жұмыс форматы белгісіз; кеңсе немесе қашықтан жұмыс қалауы болжанбайды.",
+    "pt": "Formato desconhecido; não se presume preferência presencial ou remota.",
+    "es": "Formato desconocido; no se presupone preferencia presencial o remota."
+  },
+  "Display language defaults to English; this is not an inferred employee preference.": {
+    "en": "Display language defaults to English; this is not an inferred employee preference.",
+    "ru": "Язык по умолчанию — английский; это настройка, а не установленное предпочтение сотрудника.",
+    "de": "Anzeigesprache standardmäßig Englisch; keine abgeleitete Mitarbeiterpräferenz.",
+    "zh": "显示语言默认为英语；这不代表员工偏好。",
+    "kk": "Әдепкі көрсету тілі — ағылшын тілі; бұл қызметкердің қалауы деп есептелмейді.",
+    "pt": "Idioma padrão inglês; não representa uma preferência inferida do funcionário.",
+    "es": "Idioma predeterminado inglés; no representa una preferencia inferida del empleado."
+  },
+  "No career goal supplied; recommendations use the next grade of the current role.": {
+    "en": "No career goal supplied; recommendations use the next grade of the current role.",
+    "ru": "Карьерная цель не указана; рекомендации используют следующий грейд текущей роли.",
+    "de": "Kein Karriereziel angegeben; Empfehlungen nutzen die nächste Stufe der aktuellen Rolle.",
+    "zh": "未提供职业目标；推荐基于当前角色的下一职级。",
+    "kk": "Мансап мақсаты көрсетілмеген; ұсыныстар ағымдағы рөлдің келесі грейдіне негізделеді.",
+    "pt": "Sem meta de carreira; as recomendações usam o próximo nível da função atual.",
+    "es": "Sin meta profesional; las recomendaciones usan el siguiente nivel de la función actual."
+  },
+  "No assessment date supplied: skill levels are treated as current at the dataset snapshot. Imported history is context only and adds no skill gains.": {
+    "en": "No assessment date supplied: skill levels are treated as current at the dataset snapshot. Imported history is context only and adds no skill gains.",
+    "ru": "Дата оценки не указана: навыки считаются актуальными на дату среза. История служит контекстом и не начисляет рост.",
+    "de": "Kein Bewertungsdatum: Die Werte gelten zum Datenstichtag. Importierte Historie dient nur als Kontext und erhöht keine Werte.",
+    "zh": "未提供评估日期：技能等级视为数据快照时的当前值。历史记录仅提供上下文，不增加技能等级。",
+    "kk": "Бағалау күні жоқ: дағдылар кесінді күніне өзекті деп есептеледі. Тарих тек контекст ретінде қолданылады және өсім қоспайды.",
+    "pt": "Sem data de avaliação: os níveis são atuais na data do conjunto. O histórico serve apenas como contexto, sem acrescentar ganhos.",
+    "es": "Sin fecha de evaluación: los niveles se consideran actuales en la fecha del conjunto. El historial solo sirve de contexto, sin añadir mejoras."
+  },
+  "Approximate hire date derived from tenure and snapshot; supply hire_date for an exact date. History predating it will be rejected.": {
+    "en": "Approximate hire date derived from tenure and snapshot; supply hire_date for an exact date. History predating it will be rejected.",
+    "ru": "Дата найма приблизительно рассчитана по стажу и дате среза. Для точности укажите hire_date; более ранняя история отклоняется.",
+    "de": "Eintrittsdatum aus Betriebszugehörigkeit und Stichtag geschätzt. Geben Sie hire_date für das genaue Datum an; frühere Historie wird abgelehnt.",
+    "zh": "根据工龄和快照日期估算入职日期。请提供 hire_date 以获得准确日期；更早的历史记录将被拒绝。",
+    "kk": "Жұмысқа қабылдау күні өтіл мен кесіндіден шамамен есептелді. Дәл күн үшін hire_date көрсетіңіз; ертерек тарих қабылданбайды.",
+    "pt": "Admissão estimada pelo tempo de serviço e pela data do conjunto. Informe hire_date para a data exata; histórico anterior será rejeitado.",
+    "es": "Incorporación estimada por antigüedad y fecha del conjunto. Indique hire_date para la fecha exacta; se rechazará el historial anterior."
   }
 }

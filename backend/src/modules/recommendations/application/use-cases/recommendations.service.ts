@@ -2,7 +2,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { DevelopmentContext } from '../../../../shared/domain/context';
 import { DomainError } from '../../../../shared/domain/domain-error';
 import { ContextVersion, Feedback, Locale, RecommendationSet } from '../../domain/entities/recommendation-set';
-import { DevelopmentPolicies, materializeItems, PROMPT_VERSION, rankCandidates, RANKING_VERSION, selectDiverse } from '../../domain/policies/ranking.policy';
+import { DevelopmentPolicies, PROMPT_VERSION, RANKING_VERSION } from '../../domain/policies/ranking.policy';
+import { buildPlans, evaluateSequence, materializePlan } from '../../domain/policies/planner.policy';
 import { LlmRecommendationPort, LlmSelection, RecommendationClock, RecommendationContextPort, RecommendationRepositoryPort } from '../ports/recommendation.ports';
 import { validateSelection } from '../../domain/policies/evidence.policy';
 
@@ -49,11 +50,11 @@ export class RecommendationsService {
     if (!options.force && previous && previous.cacheKey === cacheKey(context, locale, this.llm.model, this.llm.provider) && !isStale(previous, context, this.clock.now())) return {...previous, stale: false};
     let preferences = await this.repository.preferences(employeeId);
     this.budget(deadline);
-    let ranking = rankCandidates(context, this.policies, preferences);
-    let selected = selectDiverse(ranking.candidates);
+    let ranking = buildPlans(context, this.policies, preferences, 3, {deadlineMs: Math.min(deadline - 2000, Date.now() + 5000)});
+    let selected = ranking.best;
     let selection: LlmSelection | null = null;
     let fallbackReason: string | null = this.llm.provider === 'disabled' ? 'LLM_DISABLED' : null;
-    if (ranking.candidates.length && this.llm.provider !== 'disabled') {
+    if (ranking.best && this.llm.provider !== 'disabled') {
       const remaining = Math.max(0, this.budget(deadline) - 2000);
       const budget = Math.min(this.timeoutMs, remaining);
       const controller = new AbortController();
@@ -61,10 +62,10 @@ export class RecommendationsService {
       requestSignal.addEventListener('abort', onAbort, {once: true});
       let timer: ReturnType<typeof setTimeout> | undefined;
       try {
-        selection = await Promise.race([this.llm.select({locale, candidates: ranking.candidates.slice(0, 10)}, controller.signal),
+        selection = await Promise.race([this.llm.select({locale, candidates: ranking.candidates, plans: ranking.plans}, controller.signal),
           new Promise<never>((_, reject) => {timer = setTimeout(() => {controller.abort(); reject(new DomainError('LLM_TIMEOUT', 'Model exceeded request budget'));}, budget);})]);
-        validateSelection(selection, ranking.candidates.slice(0, 10));
-        selected = selection.recommendations.map(item => ranking.candidates.find(c => c.activityId === item.activityId)!);
+        validateSelection(selection, ranking.candidates, ranking.plans);
+        selected = evaluateSequence(context, selection.recommendations.map(item => item.activityId), this.policies, preferences);
       } catch (error) {
         selection = null;
         fallbackReason = error instanceof DomainError ? error.code : 'LLM_PROVIDER_ERROR';
@@ -77,8 +78,8 @@ export class RecommendationsService {
       context = latest;
       preferences = await this.repository.preferences(employeeId);
       this.budget(deadline);
-      ranking = rankCandidates(context, this.policies, preferences);
-      selected = selectDiverse(ranking.candidates);
+      ranking = buildPlans(context, this.policies, preferences, 3, {deadlineMs: deadline - 500});
+      selected = ranking.best;
       selection = null;
       fallbackReason = 'CONTEXT_CHANGED';
     }
@@ -88,8 +89,8 @@ export class RecommendationsService {
       locale, source: selection ? 'AI_ASSISTED' : 'RULES_FALLBACK', aiUsed: Boolean(selection), model: selection ? this.llm.model : null,
       promptVersion: PROMPT_VERSION, rankingVersion: RANKING_VERSION, contextVersion: contextVersion(context), cacheKey: cacheKey(context, locale, this.llm.model, this.llm.provider),
       stale: false, status: ranking.status,
-      recommendations: materializeItems(context, selected, locale, this.policies, selection ? Object.fromEntries(selection.recommendations.map(s => [s.activityId, s.evidenceIds])) : undefined),
-      diagnostics: {fallbackReason, excluded: ranking.excluded, latencyMs: now.getTime() - started, shortlisted: Math.min(ranking.candidates.length, 10)},
+      recommendations: selected ? materializePlan(context, selected, locale, this.policies, ranking.plans, selection ? Object.fromEntries(selection.recommendations.map(s => [s.activityId, s.evidenceIds])) : undefined) : [],
+      diagnostics: {fallbackReason, excluded: ranking.excluded, latencyMs: now.getTime() - started, shortlisted: ranking.candidates.length, planning: ranking.search},
     };
     try { return await this.repository.save(set, this.safeSnapshot(context, preferences), this.budget(deadline)); }
     catch (error) {
@@ -99,11 +100,11 @@ export class RecommendationsService {
       context = await this.contexts.context(employeeId);
       this.budget(deadline);
       preferences = await this.repository.preferences(employeeId);
-      ranking = rankCandidates(context, this.policies, preferences);
+      ranking = buildPlans(context, this.policies, preferences, 3, {deadlineMs: deadline - 500});
       const current = {...set, source: 'RULES_FALLBACK' as const, aiUsed: false, model: null, contextVersion: contextVersion(context),
         cacheKey: cacheKey(context, locale, this.llm.model, this.llm.provider), status: ranking.status,
-        recommendations: materializeItems(context, selectDiverse(ranking.candidates), locale, this.policies),
-        diagnostics: {...set.diagnostics, fallbackReason: 'CONTEXT_CHANGED', excluded: ranking.excluded, shortlisted: Math.min(ranking.candidates.length, 10), latencyMs: this.clock.now().getTime() - started}};
+        recommendations: ranking.best ? materializePlan(context, ranking.best, locale, this.policies, ranking.plans) : [],
+        diagnostics: {...set.diagnostics, fallbackReason: 'CONTEXT_CHANGED', excluded: ranking.excluded, shortlisted: ranking.candidates.length, planning: ranking.search, latencyMs: this.clock.now().getTime() - started}};
       return this.repository.save(current, this.safeSnapshot(context, preferences), this.budget(deadline));
     }
   }
@@ -128,6 +129,6 @@ export class RecommendationsService {
       skills: context.skills.map(skill => ({id: skill.id, name: skill.name, translations: skill.translations})),
       activities: context.activities.map(activity => ({id: activity.id, title: activity.title, type: activity.type, durationHours: activity.durationHours, version: activity.version, format: activity.format, roleIds: activity.roleIds, gradeIds: activity.gradeIds,
         effects: activity.effects, prerequisites: activity.prerequisites, upcomingSessions: activity.upcomingSessions, repeatable: activity.repeatable, mandatory: activity.mandatory})),
-      history: context.history.map(h => ({activityId: h.activityId, status: h.status, date: h.date}))};
+      history: context.history.map(h => ({activityId: h.activityId, status: h.status, date: h.date, assignedBy: h.assignedBy}))};
   }
 }

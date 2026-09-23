@@ -1,0 +1,14 @@
+# Explicit rules-only launch; keeps the same full catalogue and persistent data.
+services:
+  migrate:
+    environment:
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: "false"
+  bootstrap:
+    environment:
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: "false"
+  api:
+    environment:
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: "false"

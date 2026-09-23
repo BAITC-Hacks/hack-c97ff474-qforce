@@ -1,6 +1,6 @@
 import { DomainError } from '../../../../shared/domain/domain-error';
 import { LlmInput, LlmRecommendationPort, LlmSelection } from '../../application/ports/recommendation.ports';
-import { parseSelection, responseJsonSchema } from './response.schema';
+import { parseSelection, providerInput, providerResponseSchema } from './response.schema';
 import { selectionInstructions } from './prompts/selection.prompt';
 import { readBoundedJson } from './http-json';
 
@@ -17,8 +17,8 @@ export class OpenAiAdapter implements LlmRecommendationPort {
     if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new DomainError('LLM_INVALID_ENDPOINT', 'Cloud provider requires an HTTPS endpoint without embedded credentials');
     const response = await this.http(`${endpoint.href.replace(/\/$/, '')}/responses`, {method: 'POST', signal, redirect: 'error', headers: {'Content-Type': 'application/json', Authorization: `Bearer ${this.settings.apiKey}`}, body: JSON.stringify({
       model: this.model, store: false, instructions: selectionInstructions,
-      input: JSON.stringify(input), max_output_tokens: 1500,
-      text: {format: {type: 'json_schema', name: 'career_quest_selection', strict: true, schema: responseJsonSchema}},
+      input: JSON.stringify(providerInput(input)), max_output_tokens: input.plans ? 256 : 1500,
+      text: {format: {type: 'json_schema', name: 'career_quest_selection', strict: true, schema: providerResponseSchema(input)}},
     })});
     if (!response.ok) throw new DomainError('LLM_PROVIDER_ERROR', `Model provider returned HTTP ${response.status}`);
     const raw = await readBoundedJson(response);

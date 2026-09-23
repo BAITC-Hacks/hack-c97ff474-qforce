@@ -1,0 +1,52 @@
+import request from 'supertest';
+import type { INestApplication } from '@nestjs/common';
+import type { PrismaService } from '../../src/shared/infrastructure/database/prisma.service';
+import { ImportService } from '../../src/modules/dataset-import/public';
+import { seed } from '../../prisma/seed';
+import { configuration } from '../../src/config/configuration';
+import { clearTestDatabase, fixtureFiles, testApplication } from '../support/database';
+
+describe('employee development support queue', () => {
+  let app: INestApplication, prisma: PrismaService, employee: string, hr: string;
+  const base = '/api/v1', own = `${base}/employees/fixture_person_a/development-request`;
+  const auth = (token: string) => ({Authorization: `Bearer ${token}`});
+  beforeAll(async () => {
+    ({app, prisma} = await testApplication()); await clearTestDatabase(prisma);
+    expect((await app.get(ImportService).run(fixtureFiles(), false)).report.valid).toBe(true);
+    await seed(prisma, configuration());
+    employee = (await request(app.getHttpServer()).post(`${base}/auth/login`).send({username: 'employee', password: 'test-employee-password-safe'})).body.data.accessToken;
+    hr = (await request(app.getHttpServer()).post(`${base}/auth/login`).send({username: 'hr', password: 'test-hr-password-safe'})).body.data.accessToken;
+  });
+  afterAll(async () => { await app?.close(); });
+  it('persists one concurrent request, exposes it only to its owner and HR, and returns the HR answer without changing skills', async () => {
+    const before = await prisma.employeeSkill.findMany({where: {employeeId: 'fixture_person_a'}, orderBy: {skillId: 'asc'}});
+    const pending = await request(app.getHttpServer()).get(own).set(auth(employee)).expect(200);
+    expect(pending.body.data.guidance.gaps.length).toBeGreaterThan(0);
+    expect(pending.body.data.request).toBeNull();
+    const opened = await Promise.all([0, 1].map(() => request(app.getHttpServer()).post(own).set(auth(employee)).send({}).expect(201)));
+    expect(opened[0].body.data.id).toBe(opened[1].body.data.id);
+    expect(await prisma.developmentRequest.count()).toBe(1);
+    await request(app.getHttpServer()).get(`${base}/employees/fixture_person_b/development-request`).set(auth(employee)).expect(403);
+    await request(app.getHttpServer()).get(`${base}/hr/development-requests`).set(auth(employee)).expect(403);
+    const queue = await request(app.getHttpServer()).get(`${base}/hr/development-requests`).set(auth(hr)).expect(200);
+    expect(queue.body.meta.total).toBe(1);
+    const resolutionPath = `${base}/hr/development-requests/${opened[0].body.data.id}/resolve`;
+    await request(app.getHttpServer()).post(resolutionPath).set(auth(employee)).send({resolution: 'Not allowed'}).expect(403);
+    await request(app.getHttpServer()).post(resolutionPath).set(auth(hr)).send({resolution: ' '}).expect(400);
+    const version = opened[0].body.data.version;
+    await request(app.getHttpServer()).post(resolutionPath).set(auth(hr)).send({resolution: 'A suitable learning option will be reviewed with the employee.', expectedVersion: version}).expect(201);
+    await request(app.getHttpServer()).post(resolutionPath).set(auth(hr)).send({resolution: 'Stale answer must not overwrite it.', expectedVersion: version}).expect(409);
+    await request(app.getHttpServer()).post(own).set(auth(employee)).send({}).expect(409);
+    const answer = await request(app.getHttpServer()).get(own).set(auth(employee)).expect(200);
+    expect(answer.body.data.request.status).toBe('RESOLVED');
+    expect(answer.body.data.request.resolution).toContain('reviewed');
+    const reopenVersion = answer.body.data.request.version;
+    const reopened = await request(app.getHttpServer()).post(own).set(auth(employee)).send({expectedVersion: reopenVersion}).expect(201);
+    expect(reopened.body.data).toMatchObject({status: 'OPEN', version: reopenVersion + 1});
+    const replay = await request(app.getHttpServer()).post(own).set(auth(employee)).send({expectedVersion: reopenVersion}).expect(201);
+    expect(replay.body.data.version).toBe(reopened.body.data.version);
+    expect(replay.body.data.updatedAt).toBe(reopened.body.data.updatedAt);
+    await request(app.getHttpServer()).post(resolutionPath).set(auth(hr)).send({resolution: 'Old form after reopening', expectedVersion: version}).expect(409);
+    expect(await prisma.employeeSkill.findMany({where: {employeeId: 'fixture_person_a'}, orderBy: {skillId: 'asc'}})).toEqual(before);
+  });
+});

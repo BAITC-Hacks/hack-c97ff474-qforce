@@ -9,6 +9,7 @@ import { overlappingEffectsContext, recommendationFixtures, syntheticContext } f
 import { DomainError } from '../../src/shared/domain/domain-error';
 import { minimumSkillBaseline, verifiedExplanation, verifiedPlanExplanations } from '../../scripts/evaluate-recommendations';
 import { activitiesSchema } from '../../src/modules/dataset-import/infrastructure/schemas/dataset.schemas';
+import { buildPlans } from '../../src/modules/recommendations/domain/policies/planner.policy';
 
 class TestRepository implements RecommendationRepositoryPort {
   sets: RecommendationSet[] = [];
@@ -69,12 +70,13 @@ describe('verified hybrid recommendations', () => {
   });
   it('rejects a dominated model choice on the jury trap but preserves genuine duration tradeoffs', () => {
     const context = recommendationFixtures().find(f => f.id === 'critical-gap-with-skips')!.context;
-    const candidates = rankCandidates(context, developmentPolicies).candidates;
-    const speaking = candidates.find(c => c.activityId === 'SPEAKING')!;
-    const response = {recommendations: [{activityId: speaking.activityId, evidenceIds: speaking.evidence.map(e => e.id)}]};
-    expect(() => parseSelection(response, {locale: 'en', candidates})).toThrow(expect.objectContaining({code: 'LLM_DOMINATED_SELECTION'}));
-    speaking.durationHours = 0.25;
-    expect(parseSelection(response, {locale: 'en', candidates}).recommendations[0].activityId).toBe('SPEAKING');
+    let planning = buildPlans(context, developmentPolicies);
+    const candidates = planning.candidates;
+    const response = {planId: planning.plans.find(p => p.activityIds.length === 1 && p.activityIds[0] === 'SPEAKING')!.id};
+    expect(() => parseSelection(response, {locale: 'en', candidates, plans: planning.plans})).toThrow(expect.objectContaining({code: 'LLM_DOMINATED_PLAN'}));
+    context.activities.find(a => a.id === 'SPEAKING')!.durationHours = 0.25;
+    planning = buildPlans(context, developmentPolicies);
+    expect(parseSelection(response, {locale: 'en', candidates: planning.candidates, plans: planning.plans}).recommendations[0].activityId).toBe('SPEAKING');
   });
   it('falls back to valid rules when the model chooses a dominated first step', async () => {
     const context = recommendationFixtures().find(f => f.id === 'critical-gap-with-skips')!.context;
@@ -83,7 +85,7 @@ describe('verified hybrid recommendations', () => {
       return {recommendations: [{activityId: speaking.activityId, evidenceIds: speaking.evidence.map(e => e.id)}]};
     }};
     const result = await new RecommendationsService({context: async () => context}, new TestRepository(), model, developmentPolicies, clock).generate(context.employee.id);
-    expect(result).toMatchObject({source: 'RULES_FALLBACK', aiUsed: false, diagnostics: {fallbackReason: 'LLM_DOMINATED_SELECTION'}});
+    expect(result).toMatchObject({source: 'RULES_FALLBACK', aiUsed: false, diagnostics: {fallbackReason: 'LLM_DOMINATED_PLAN'}});
     expect(result.recommendations[0].activityId).toBe('DESIGN_COURSE');
   });
   it('evaluates equal step budgets and checks explanation numbers rather than category presence alone', () => {
@@ -145,7 +147,11 @@ describe('verified hybrid recommendations', () => {
   });
   it('allows the model to change selection order and caches without another call', async () => {
     const context = syntheticContext(); const repository = new TestRepository();
-    const select = jest.fn(async input => ({recommendations: [{activityId: input.candidates[1].activityId, evidenceIds: input.candidates[1].evidence.map((e: {id: string}) => e.id)}]}));
+    context.activities[0].durationHours = 4; // Lab trades a later date for fewer hours.
+    const select = jest.fn(async input => {
+      const candidate = input.candidates.find((c: {activityId: string}) => c.activityId === 'DESIGN_LAB');
+      return {recommendations: [{activityId: candidate.activityId, evidenceIds: candidate.evidence.map((e: {id: string}) => e.id)}]};
+    });
     const model: LlmRecommendationPort = {provider: 'local', model: 'test-fake', select};
     const service = new RecommendationsService({context: async () => context}, repository, model, developmentPolicies, clock);
     const result = await service.generate(context.employee.id);

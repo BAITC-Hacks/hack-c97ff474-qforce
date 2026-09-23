@@ -6,9 +6,9 @@ const props = defineProps({
   rec: { type: Object, required: true },
   compact: Boolean,
 });
-const { roleName, gradeName, skillName } = useCareer();
+const { roleName, gradeName, skillName, activityName } = useCareer();
 const explanation = computed(() =>
-  explainRecommendation(props.rec, { roleName, gradeName, skillName }),
+  explainRecommendation(props.rec, { roleName, gradeName, skillName, activityName }),
 );
 </script>
 <template>

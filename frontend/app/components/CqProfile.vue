@@ -20,6 +20,11 @@ watch(
   >
     <div v-if="store.profile">
       <CqDataWarnings :blocks="hr ? ['catalogs', 'grades', 'history', 'eligible'] : ['catalogs', 'grades', 'history', 'eligible', 'recommendations']" />
+      <CqNotice v-if="store.profile.importAssumptions?.length" color="gold">
+        <strong>{{ t('Проверочный профиль содержит допущения импорта') }}</strong>
+        <p>{{ t('Значения ниже нужны для совместимости формата и не являются подтверждёнными фактами о сотруднике.') }}</p>
+        <div v-for="(assumption, index) in store.profile.importAssumptions" :key="index" class="small">{{ assumption.field }}: {{ t(assumption.value) }} — {{ t(assumption.reason) }}</div>
+      </CqNotice>
       <CqHeading
         :title="hr ? store.profile.fullName : t('Мой профиль и навыки')"
         :raw-title="hr"
@@ -52,7 +57,7 @@ watch(
                 <dd>
                   {{
                     t(
-                      { office: "Офис", hybrid: "Гибрид", remote: "Удалённо" }[
+                      { office: "Офис", hybrid: "Гибрид", remote: "Удалённо", unknown: "Не указано" }[
                         store.profile.workFormat
                       ] || store.profile.workFormat,
                     )
@@ -65,7 +70,7 @@ watch(
               </div>
               <div>
                 <dt>{{ t("Подразделение") }}</dt>
-                <dd>{{ store.profile.department }}</dd>
+                <dd>{{ store.profile.department === 'Not provided' ? t('Не указано') : store.profile.department }}</dd>
               </div>
               <div>
                 <dt>{{ t("Руководитель (ID)") }}</dt>

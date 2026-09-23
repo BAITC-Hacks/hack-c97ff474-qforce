@@ -9,8 +9,9 @@ import { RecommendationsModule } from './modules/recommendations/recommendations
 import { HrAnalyticsModule } from './modules/hr-analytics/hr-analytics.module';
 import { DatasetImportModule } from './modules/dataset-import/dataset-import.module';
 import { HealthModule } from './modules/health/health.module';
+import { DevelopmentRequestsModule } from './modules/development-requests/development-requests.module';
 
 @Module({
-  imports: [PrismaModule, IdentityAccessModule, EmployeesModule, CompetencyCatalogModule, LearningCatalogModule, DevelopmentModule, RecommendationsModule, HrAnalyticsModule, DatasetImportModule, HealthModule],
+  imports: [PrismaModule, IdentityAccessModule, EmployeesModule, CompetencyCatalogModule, LearningCatalogModule, DevelopmentModule, RecommendationsModule, HrAnalyticsModule, DatasetImportModule, HealthModule, DevelopmentRequestsModule],
 })
 export class AppModule {}

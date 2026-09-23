@@ -1,0 +1,4023 @@
+{
+  "generatedAt": "2026-09-23T12:38:33.140Z",
+  "verificationVersion": "sequence-context-and-independent-oracle-v3",
+  "dataset": "Author-created synthetic audit scenarios, not hidden jury profiles or observed employee outcomes",
+  "sampleSize": 18,
+  "liveRequested": true,
+  "liveCalls": 31,
+  "model": "gpt-4.1-mini",
+  "comparison": "Each budget is planned independently. Live provider is called separately per nonempty fixture/budget; compare paired rows with identical fixture and budget.",
+  "limitations": [
+    "Synthetic fixtures do not establish real engagement or hidden-jury accuracy.",
+    "The independent exhaustive oracle measures achievable gap reduction and duration, not learner preference.",
+    "Calendar planning has day precision and minimum physical duration; real availability is not known.",
+    "Same step budget is not the same learning duration; both are reported.",
+    "Provider fallbacks remain visible and are not counted as successful AI calls."
+  ],
+  "summaries": [
+    {
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "cases": 18,
+      "expectedFirstRate": 0.5,
+      "feasibleRate": 1,
+      "verifiedFactorRate": null,
+      "meanOptimalGapRatio": 0.75,
+      "gainCostDominated": 9,
+      "fallbackCount": 0,
+      "p50Ms": 0.08699999999953434,
+      "p95Ms": 1.2164000000000215
+    },
+    {
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "cases": 18,
+      "expectedFirstRate": 1,
+      "feasibleRate": 1,
+      "verifiedFactorRate": null,
+      "meanOptimalGapRatio": 1,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.055699999997159466,
+      "p95Ms": 0.43739999999888823
+    },
+    {
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "cases": 18,
+      "expectedFirstRate": 1,
+      "feasibleRate": 1,
+      "verifiedFactorRate": 1,
+      "meanOptimalGapRatio": 1,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.33250000000043656,
+      "p95Ms": 12.374099999999999
+    },
+    {
+      "mode": "live",
+      "stepBudget": 1,
+      "cases": 15,
+      "expectedFirstRate": 1,
+      "feasibleRate": 1,
+      "verifiedFactorRate": 1,
+      "meanOptimalGapRatio": 1,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 1293.5282999999981,
+      "p95Ms": 3537.655700000003
+    },
+    {
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "cases": 18,
+      "expectedFirstRate": 0.3333333333333333,
+      "feasibleRate": 0.6111111111111112,
+      "verifiedFactorRate": null,
+      "meanOptimalGapRatio": 0.47916666666666663,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.12519999999494758,
+      "p95Ms": 0.6326999999982945
+    },
+    {
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "cases": 18,
+      "expectedFirstRate": 0.8333333333333334,
+      "feasibleRate": 0.6111111111111112,
+      "verifiedFactorRate": null,
+      "meanOptimalGapRatio": 0.4583333333333333,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.08950000000004366,
+      "p95Ms": 0.7796999999991385
+    },
+    {
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "cases": 18,
+      "expectedFirstRate": 1,
+      "feasibleRate": 1,
+      "verifiedFactorRate": 1,
+      "meanOptimalGapRatio": 1,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.6433999999990192,
+      "p95Ms": 3.2871000000013737
+    },
+    {
+      "mode": "live",
+      "stepBudget": 3,
+      "cases": 16,
+      "expectedFirstRate": 0.9375,
+      "feasibleRate": 1,
+      "verifiedFactorRate": 1,
+      "meanOptimalGapRatio": 1,
+      "gainCostDominated": 0,
+      "fallbackCount": 1,
+      "p50Ms": 1879.5455999999976,
+      "p95Ms": 3048.9412000000048
+    },
+    {
+      "mode": "live-not-needed",
+      "stepBudget": 1,
+      "cases": 3,
+      "expectedFirstRate": 1,
+      "feasibleRate": 1,
+      "verifiedFactorRate": null,
+      "meanOptimalGapRatio": 0,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.14419999999881838,
+      "p95Ms": 1.2235000000000582
+    },
+    {
+      "mode": "live-not-needed",
+      "stepBudget": 3,
+      "cases": 2,
+      "expectedFirstRate": 1,
+      "feasibleRate": 1,
+      "verifiedFactorRate": null,
+      "meanOptimalGapRatio": 0,
+      "gainCostDominated": 0,
+      "fallbackCount": 0,
+      "p50Ms": 0.015599999995174585,
+      "p95Ms": 0.031200000001263106
+    }
+  ],
+  "pairedLiveVsRules": [
+    {
+      "fixture": "critical-gap-with-skips",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "cold-start",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "cold-start",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "audience-and-cap",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "audience-and-cap",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "history-changes-choice",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "history-changes-choice",
+      "stepBudget": 3,
+      "modelUsed": false,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "repeated-drops",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "repeated-drops",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": false
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "cap-order-trap",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "cap-order-trap",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "stepBudget": 1,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "stepBudget": 3,
+      "modelUsed": true,
+      "gapDelta": 0,
+      "durationDelta": 0,
+      "sameSequence": true
+    }
+  ],
+  "results": [
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.2164000000000215
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.27309999999988577
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 12.374099999999999
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 2603.392
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.2114000000001397
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.20240000000012515
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.1046000000005733
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "description": "Low speaking with three misses must not eclipse critical design",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 2415.6135999999997
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.10069999999996071
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06769999999960419
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.4252999999998792
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1766.789200000001
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.14499999999861757
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.08150000000023283
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.6433999999990192
+    },
+    {
+      "fixture": "cold-start",
+      "description": "No history is neutral and supports a complete evidence explanation",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1893.8153000000002
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.05320000000028813
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.03800000000046566
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.23149999999986903
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1144.5159999999996
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.09030000000166183
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.040000000000873115
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.30379999999968277
+    },
+    {
+      "fixture": "audience-and-cap",
+      "description": "Obvious activities are excluded by audience or exhausted cap",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 2636.6975
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.039999999999054126
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.01389999999992142
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06350000000020373
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "live-not-needed",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06199999999989814
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.01900000000023283
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.012300000000323053
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.031500000002779416
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "description": "Do not invent an ID to fill a card",
+      "mode": "live-not-needed",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.031200000001263106
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.1172999999998865
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.08220000000073924
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.9398000000001048
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1855.8153999999995
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.5746999999992113
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "SPEAKING",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.08950000000004366
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.6992000000009284
+    },
+    {
+      "fixture": "history-changes-choice",
+      "description": "Identical skills, different observed format history",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": "Model must choose an entire server-verified sequence",
+      "latencyMs": 1804.1473999999998
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.027399999999033753
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.01599999999962165
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.14429999999629217
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "live-not-needed",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.14419999999881838
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.017100000000937143
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.015299999999115244
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.015599999998812564
+    },
+    {
+      "fixture": "unknown-level",
+      "description": "Unknown required skill must not become zero",
+      "mode": "live-not-needed",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.015599999995174585
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.07790000000022701
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.05860000000029686
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.33250000000043656
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1084.513500000001
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.20040000000153668
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "SPEAKING",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.1143000000010943
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.415899999999965
+    },
+    {
+      "fixture": "repeated-drops",
+      "description": "Repeated unfinished learning softly favors another format",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1629.6775000000016
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.08699999999953434
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06700000000273576
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.8977999999988242
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1675.6403999999966
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.6326999999982945
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.14680000000225846
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.7947000000021944
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "description": "Required compliance history does not imply a voluntary learning preference",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 2696.34
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06480000000010477
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.047200000000884756
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.379399999997986
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1270.4830000000002
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.16539999999804422
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.11160000000018044
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.4354999999959546
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "description": "Speaking declines must not penalize design in the same format",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 2151.9082999999955
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 1,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.5,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.10619999999835272
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.08059999999750289
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.3181000000004133
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1503.464
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.133800000003248
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "SPEAKING",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 3,
+      "totalDurationHours": 6,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.0768000000025495
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.2599000000009255
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "description": "Recent success and old drops outweigh old success and recent drops",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": false,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1906.5901999999987
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 3,
+        "gainCostDominated": true,
+        "optimalGapRatio": 0.75,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.04579999999987194
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.43739999999888823
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.2897000000011758
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1059.2849000000024
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.0658000000003085
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.03949999999895226
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.43440000000191503
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "description": "A later mixed activity must not explain growth in an already capped skill",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 5,
+        "achievedWeightedGap": 5,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 3048.9412000000048
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.1264999999984866
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.055699999997159466
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.3923999999969965
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1355.4800000000032
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.6666666666666666,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.09469999999419088
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.6666666666666666,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.10450000000128057
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.5331000000005588
+    },
+    {
+      "fixture": "cap-order-trap",
+      "description": "A low-cap foundation before an advanced course closes the full gap",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1450.933100000002
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.0966000000044005
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.024000000004889444
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.223999999994703
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "live-not-needed",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 0,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": null,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 1.2235000000000582
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.075700000001234
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "totalDurationHours": 0,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": false,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 0,
+        "gainCostDominated": null,
+        "optimalGapRatio": 0,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.026699999994889367
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.866199999996752
+    },
+    {
+      "fixture": "prerequisite-only-bridge",
+      "description": "A prerequisite outside next-grade skills enables the advanced course",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1662.4412999999986
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.14400000000023283
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.09669999999459833
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.7200999999986379
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1030.4430000000066
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.12519999999494758
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.0918999999994412
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.5298000000038883
+    },
+    {
+      "fixture": "reverse-session-dates",
+      "description": "Cannot learn the prerequisite after the only advanced session",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1088.337599999999
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.5670000000027358
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.043900000004214235
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.26419999999779975
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1293.5282999999981
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.3333333333333333,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.16159999999945285
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "AVAILABLE_STEP"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.3333333333333333,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.12700000000040745
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 2.1120999999984633
+    },
+    {
+      "fixture": "later-session-unlocks-chain",
+      "description": "A later advanced session makes the prerequisite chain feasible",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1580.6993000000002
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DECOY_0"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.2649999999994179
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DECOY_0"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.20719999999710126
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DECOY_0"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 2.515000000006694
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DECOY_0"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 3537.655700000003
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DECOY_0",
+        "Z_FINISH"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.6286000000036438
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DECOY_0"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.6666666666666666,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.7796999999991385
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DECOY_0",
+        "Z_FINISH"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 3.2871000000013737
+    },
+    {
+      "fixture": "beyond-ten-candidates",
+      "description": "A course beyond the old ten-item cutoff is needed to complete the gap",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DECOY_0",
+        "Z_FINISH"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1792.6340999999957
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "LONG"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 20,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": true,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.046600000001490116
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SHORT"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 1,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.02870000000257278
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SHORT"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 1,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.21209999999700813
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SHORT"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 1,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 2,
+        "achievedWeightedGap": 2,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1241.5874999999942
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "LONG",
+        "SHORT"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 21,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.11099999999714782
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SHORT",
+        "LONG"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 21,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.7073999999993248
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SHORT",
+        "LONG"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 21,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.412400000001071
+    },
+    {
+      "fixture": "equal-gain-different-duration",
+      "description": "Avoid a longer identical one-step course",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SHORT",
+        "LONG"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 21,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 2106.7474
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "minimum-skill",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.05680000000575092
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "previous-greedy",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.02719999999681022
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "sequential-rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.17590000000200234
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "live",
+      "stepBudget": 1,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 4,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1167.7642999999953
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "minimum-skill",
+      "stepBudget": 3,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.6666666666666666,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06719999999768334
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "previous-greedy",
+      "stepBudget": 3,
+      "selectedIds": [
+        "ADVANCED"
+      ],
+      "selectedCount": 1,
+      "totalDurationHours": 2,
+      "expectedFirst": false,
+      "verifiedFactors": null,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 4,
+        "gainCostDominated": false,
+        "optimalGapRatio": 0.6666666666666666,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.02990000000136206
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "sequential-rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": false,
+      "fallbackReason": null,
+      "latencyMs": 0.26900000000023283
+    },
+    {
+      "fixture": "catalogue-order-invariance",
+      "description": "Reversing source order must not lose the cap-order solution",
+      "mode": "live",
+      "stepBudget": 3,
+      "selectedIds": [
+        "FOUNDATION",
+        "ADVANCED"
+      ],
+      "selectedCount": 2,
+      "totalDurationHours": 4,
+      "expectedFirst": true,
+      "verifiedFactors": true,
+      "oracle": {
+        "feasible": true,
+        "attainableWeightedGap": 6,
+        "achievedWeightedGap": 6,
+        "gainCostDominated": false,
+        "optimalGapRatio": 1,
+        "interpretation": "GAIN_COST_FRONTIER_DOES_NOT_MEASURE_HISTORY_PREFERENCE_OR_ENGAGEMENT"
+      },
+      "searchComplete": true,
+      "modelUsed": true,
+      "fallbackReason": null,
+      "latencyMs": 1879.5455999999976
+    }
+  ],
+  "availableFixtureCount": 18,
+  "providerContract": "historical-sequence-ids-before-plan-id-hardening",
+  "supersededBy": "weakness-live-planid-evaluation.json"
+}

@@ -41,7 +41,7 @@ async function act(row, status) {
       store.lastCompletion = result.data;
     } else
       await request(base + "/status", { method: "PATCH", body: { status } });
-    await loadEmployee(employeeId);
+    await loadEmployee(employeeId, { waitForOptional: false });
     if (store.error)
       actionError.value = message(
         "Изменение сохранено, но перечитать данные не удалось: {error}",
@@ -75,6 +75,7 @@ async function act(row, status) {
       @retry="loadEmployee()"
     >
       <CqDataWarnings />
+      <CqNotice>{{ t('«Завершить» — ваша отметка о выполнении. Навыки обновляются по правилам активности; проверка знаний или подтверждение LMS здесь не выполняется.') }}</CqNotice>
       <p v-if="store.blockLoading.history" role="status">{{ t("Загружаем историю…") }}</p>
       <div class="filters">
         <select

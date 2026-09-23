@@ -94,7 +94,23 @@ model Employee {
   participations    Participation[]
   recommendationSets RecommendationSet[]
   feedback          RecommendationFeedback[]
+  developmentRequest DevelopmentRequest?
   @@index([roleId, gradeId, department])
+}
+
+model DevelopmentRequest {
+  id           String   @id @default(uuid())
+  employeeId   String   @unique
+  status       String   @default("OPEN")
+  version      Int      @default(1)
+  snapshot     Json
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(3)
+  resolvedAt   DateTime? @db.Timestamptz(3)
+  resolution   String?
+  resolvedBy   String?
+  employee     Employee @relation(fields: [employeeId], references: [id])
+  @@index([status, updatedAt])
 }
 
 model EmployeeDevelopmentState {

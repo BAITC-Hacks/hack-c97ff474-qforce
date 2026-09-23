@@ -1,0 +1,8 @@
+{
+  "employeeCount": 200,
+  "skillCount": 12000,
+  "participationCount": 2744,
+  "businessDataSha256": "849b05b0adf261d246dea255fbffd52dd281d3ac559debbdf8324850155b438f",
+  "matchesBefore": true,
+  "hashMethod": "SHA-256 of JSON.stringify([employees ordered by id, employeeSkill ordered by employeeId then skillId, participation ordered by id]), all scalar fields from Prisma findMany"
+}

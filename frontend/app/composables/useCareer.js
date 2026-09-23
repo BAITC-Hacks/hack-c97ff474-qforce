@@ -72,6 +72,11 @@ export function useCareer() {
       store.activities = activities;
     }
   }
+  async function readLatestRecommendations(id) {
+    const path = `/employees/${encodeURIComponent(id)}/recommendations/latest`;
+    const selected = await request(path, { query: { locale: apiLocale() } });
+    return selected.data === null ? (await request(path)).data : selected.data;
+  }
   async function loadBlock(key, id = store.profile?.id, version = loadVersion) {
     if (!id) return;
     const sessionVersion = session.version;
@@ -80,12 +85,7 @@ export function useCareer() {
     // Read first, commit only if both the employee and the session are still current.
     const readers = {
       history: () => allPages(`${path}/history`),
-      recommendations: async () => {
-        const selected = await request(`${path}/recommendations/latest`, { query: { locale: apiLocale() } });
-        // A language switch can reuse saved evidence in another language.
-        // Rendering translates the same facts without a new model call.
-        return selected.data === null ? (await request(`${path}/recommendations/latest`)).data : selected.data;
-      },
+      recommendations: () => readLatestRecommendations(id),
       eligible: async () => (await request(`${path}/eligible-activities`)).data,
       grades: async () => (await request(`/roles/${encodeURIComponent(store.profile.roleId)}/grades`, { query: { locale: apiLocale() } })).data,
       catalogs: loadCatalogs,
@@ -156,6 +156,7 @@ export function useCareer() {
     store,
     loadEmployee,
     loadBlock,
+    readLatestRecommendations,
     loadCatalogs,
     generateRecommendations,
     logout,

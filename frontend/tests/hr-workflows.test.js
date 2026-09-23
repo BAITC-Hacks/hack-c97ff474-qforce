@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { File } from "node:buffer";
 import { test } from "node:test";
-import { computed, ref, shallowRef } from "vue";
+import { computed, ref, shallowRef, watch, nextTick } from "vue";
 import { useLocale } from "../app/composables/useLocale.js";
 import { translate as t } from "../app/utils/i18n.js";
 
@@ -28,8 +28,9 @@ function importScreen(request) {
     "shallowRef",
     "computed",
     "onMounted",
+    "watch",
     source +
-      "\nreturn { choose, run, result, error, busy, canApply, reportWarning };",
+      "\nreturn { choose, run, result, error, busy, canApply, reportWarning, juryMode };",
   );
   return {
     ...build(
@@ -41,6 +42,7 @@ function importScreen(request) {
       shallowRef,
       computed,
       () => {},
+      watch,
     ),
     route,
   };
@@ -128,6 +130,20 @@ test("changing files invalidates a previously successful check", async () => {
   assert.equal(screen.canApply.value, false);
   assert.equal(screen.result.value, null);
   assert.deepEqual(screen.route.query, {});
+});
+
+test("switching to jury copies invalidates the old preview and binds apply to the new namespace and validated run", async () => {
+  const calls=[];
+  const screen=importScreen(async(path,options)=>{
+    calls.push({path,options});
+    return {data:{id:'jury-preview',status:path==='/imports'?'APPLIED':'VALIDATED',report:report()}};
+  });
+  screen.choose([packageFile()]);await screen.run(false);assert.equal(screen.canApply.value,true);
+  screen.juryMode.value=true;await nextTick();assert.equal(screen.canApply.value,false);assert.equal(screen.result.value,null);
+  await screen.run(false);const preview=calls.findLast(call=>call.path==='/imports/dry-run');
+  assert.equal(preview.options.query.mode,'jury');assert.ok(preview.options.query.namespace);
+  await screen.run(true);const apply=calls.find(call=>call.path==='/imports');
+  assert.equal(apply.options.query.namespace,preview.options.query.namespace);assert.equal(apply.options.query.validatedRunId,'jury-preview');
 });
 
 test("failed apply displays server diagnostics and prevents repeated submission while pending", async () => {

@@ -7,6 +7,7 @@ export const importReportSchema = z.object({
   records: z.record(count),
   rules: z.object({asOfDate: z.string().date(), missingSkillLevel: z.number().min(0).max(5).nullable(), baseline: z.enum(['last_review', 'current_snapshot']), repeatableActivityIds: z.array(z.string()), gradeOrder: z.array(z.string()).min(1)}),
   elapsedMs: z.number().nonnegative().optional(),
+  jury: z.object({ namespace:z.string().uuid(), employees:z.array(z.object({originalId:z.string(),importedId:z.string()})), assumptions:z.array(z.object({employeeId:z.string(),field:z.string(),value:z.unknown(),reason:z.string()})) }).optional(),
 });
 export const dryRunResultSchema = z.object({id: z.string().uuid(), status: z.enum(['VALIDATED', 'REJECTED']), report: importReportSchema});
 export const appliedImportSchema = z.object({id: z.string().uuid(), status: z.literal('APPLIED'), report: importReportSchema});

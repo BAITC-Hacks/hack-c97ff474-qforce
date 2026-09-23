@@ -1,6 +1,6 @@
 export type Locale = 'ru' | 'kk' | 'en';
 export type RecommendationStatus = 'READY' | 'NO_ELIGIBLE_ACTIVITIES' | 'DATA_INCOMPLETE' | 'NO_NEXT_GRADE';
-export type FactorCategory = 'CAREER_CONTEXT' | 'SKILL_GAP' | 'PARTICIPATION_HISTORY' | 'FORMAT_PREFERENCE' | 'NOVELTY';
+export type FactorCategory = 'CAREER_CONTEXT' | 'SKILL_GAP' | 'PARTICIPATION_HISTORY' | 'FORMAT_PREFERENCE' | 'NOVELTY' | 'SEQUENCE_CONTEXT' | 'PLAN_COMPARISON';
 export interface Evidence {
   id: string;
   category: FactorCategory;
@@ -41,6 +41,7 @@ export interface RecommendationSet {
   stale: boolean;
   status: RecommendationStatus;
   recommendations: RecommendationItem[];
-  diagnostics: { fallbackReason: string | null; excluded: {activityId: string; reasons: string[]}[]; latencyMs: number; shortlisted: number };
+  diagnostics: { fallbackReason: string | null; excluded: {activityId: string; reasons: string[]}[]; latencyMs: number; shortlisted: number;
+    planning?: {evaluatedSequences: number; complete: boolean; maxSteps: number} };
 }
 export interface Feedback { activityId?: string; rating: 'HELPFUL' | 'NOT_HELPFUL'; reason?: string }

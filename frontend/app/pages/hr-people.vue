@@ -3,7 +3,7 @@ import { t, localeState, apiLocale, catalogText, uiError } from "../utils/i18n.j
 const { request } = useApi();
 const department = ref(""),
   roleId = ref(""),
-  gradeId = ref("");
+  gradeId = ref(""), search = ref("");
 const rows = ref([]),
   roles = ref([]),
   page = ref(1),
@@ -45,6 +45,7 @@ function applyFilters() {
     department: department.value.trim() || undefined,
     roleId: roleId.value || undefined,
     gradeId: gradeId.value.trim() || undefined,
+    search: search.value.trim() || undefined,
   };
   page.value = 1;
   load();
@@ -83,6 +84,7 @@ watch(() => localeState.locale, initialize);
       /></NuxtLink>
     </CqHeading>
     <form class="filters" @submit.prevent="applyFilters">
+      <input v-model="search" class="input" :placeholder="t('Поиск по ID или имени')" :aria-label="t('Поиск по ID или имени')" :disabled="loading" maxlength="200" />
       <CqDepartment v-model="department" :disabled="loading" />
       <select
         v-model="roleId"
@@ -109,7 +111,7 @@ watch(() => localeState.locale, initialize);
     <p class="small muted section">
       {{
         t(
-          "Фильтры используют точное совпадение. Поиск по имени пока недоступен.",
+          "Поиск проверяет ID и имя. Подразделение, роль и грейд фильтруются по точному совпадению.",
         )
       }}
     </p>
@@ -159,6 +161,7 @@ watch(() => localeState.locale, initialize);
                       <div class="sub">{{ employee.id }}</div>
                     </div>
                   </NuxtLink>
+                  <CqEmployeeAccount :employee-id="employee.id" />
                 </td>
                 <td>{{ t(employee.department) }}</td>
                 <td>

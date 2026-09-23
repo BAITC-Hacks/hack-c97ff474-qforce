@@ -1,0 +1,944 @@
+{
+  "generatedAt": "2026-09-23T12:48:01.383Z",
+  "base": "http://127.0.0.1:3001/api/v1",
+  "kind": "Real authenticated HTTP requests against full local dataset; only saved recommendation sets written",
+  "results": [
+    {
+      "employeeId": "E0001",
+      "httpStatus": 201,
+      "elapsedMs": 1420.3528000000001,
+      "source": "AI_ASSISTED",
+      "aiUsed": true,
+      "model": "gpt-4.1-mini",
+      "status": "READY",
+      "rankingVersion": "sequential-plan-v3",
+      "promptVersion": "verified-plan-selection-v3",
+      "cards": 2,
+      "activityIds": [
+        "EV_036",
+        "EV_005"
+      ],
+      "diagnostics": {
+        "excluded": [
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_001"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_002"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_003"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_004"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH",
+              "PREREQUISITES_NOT_MET"
+            ],
+            "activityId": "EV_006"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH",
+              "PREREQUISITES_NOT_MET"
+            ],
+            "activityId": "EV_007"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_008"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH"
+            ],
+            "activityId": "EV_009"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH",
+              "PREREQUISITES_NOT_MET"
+            ],
+            "activityId": "EV_010"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_011"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_012"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_013"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "GRADE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_014"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_015"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_016"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_017"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_018"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_019"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_020"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_021"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "EV_022"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "EV_023"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "GRADE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_024"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_025"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_026"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_027"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_028"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "GRADE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_029"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_030"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "GRADE_MISMATCH"
+            ],
+            "activityId": "EV_031"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_032"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_033"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_034"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_035"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH"
+            ],
+            "activityId": "EV_037"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_038"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_039"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_040"
+          }
+        ],
+        "planning": {
+          "complete": true,
+          "maxSteps": 3,
+          "evaluatedSequences": 4
+        },
+        "latencyMs": 1376,
+        "shortlisted": 2,
+        "fallbackReason": null
+      }
+    },
+    {
+      "employeeId": "E0090",
+      "httpStatus": 201,
+      "elapsedMs": 1226.9153,
+      "source": "AI_ASSISTED",
+      "aiUsed": true,
+      "model": "gpt-4.1-mini",
+      "status": "READY",
+      "rankingVersion": "sequential-plan-v3",
+      "promptVersion": "verified-plan-selection-v3",
+      "cards": 3,
+      "activityIds": [
+        "EV_023",
+        "EV_021",
+        "EV_020"
+      ],
+      "diagnostics": {
+        "excluded": [
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "ALREADY_ACTIVE",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_001"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_002"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_003"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_004"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_005"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_006"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_007"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_008"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_009"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_010"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_011"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_012"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_013"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_014"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_015"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_016"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_017"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_018"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_019"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_026"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_027"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_028"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_029"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_030"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "EV_031"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_032"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_033"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_034"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_035"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH"
+            ],
+            "activityId": "EV_038"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_039"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_040"
+          }
+        ],
+        "planning": {
+          "complete": true,
+          "maxSteps": 3,
+          "evaluatedSequences": 380
+        },
+        "latencyMs": 1181,
+        "shortlisted": 8,
+        "fallbackReason": null
+      }
+    },
+    {
+      "employeeId": "E0028",
+      "httpStatus": 201,
+      "elapsedMs": 1090.0495,
+      "source": "AI_ASSISTED",
+      "aiUsed": true,
+      "model": "gpt-4.1-mini",
+      "status": "READY",
+      "rankingVersion": "sequential-plan-v3",
+      "promptVersion": "verified-plan-selection-v3",
+      "cards": 3,
+      "activityIds": [
+        "EV_009",
+        "EV_010",
+        "EV_037"
+      ],
+      "diagnostics": {
+        "excluded": [
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_001"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_002"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_003"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_004"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_005"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_006"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_007"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_008"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_011"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_012"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_013"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_014"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_015"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_016"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_017"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_018"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_019"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_020"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_021"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "EV_022"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_023"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "PREREQUISITES_NOT_MET",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_024"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_025"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_026"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "EV_027"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_028"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_029"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_030"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_031"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_032"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_033"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_034"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_035"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_036"
+          },
+          {
+            "reasons": [
+              "GRADE_MISMATCH"
+            ],
+            "activityId": "EV_038"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED",
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "EV_039"
+          },
+          {
+            "reasons": [
+              "ALREADY_COMPLETED"
+            ],
+            "activityId": "EV_040"
+          }
+        ],
+        "planning": {
+          "complete": true,
+          "maxSteps": 3,
+          "evaluatedSequences": 15
+        },
+        "latencyMs": 1060,
+        "shortlisted": 3,
+        "fallbackReason": null
+      }
+    }
+  ]
+}

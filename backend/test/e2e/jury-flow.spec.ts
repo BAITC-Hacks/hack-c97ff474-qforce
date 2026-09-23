@@ -1,0 +1,64 @@
+import request from 'supertest';
+import type { INestApplication } from '@nestjs/common';
+import type { PrismaService } from '../../src/shared/infrastructure/database/prisma.service';
+import { ImportService } from '../../src/modules/dataset-import/public';
+import { configuration } from '../../src/config/configuration';
+import { seed } from '../../prisma/seed';
+import { clearTestDatabase, fixtureFiles, testApplication } from '../support/database';
+
+describe('jury preview, isolated import and employee login HTTP workflow',()=>{
+  let app:INestApplication,prisma:PrismaService,hrToken:string,employeeToken:string;
+  const base='/api/v1';
+  beforeAll(async()=>{
+    ({app,prisma}=await testApplication());await clearTestDatabase(prisma);
+    await app.get(ImportService).run(fixtureFiles(),false);await seed(prisma,configuration());
+    hrToken=(await request(app.getHttpServer()).post(`${base}/auth/login`).send({username:'hr',password:'test-hr-password-safe'})).body.data.accessToken;
+    employeeToken=(await request(app.getHttpServer()).post(`${base}/auth/login`).send({username:'employee',password:'test-employee-password-safe'})).body.data.accessToken;
+  });
+  afterAll(async()=>{await app?.close();});
+  it('imports a colliding compact profile only after preview, then supports its own employee journey',async()=>{
+    const original=await prisma.employee.findUniqueOrThrow({where:{id:'fixture_person_a'},include:{skills:true,participations:true}});
+    const source=Buffer.from(JSON.stringify({employee_id:'fixture_person_a',role:'Fixture Engineer',grade:'Apprentice',tenure_months:21,skills:{SK_SYSTEM_DESIGN:1,SK_PUBLIC_SPEAKING:0,SK_SQL:2,SK_COMMUNICATION:2}}));
+    const history=Buffer.from('record_id,employee_id,event_id,date,due_date,status,completion_pct,score,feedback_rating,assigned_by\nFX_H_A_1,fixture_person_a,FX_SQL,2026-09-20,,declined,0,,,self\n');
+    const options={mode:'jury',namespace:'b5010756-c084-4f82-894a-54f065826188'};
+    const send=(url:string,query:Record<string,string>)=>request(app.getHttpServer()).post(`${base}${url}`).set('Authorization',`Bearer ${hrToken}`).query(query).attach('employees',source,'employees.json').attach('history',history,'activity_history.csv');
+    await send('/imports',options).expect(409);
+    const preview=await send('/imports/dry-run',options).expect(200);
+    expect(preview.body.data.status).toBe('VALIDATED');
+    const id=preview.body.data.report.jury.employees[0].importedId as string;
+    expect(await prisma.employee.findUnique({where:{id}})).toBeNull();
+    await send('/imports',{...options,validatedRunId:preview.body.data.id}).expect(201);
+    expect(await prisma.employee.findUniqueOrThrow({where:{id:'fixture_person_a'},include:{skills:true,participations:true}})).toEqual(original);
+    expect(await prisma.participation.count({where:{employeeId:id}})).toBe(1);
+    expect(await prisma.skillChange.count({where:{participation:{employeeId:id}}})).toBe(0);
+    const profile=await request(app.getHttpServer()).get(`${base}/employees/${id}`).set('Authorization',`Bearer ${hrToken}`).expect(200);
+    expect(profile.body.data.importAssumptions.length).toBeGreaterThan(0);
+    const searched=await request(app.getHttpServer()).get(`${base}/employees`).query({search:id}).set('Authorization',`Bearer ${hrToken}`).expect(200);
+    expect(searched.body.data.map((employee:{id:string})=>employee.id)).toEqual([id]);
+    await request(app.getHttpServer()).post(`${base}/auth/employee-accounts`).set('Authorization',`Bearer ${employeeToken}`).send({employeeId:id}).expect(403);
+    const created=await request(app.getHttpServer()).post(`${base}/auth/employee-accounts`).set('Authorization',`Bearer ${hrToken}`).send({employeeId:id}).expect(201);
+    expect(created.headers['cache-control']).toBe('no-store');
+    const credentials=created.body.data;
+    const stored=await prisma.user.findUniqueOrThrow({where:{employeeId:id}});
+    expect(stored.passwordHash.startsWith('scrypt:')).toBe(true);
+    expect(stored.passwordHash===credentials.password).toBe(false);
+    await request(app.getHttpServer()).post(`${base}/auth/employee-accounts`).set('Authorization',`Bearer ${hrToken}`).send({employeeId:id}).expect(409);
+    const login=await request(app.getHttpServer()).post(`${base}/auth/login`).send({username:credentials.username,password:credentials.password}).expect(200);
+    const auth={Authorization:`Bearer ${login.body.data.accessToken}`};
+    await request(app.getHttpServer()).get(`${base}/employees/fixture_person_a`).set(auth).expect(403);
+    const plan=await request(app.getHttpServer()).post(`${base}/employees/${id}/recommendations`).set(auth).send({locale:'en'}).expect(201);
+    expect(plan.body.data.recommendations.length).toBeGreaterThan(0);
+    const registration=await request(app.getHttpServer()).post(`${base}/employees/${id}/participations`).set(auth).send({activityId:'FX_DESIGN_COURSE'}).expect(201);
+    const completed=await request(app.getHttpServer()).post(`${base}/employees/${id}/participations/${registration.body.data.id}/complete`).set(auth).set('Idempotency-Key','jury-completion').send({}).expect(201);
+    expect(completed.body.data.changedSkills).toContainEqual(expect.objectContaining({skillId:'SK_SYSTEM_DESIGN',before:1,after:2}));
+    const report=await request(app.getHttpServer()).get(`${base}/imports/${preview.body.data.id}`).set('Authorization',`Bearer ${hrToken}`).expect(200);
+    expect(JSON.stringify(report.body).includes(credentials.password)).toBe(false);
+  });
+  it('rejects a partial snapshot change without touching the global date or an original profile',async()=>{
+    const before=await prisma.catalogVersion.findUniqueOrThrow({where:{id:'global'}});
+    const source=JSON.parse(fixtureFiles()['employees.json'].toString('utf8'));source.meta.as_of_date='2026-11-01';source.employees=source.employees.slice(0,1);
+    const rejected=await request(app.getHttpServer()).post(`${base}/imports`).set('Authorization',`Bearer ${hrToken}`).attach('employees',Buffer.from(JSON.stringify(source)),'employees.json').expect(422);
+    expect(rejected.body.details.report.diagnostics).toContainEqual(expect.objectContaining({code:'PARTIAL_SNAPSHOT_CONFLICT'}));
+    expect(await prisma.catalogVersion.findUniqueOrThrow({where:{id:'global'}})).toEqual(before);
+  });
+});

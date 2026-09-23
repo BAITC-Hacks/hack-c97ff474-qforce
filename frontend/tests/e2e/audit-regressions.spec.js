@@ -81,3 +81,24 @@ test('Kazakh selection translates the actual flow, persists, and selects kk cata
  await page.getByRole('combobox',{name:'Интерфейс тілі',exact:true}).selectOption('ru');
  await expect(page.getByRole('heading',{name:'Следующий шаг с объяснением',exact:true})).toBeVisible();
 });
+
+test('HR analytics keeps healthy blocks visible, retries coverage alone and paginates gaps alone', async({page})=>{
+ const calls=[];page.on('request',request=>{const url=new URL(request.url());if(url.pathname.startsWith('/api/v1/hr/'))calls.push(url.pathname);});
+ const coverage='**/api/v1/hr/recommendation-coverage?*';
+ await page.route(coverage,route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({code:'COVERAGE_TEST_FAILURE',message:'coverage unavailable',requestId:'test'})}));
+ await page.route('**/api/v1/hr/skill-gaps?*',async route=>{const response=await route.fetch();const body=await response.json();body.meta.total=20;await route.fulfill({response,json:body});});
+ await login(page,'hr');
+ await expect(page.getByTestId('hr-overview').getByTestId('participation-breakdown')).toBeVisible();
+ await expect(page.getByTestId('hr-gaps').getByRole('button',{name:'Следующая страница навыков',exact:true})).toBeEnabled();
+ const failed=page.getByTestId('hr-coverage');await expect(failed).toContainText('COVERAGE_TEST_FAILURE');
+ await expect(page.getByTestId('hr-attention').getByRole('alert')).toHaveCount(0);
+ const beforeRetry=calls.length;await page.unroute(coverage);
+ const retry=page.waitForResponse(response=>response.url().includes('/hr/recommendation-coverage?'));
+ await failed.getByRole('button',{name:'Повторить запрос',exact:true}).click();expect((await retry).ok()).toBeTruthy();
+ await expect(failed.getByRole('alert')).toHaveCount(0);
+ expect(calls.slice(beforeRetry)).toEqual(['/api/v1/hr/recommendation-coverage']);
+ const beforePage=calls.length;const next=page.waitForResponse(response=>response.url().includes('/hr/skill-gaps?')&&new URL(response.url()).searchParams.get('page')==='2');
+ await page.getByTestId('hr-gaps').getByRole('button',{name:'Следующая страница навыков',exact:true}).click();expect((await next).ok()).toBeTruthy();
+ expect(calls.slice(beforePage)).toEqual(['/api/v1/hr/skill-gaps']);
+ await expect(page.getByTestId('hr-overview').getByTestId('participation-breakdown')).toBeVisible();
+});

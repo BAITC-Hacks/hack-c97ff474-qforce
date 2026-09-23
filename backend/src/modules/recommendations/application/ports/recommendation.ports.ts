@@ -1,6 +1,7 @@
 import { DevelopmentContext } from '../../../../shared/domain/context';
 import { ContextVersion, Feedback, Locale, RecommendationSet } from '../../domain/entities/recommendation-set';
 import { Candidate } from '../../domain/policies/ranking.policy';
+import { PlanSummary } from '../../domain/policies/planner.policy';
 
 export interface RecommendationContextPort { context(employeeId: string): Promise<DevelopmentContext> }
 export interface RecommendationRepositoryPort {
@@ -10,7 +11,7 @@ export interface RecommendationRepositoryPort {
   feedback(employeeId: string, setId: string, feedback: Feedback): Promise<{id: string}>;
   preferences(employeeId: string): Promise<Record<string, number>>;
 }
-export interface LlmInput { locale: Locale; candidates: Candidate[] }
+export interface LlmInput { locale: Locale; candidates: Candidate[]; plans?: PlanSummary[] }
 export interface LlmSelection { recommendations: {activityId: string; evidenceIds: string[]}[] }
 export interface LlmRecommendationPort {
   readonly provider: 'disabled' | 'openai' | 'local';

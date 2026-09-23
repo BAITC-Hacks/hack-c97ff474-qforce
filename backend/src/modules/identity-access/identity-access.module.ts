@@ -7,7 +7,11 @@ import { Credentials } from './infrastructure/credentials';
 import { PrismaUsers } from './infrastructure/prisma-users';
 import { AuthController } from './presentation/auth.controller';
 import { AuthGuard } from './presentation/auth.guard';
-@Module({ controllers: [AuthController], providers: [
+import { EmployeeAccountService } from './application/employee-account.service';
+import { PrismaEmployeeAccounts, RandomAccountSecrets } from './infrastructure/employee-accounts';
+import { EmployeeAccountsController } from './presentation/employee-accounts.controller';
+@Module({ controllers: [AuthController,EmployeeAccountsController], providers: [
+  {provide:EmployeeAccountService,inject:[PrismaService],useFactory:(db:PrismaService)=>new EmployeeAccountService(new PrismaEmployeeAccounts(db),new RandomAccountSecrets())},
   { provide: AuthService, inject: [PrismaService], useFactory: (db: PrismaService) => new AuthService(new PrismaUsers(db), new Credentials(configuration())) },
   { provide: APP_GUARD, useClass: AuthGuard },
 ], exports: [AuthService] })

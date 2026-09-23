@@ -39,6 +39,10 @@ export class PrismaImportStore implements ImportStore {
         await this.prisma.$transaction(async (tx) => {
           await tx.$executeRaw`SELECT pg_advisory_xact_lock(723641)`;
           await tx.$queryRaw`SELECT "employeeId" FROM "EmployeeDevelopmentState" ORDER BY "employeeId" FOR UPDATE`;
+          if (parsed.requiredSnapshot) {
+            const currentVersion = await tx.catalogVersion.findUnique({where:{id:'global'}});
+            if (currentVersion?.asOfDate.toISOString().slice(0,10) !== parsed.requiredSnapshot) throw new DomainError('PARTIAL_SNAPSHOT_CONFLICT','The dataset snapshot changed after parsing. Validate the partial package again.',409);
+          }
           validateImport(parsed.plan, await readState(tx), report);
           if (!report.valid) throw new DryRunRollback();
           const catalogChanged = await createCompetencyImportWriter(tx).apply(parsed.plan);

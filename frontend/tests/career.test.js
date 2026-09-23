@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import { useCareer } from '../app/composables/useCareer.js';
 import { saveToken, session, clearSession } from '../app/utils/session.js';
 import { localeState, setLocale, adoptPreferredLocale, initializeLocale, t } from '../app/utils/i18n.js';
+import { createHrAnalytics } from '../app/utils/hr-analytics.js';
+import { readFileSync } from 'node:fs';
+import { ref, computed } from 'vue';
+import { useLocale } from '../app/composables/useLocale.js';
+import { uiError, message } from '../app/utils/i18n.js';
 
 test('an optional recommendation failure keeps profile/trajectory and retry only reads that block', async () => {
   let fail=true; const calls=[];
@@ -84,4 +89,59 @@ test('event-style critical loading returns before a slow recommendation request 
 test('translation preserves imported strings that match JavaScript prototype property names',()=>{
   for(const language of ['ru','kk']){localeState.locale=language;for(const value of ['__proto__','constructor','toString','hasOwnProperty'])assert.equal(t(value),value);}
   localeState.locale='ru';
+});
+
+test('HR analytics isolates errors, retries only one block and discards an older page response', async()=>{
+  const calls=[];let fail=true, finishOld;
+  const old=new Promise(resolve=>finishOld=resolve);
+  const hr=createHrAnalytics(async(path,{query})=>{
+    calls.push({path,query});
+    if(path.endsWith('recommendation-coverage')&&fail)throw Error('coverage unavailable');
+    if(path.endsWith('skill-gaps')&&query.page===2)return old;
+    return {data:path.endsWith('overview')?{employeeCount:200}:[{page:query.page}],meta:{total:30}};
+  });
+  await Promise.all(['overview','gaps','attention','coverage'].map(key=>hr.loadBlock(key,{page:1})));
+  assert.equal(hr.blocks.overview.data.employeeCount,200);assert.equal(hr.blocks.gaps.data.length,1);assert.equal(hr.blocks.coverage.error,'coverage unavailable');
+  const before=calls.length;fail=false;await hr.loadBlock('coverage',{page:1});
+  assert.deepEqual(calls.slice(before).map(row=>row.path),['/hr/recommendation-coverage']);assert.equal(hr.blocks.coverage.error,'');
+  const pending=hr.loadBlock('gaps',{page:2});await hr.loadBlock('gaps',{page:3});finishOld({data:[{page:2}],meta:{total:30}});await pending;
+  assert.equal(hr.blocks.gaps.data[0].page,3);assert.equal(hr.blocks.overview.data.employeeCount,200);
+});
+
+function screenScript(file, bindings, exposed) {
+  const source=readFileSync(new URL('../app/'+file,import.meta.url),'utf8').match(/<script setup>([\s\S]*?)<\/script>/)[1].replace(/^import .*?;\s*$/gm,'');
+  return new Function(...Object.keys(bindings),source+'\nreturn {'+exposed+'};')(...Object.values(bindings));
+}
+
+for(const action of ['complete','enroll'])test(`${action} navigates after saving even while optional recommendations are pending`,async()=>{
+  let finish;const pending=new Promise(resolve=>finish=resolve);let navigation=null;
+  const api={request:async(path,options)=>{
+    if(options?.method==='POST')return {data:{participationId:'p'}};
+    if(path.endsWith('/recommendations/latest'))return pending;
+    if(path==='/employees/a')return {data:{id:'a',roleId:'role'}};
+    return {data:[]};},allPages:async()=>[]};
+  globalThis.useApi=()=>api;saveToken('employee');session.user={role:'EMPLOYEE',employeeId:'a'};
+  const career=useCareer();career.store.profile={id:'a'};
+  const bindings={useCareer, useApi:()=>api, ref, computed, onMounted:()=>{}, navigateTo:async route=>{navigation=route;}, uiError, message, t, useRoute:()=>({query:{id:'course'}}), watch:()=>{}};
+  let saving;
+  try{
+    if(action==='complete'){const screen=screenScript('pages/activities.vue',bindings,'act');saving=screen.act({id:'p'},'completed');}
+    else{const screen=screenScript('pages/event.vue',bindings,'enroll,activity');screen.activity.value={format:'self_paced'};saving=screen.enroll();}
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.ok(navigation,'Successful action must reach its destination without waiting for recommendations');
+    assert.equal(career.store.blockLoading.recommendations,true);
+  }finally{finish({data:{recommendations:[]}});await saving;await new Promise(resolve=>setImmediate(resolve));clearSession();delete globalThis.useApi;}
+});
+
+test('feedback on a saved set from another language retains its recommendation cards',async()=>{
+  const saved={recommendationSetId:'ru-set',recommendations:[{activityId:'course'}]};const calls=[];
+  const api={session,request:async(path,options)=>{calls.push({path,options});return {data:path.endsWith('/feedback')?{id:'feedback'}:options?.query?null:saved};},allPages:async()=>[]};
+  globalThis.useApi=()=>api;saveToken('employee');session.user={role:'EMPLOYEE',employeeId:'a'};localeState.locale='kk';
+  const career=useCareer();career.store.profile={id:'a'};career.store.recommendations=saved;
+  try{
+    const screen=screenScript('components/CqRecommendation.vue',{useCareer:()=>({...career,notify:()=>{}}),useApi:()=>api,useLocale,defineProps:()=>({rec:saved.recommendations[0],readonly:false}),computed,ref},'feedback');
+    await screen.feedback('HELPFUL');
+    assert.equal(career.store.recommendations.recommendationSetId,'ru-set');assert.equal(career.store.recommendations.recommendations.length,1);
+    assert.equal(calls.filter(row=>row.options?.method==='POST').length,1);assert.equal(calls.at(-1).options,undefined);
+  }finally{clearSession();localeState.locale='ru';delete globalThis.useApi;}
 });

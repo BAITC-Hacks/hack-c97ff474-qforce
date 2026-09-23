@@ -3,6 +3,7 @@ export interface EmployeeView {
   id: string; fullName: string; roleId: string; gradeId: string; department: string;
   tenureMonths: number; preferredLanguage: string; workFormat: string; hireDate: string;
   lastReviewDate: string; careerGoal: { target_role: string; target_grade: string } | null; version: number;
+  importAssumptions?: unknown[];
 }
 export interface SkillView { id: string; name: string; type: string; category: string; description: string; translations?: Record<string, unknown>; }
 export interface Requirement { skillId: string; requiredLevel: number; critical: boolean; }

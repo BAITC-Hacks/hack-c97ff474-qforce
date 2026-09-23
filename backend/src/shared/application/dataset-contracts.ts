@@ -13,7 +13,8 @@ export interface ImportedActivity { id: string; title: string; description: stri
 export interface ImportedHistory { id: string; employeeId: string; activityId: string; date: string; dueDate: string | null; status: string; completionPct: number; score: number | null; feedbackRating: number | null; assignedBy: string; metadata: Metadata; sourceHash: string }
 export interface ImportPlan { rules: DatasetRules; skills: ImportedSkill[]; grades: ImportedGrade[]; employees: ImportedEmployee[]; activities: ImportedActivity[]; history: ImportedHistory[]; sourceMetadata: Metadata }
 export interface ImportDiagnostic { file: string; row?: number; recordId?: string; field: string; code: string; message: string }
-export interface ImportReport { valid: boolean; counts: { create: number; update: number; skip: number; conflict: number }; diagnostics: ImportDiagnostic[]; records: Record<string, number>; rules: DatasetRules; elapsedMs?: number }
+export interface JuryImportPreview { namespace: string; employees: { originalId: string; importedId: string }[]; assumptions: { employeeId: string; field: string; value: unknown; reason: string }[] }
+export interface ImportReport { valid: boolean; counts: { create: number; update: number; skip: number; conflict: number }; diagnostics: ImportDiagnostic[]; records: Record<string, number>; rules: DatasetRules; elapsedMs?: number; jury?: JuryImportPreview }
 export interface ExistingImportState {
   skillIds: string[]; skillHashes?: Record<string, string>; grades: { roleId: string; id: string; position?: number; requirements?: { skillId: string; requiredLevel: number; critical: boolean }[]; metadata?: Metadata; translations?: Metadata }[];
   employees: { id: string; sourceHash: string; baselineHash: string; onlineVersion: number; baselineDate: string; hireDate: string }[];

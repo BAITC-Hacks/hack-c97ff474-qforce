@@ -1,0 +1,295 @@
+{
+  "generatedAt": "2026-09-23T12:44:33.783Z",
+  "mode": "read-only-sequential-planner-verification-v3",
+  "externalCalls": 0,
+  "employees": 200,
+  "expectedEmployees": 200,
+  "cards": 374,
+  "gapFacts": 506,
+  "statuses": {
+    "READY": 159,
+    "NO_NEXT_GRADE": 16,
+    "NO_ELIGIBLE_ACTIVITIES": 25
+  },
+  "recovery": [
+    {
+      "employeeId": "E0018",
+      "gaps": 9,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "ALREADY_COMPLETED": 4,
+        "GRADE_MISMATCH": 2
+      }
+    },
+    {
+      "employeeId": "E0021",
+      "gaps": 11,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 6,
+        "NO_RELEVANT_GAIN": 1,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0023",
+      "gaps": 11,
+      "activeActivities": 0,
+      "blockers": {
+        "ALREADY_COMPLETED": 4,
+        "GRADE_MISMATCH": 5,
+        "PREREQUISITES_NOT_MET": 2,
+        "ROLE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0029",
+      "gaps": 11,
+      "activeActivities": 0,
+      "blockers": {
+        "ALREADY_COMPLETED": 7
+      }
+    },
+    {
+      "employeeId": "E0041",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "PREREQUISITES_NOT_MET": 1,
+        "NO_RELEVANT_GAIN": 2,
+        "ALREADY_COMPLETED": 5
+      }
+    },
+    {
+      "employeeId": "E0046",
+      "gaps": 9,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 6,
+        "NO_RELEVANT_GAIN": 1,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0053",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "GRADE_MISMATCH": 3,
+        "PREREQUISITES_NOT_MET": 2,
+        "ALREADY_COMPLETED": 3
+      }
+    },
+    {
+      "employeeId": "E0057",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 3,
+        "PREREQUISITES_NOT_MET": 1,
+        "NO_RELEVANT_GAIN": 2,
+        "ALREADY_COMPLETED": 6,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0065",
+      "gaps": 10,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 2,
+        "ALREADY_COMPLETED": 6,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0079",
+      "gaps": 7,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "ALREADY_COMPLETED": 3,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0091",
+      "gaps": 10,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 2,
+        "ALREADY_COMPLETED": 5,
+        "GRADE_MISMATCH": 2
+      }
+    },
+    {
+      "employeeId": "E0093",
+      "gaps": 13,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 6,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0094",
+      "gaps": 6,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 4,
+        "NO_RELEVANT_GAIN": 1,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0102",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "GRADE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 2,
+        "ALREADY_COMPLETED": 6
+      }
+    },
+    {
+      "employeeId": "E0105",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "PREREQUISITES_NOT_MET": 1,
+        "NO_RELEVANT_GAIN": 2,
+        "ALREADY_COMPLETED": 7
+      }
+    },
+    {
+      "employeeId": "E0111",
+      "gaps": 9,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "PREREQUISITES_NOT_MET": 2,
+        "ALREADY_COMPLETED": 6
+      }
+    },
+    {
+      "employeeId": "E0112",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 5
+      }
+    },
+    {
+      "employeeId": "E0114",
+      "gaps": 9,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "GRADE_MISMATCH": 3,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 4
+      }
+    },
+    {
+      "employeeId": "E0123",
+      "gaps": 6,
+      "activeActivities": 0,
+      "blockers": {
+        "GRADE_MISMATCH": 1,
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 4
+      }
+    },
+    {
+      "employeeId": "E0144",
+      "gaps": 8,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "GRADE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 5
+      }
+    },
+    {
+      "employeeId": "E0160",
+      "gaps": 11,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "GRADE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 5
+      }
+    },
+    {
+      "employeeId": "E0162",
+      "gaps": 10,
+      "activeActivities": 1,
+      "blockers": {
+        "ROLE_MISMATCH": 2,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 6,
+        "ALREADY_ACTIVE": 1,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0185",
+      "gaps": 9,
+      "activeActivities": 0,
+      "blockers": {
+        "ROLE_MISMATCH": 1,
+        "PREREQUISITES_NOT_MET": 1,
+        "ALREADY_COMPLETED": 6,
+        "GRADE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0192",
+      "gaps": 10,
+      "activeActivities": 0,
+      "blockers": {
+        "ALREADY_COMPLETED": 3,
+        "GRADE_MISMATCH": 4,
+        "PREREQUISITES_NOT_MET": 2,
+        "ROLE_MISMATCH": 1
+      }
+    },
+    {
+      "employeeId": "E0197",
+      "gaps": 11,
+      "activeActivities": 0,
+      "blockers": {
+        "ALREADY_COMPLETED": 6,
+        "PREREQUISITES_NOT_MET": 1,
+        "ROLE_MISMATCH": 1,
+        "GRADE_MISMATCH": 1
+      }
+    }
+  ],
+  "plannerOnlyLatencyMs": {
+    "p50": 2.4006540000000314,
+    "p95": 14.073142000000189,
+    "max": 35.6461290000002
+  },
+  "failures": [],
+  "passed": true
+}

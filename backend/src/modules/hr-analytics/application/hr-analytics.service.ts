@@ -1,18 +1,38 @@
-import { DevelopmentPolicies, PROMPT_VERSION, rankCandidates, RANKING_VERSION, contextVersion, sameVersion, cacheKey } from '../../recommendations/public';
+import { buildPlans, DevelopmentPolicies, PROMPT_VERSION, rankCandidates, RANKING_VERSION, contextVersion, sameVersion, cacheKey } from '../../recommendations/public';
 import { HrAnalyticsPort, HrEmployeeSnapshot, HrFilters, HrSnapshot } from './hr-analytics.port';
 
 export class HrAnalyticsService {
   constructor(private readonly projection: HrAnalyticsPort, private readonly policies: DevelopmentPolicies, private readonly now = () => new Date(), private readonly modelIdentity?: {model: string | null; provider: string}) {}
   private window(snapshot: HrSnapshot) { return {asOfDate: snapshot.asOfDate, dateFrom: snapshot.dateFrom, dateTo: snapshot.dateTo}; }
   private history(snapshot: HrSnapshot, employee: HrEmployeeSnapshot) { return employee.context.history.filter(h => h.date.slice(0, 10) >= snapshot.dateFrom && h.date.slice(0, 10) <= snapshot.dateTo); }
+  private participationSummary(records: HrEmployeeSnapshot['context']['history']) {
+    const completedParticipations = records.filter(h => h.status.toUpperCase() === 'COMPLETED').length;
+    return {participationCount: records.length, uniqueParticipants: new Set(records.map(h => h.employeeId)).size,
+      completedParticipations, completionRate: records.length ? completedParticipations / records.length : null};
+  }
+  private participationKind(employee: HrEmployeeSnapshot, activityId: string): 'mandatory' | 'voluntary' | 'unclassified' {
+    const activity = employee.context.activities.find(a => a.id === activityId);
+    return !activity ? 'unclassified' : activity.mandatory ? 'mandatory' : 'voluntary';
+  }
+  private nextStepStatus(context: HrEmployeeSnapshot['context']) {
+    const ranked = rankCandidates(context, this.policies);
+    // A directly useful candidate already proves a feasible one-step plan.
+    // Only the empty case needs the sequence search for prerequisite bridges.
+    return ranked.status === 'NO_ELIGIBLE_ACTIVITIES' ? buildPlans(context, this.policies).status : ranked.status;
+  }
   private paginate<T>(rows: T[], filters: HrFilters, meta: Record<string, unknown>) { return {data: rows.slice((filters.page - 1) * filters.pageSize, filters.page * filters.pageSize), meta: {...meta, total: rows.length, page: filters.page, pageSize: filters.pageSize}}; }
   async overview(filters: HrFilters) {
     const snapshot = await this.projection.snapshot(filters);
     const records = snapshot.employees.flatMap(e => this.history(snapshot, e));
     const completed = records.filter(h => h.status.toUpperCase() === 'COMPLETED').length;
+    const kinds = ['voluntary', 'mandatory', 'unclassified'] as const;
+    const participationByRequirement = Object.fromEntries(kinds.map(kind => [kind, this.participationSummary(
+      snapshot.employees.flatMap(employee => this.history(snapshot, employee).filter(h => this.participationKind(employee, h.activityId) === kind)),
+    )]));
     return {...this.window(snapshot), employeeCount: snapshot.employees.length, participationCount: records.length, uniqueParticipants: new Set(records.map(h => h.employeeId)).size,
       completedParticipations: completed, completionRate: records.length ? completed / records.length : null, completionRateDenominator: 'ALL_RECORDED_PARTICIPATIONS_IN_WINDOW',
-      employeesWithEligibleNextStep: snapshot.employees.filter(e => rankCandidates(e.context, this.policies).candidates.length > 0).length};
+      participationByRequirement,
+      employeesWithEligibleNextStep: snapshot.employees.filter(e => this.nextStepStatus(e.context) === 'READY').length};
   }
   async skillGaps(filters: HrFilters) {
     const snapshot = await this.projection.snapshot(filters);
@@ -47,19 +67,23 @@ export class HrAnalyticsService {
   async needsAttention(filters: HrFilters) {
     const snapshot = await this.projection.snapshot(filters);
     const items = snapshot.employees.map(employee => {
-      const ranking = rankCandidates(employee.context, this.policies);
+      const status = this.nextStepStatus(employee.context);
       const history = this.history(snapshot, employee);
+      const voluntaryParticipations = history.filter(h => this.participationKind(employee, h.activityId) === 'voluntary').length;
+      const mandatoryParticipations = history.filter(h => this.participationKind(employee, h.activityId) === 'mandatory').length;
+      const unclassifiedParticipations = history.length - voluntaryParticipations - mandatoryParticipations;
       const reasons: string[] = [];
-      if (ranking.status === 'DATA_INCOMPLETE') reasons.push('INCOMPLETE_REQUIREMENTS_OR_LEVELS');
-      if (ranking.status === 'NO_ELIGIBLE_ACTIVITIES') reasons.push('NO_ELIGIBLE_ACTIVITIES');
+      if (status === 'DATA_INCOMPLETE') reasons.push('INCOMPLETE_REQUIREMENTS_OR_LEVELS');
+      if (status === 'NO_ELIGIBLE_ACTIVITIES') reasons.push('NO_ELIGIBLE_ACTIVITIES');
       if (history.length === 0) reasons.push('NO_PARTICIPATION_IN_WINDOW');
+      if (voluntaryParticipations === 0 && unclassifiedParticipations === 0) reasons.push('NO_VOLUNTARY_PARTICIPATION_IN_WINDOW');
       const missed = history.filter(h => ['NO_SHOW', 'SKIPPED'].includes(h.status.toUpperCase())).length;
       const dropped = history.filter(h => h.status.toUpperCase() === 'DROPPED').length;
       const declined = history.filter(h => h.status.toUpperCase() === 'DECLINED').length;
       if (missed >= 3) reasons.push('REPEATED_SKIPS_IN_WINDOW');
       if (dropped >= 3) reasons.push('REPEATED_DROPS_IN_WINDOW');
       if (declined >= 3) reasons.push('REPEATED_DECLINES_IN_WINDOW');
-      return {employeeId: employee.context.employee.id, roleId: employee.context.employee.roleId, gradeId: employee.context.employee.gradeId, reasons, recordedParticipations: history.length, skippedParticipations: missed, droppedParticipations: dropped, declinedParticipations: declined};
+      return {employeeId: employee.context.employee.id, roleId: employee.context.employee.roleId, gradeId: employee.context.employee.gradeId, reasons, recordedParticipations: history.length, voluntaryParticipations, mandatoryParticipations, unclassifiedParticipations, skippedParticipations: missed, droppedParticipations: dropped, declinedParticipations: declined};
     }).filter(row => row.reasons.length);
     return this.paginate(items, filters, {...this.window(snapshot), interpretation: 'OBSERVABLE_SIGNALS_ONLY'});
   }
@@ -67,12 +91,12 @@ export class HrAnalyticsService {
     const snapshot = await this.projection.snapshot(filters);
     const counts: Record<string, number> = {NOT_GENERATED: 0, FRESH: 0, STALE: 0, NO_ELIGIBLE_ACTIVITIES: 0, DATA_INCOMPLETE: 0, NO_NEXT_GRADE: 0};
     const items = snapshot.employees.map(employee => {
-      const ranking = rankCandidates(employee.context, this.policies);
+      const nextStepStatus = this.nextStepStatus(employee.context);
       const latest = employee.latest;
       const stale = latest ? !sameVersion(latest.contextVersion, contextVersion(employee.context)) || new Date(latest.expiresAt) <= this.now() || latest.rankingVersion !== RANKING_VERSION || latest.promptVersion !== PROMPT_VERSION || Boolean(this.modelIdentity && latest.cacheKey !== cacheKey(employee.context, latest.locale, this.modelIdentity.model, this.modelIdentity.provider)) : false;
-      const status = ranking.status !== 'READY' ? ranking.status : !latest ? 'NOT_GENERATED' : stale ? 'STALE' : 'FRESH';
+      const status = nextStepStatus !== 'READY' ? nextStepStatus : !latest ? 'NOT_GENERATED' : stale ? 'STALE' : 'FRESH';
       counts[status] = (counts[status] ?? 0) + 1;
-      return {employeeId: employee.context.employee.id, status, hasEligibleNextStep: ranking.candidates.length > 0, recommendationGeneratedAt: latest?.generatedAt ?? null, savedRecommendationStale: stale};
+      return {employeeId: employee.context.employee.id, status, hasEligibleNextStep: nextStepStatus === 'READY', recommendationGeneratedAt: latest?.generatedAt ?? null, savedRecommendationStale: stale};
     });
     return this.paginate(items, filters, {...this.window(snapshot), counts});
   }

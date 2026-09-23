@@ -1,6 +1,5 @@
 <script setup>
 const { t, uiError, unit } = useLocale();
-import { apiLocale } from '../utils/i18n.js';
 import { formats } from "../utils/labels.js";
 const props = defineProps({
   rec: { type: Object, required: true },
@@ -8,7 +7,7 @@ const props = defineProps({
   compact: Boolean,
   readonly: Boolean,
 });
-const { store, skillName, activityName, notify } = useCareer();
+const { store, skillName, activityName, notify, readLatestRecommendations } = useCareer();
 const { request, session } = useApi();
 const activity = computed(() =>
   store.activities.find((a) => a.id === props.rec.activityId),
@@ -27,16 +26,13 @@ async function feedback(rating) {
       `/employees/${encodeURIComponent(employeeId)}/recommendations/${encodeURIComponent(setId)}/feedback`,
       { method: "POST", body: { activityId: props.rec.activityId, rating } },
     );
-    const latest = await request(
-      `/employees/${encodeURIComponent(employeeId)}/recommendations/latest`,
-      { query: { locale: apiLocale() } },
-    );
+    const latest = await readLatestRecommendations(employeeId);
     if (
       session.version === sessionVersion &&
       store.profile?.id === employeeId &&
       store.recommendations?.recommendationSetId === setId
     ) {
-      store.recommendations = latest.data;
+      store.recommendations = latest;
       notify("Обратная связь сохранена.");
     }
   } catch (e) {

@@ -18,6 +18,10 @@ export function validateImport(plan: ImportPlan, existing: ExistingImportState, 
     for (const skillId of Object.keys(employee.skills)) ref(skillIds.has(skillId), 'employees.json', employee.id, 'skills', skillId);
     if (employee.hireDate > plan.rules.asOfDate || employee.lastReviewDate > plan.rules.asOfDate || employee.lastReviewDate < employee.hireDate) diagnose('employees.json', employee.id, 'last_review_date', 'INVALID_DATE', 'Hire/review dates must be ordered and no later than the dataset snapshot');
     const old = existing.employees.find((e) => e.id === employee.id);
+    if (report.jury && old && old.sourceHash !== employee.sourceHash) {
+      diagnose('employees.json', employee.id, 'employee_id', 'JURY_NAMESPACE_CONFLICT', 'This jury namespace already contains a different copy. Start a new jury preview with a new namespace; existing test profiles are not overwritten.');
+      continue;
+    }
     if (!old) report.counts.create++;
     else if (old.sourceHash === employee.sourceHash && old.baselineHash === employee.baselineHash) report.counts.skip++;
     else if (old.baselineHash !== employee.baselineHash) diagnose('employees.json', employee.id, 'skills', 'BASELINE_CONFLICT', `Employee ${employee.id} already has an assessment. To compare a new test profile safely, assign it a new employee_id, update its history employee_id and give copied history rows new record_id values, then import profile and history together. Keep the existing ID and baseline unchanged to append history. No stored progress or ledger was changed.`);

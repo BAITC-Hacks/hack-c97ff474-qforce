@@ -270,10 +270,26 @@ test("multifactor v2 explanation retains critical skill, sequential level, relev
   assert.doesNotMatch(explanation, /999|undefined|NaN/);
   assert.equal(JSON.stringify(rec), original);
   const noRelevant = explainRecommendation({ factors: [{ category: "PARTICIPATION_HISTORY", reasonCode: "NO_RELEVANT_HISTORY", facts: { totalRecorded: 5 } }] });
-  assert.match(noRelevant, /no comparable voluntary (learning|training)/i);
+  assert.match(noRelevant, /no comparable nonmandatory learning/i);
   assert.doesNotMatch(noRelevant, /undefined|NaN/);
   for (const { code } of languages) {
     setLocale(code, false);
     assert.doesNotMatch(explainRecommendation(rec), /undefined|NaN|\{\w+\}/);
   }
+});
+
+test("planned sequences explain prerequisite access, estimated dates and the actual alternative plan", () => {
+  const rec={factors:[
+    {category:'SKILL_GAP',reasonCode:'PREREQUISITE_GAP',facts:{skillId:'SQL',currentLevel:1,requiredLevel:2,actualGain:1,nextLevel:2,requirementType:'ACTIVITY_PREREQUISITE',unlocksActivityIds:['advanced']}},
+    {category:'SEQUENCE_CONTEXT',facts:{step:1,plannedStartDate:'2026-10-01',nextStepNotBefore:'2026-10-03',assumption:'DAY_RESOLUTION_MINIMUM_DURATION'}},
+    {category:'PLAN_COMPARISON',facts:{selectedActivityIds:['intro','advanced'],alternativeActivityIds:['direct'],weightedGapClosed:4,alternativeWeightedGapClosed:3,durationHours:8,alternativeDurationHours:4,historyFit:0.6,alternativeHistoryFit:0.5}},
+    {category:'PARTICIPATION_HISTORY',reasonCode:'OBSERVED_RELEVANT_HISTORY',facts:{scope:'SELF_ASSIGNED_NONMANDATORY_SHARED_SKILLS_OR_CATEGORY',relevantCompleted:2,relevantMissedOrDeclined:0,relevantDropped:1,assignedRecords:3,categoryMatchedRecords:1,dateBasis:'PARTICIPATION_DATE_NOT_COMPLETION_TIME'}},
+  ]};
+  const original=JSON.stringify(rec);setLocale('en',false);
+  const text=explainRecommendation(rec,{activityName:id=>({intro:'Intro',advanced:'Advanced',direct:'Direct'})[id]});
+  assert.match(text,/Prerequisite skill/);assert.match(text,/Unlocks access to: Advanced/);assert.match(text,/not a session booking/);
+  assert.match(text,/Plan Intro, Advanced/);assert.match(text,/Alternative Direct/);assert.match(text,/not a probability/);
+  assert.match(text,/self-enrolled/);assert.match(text,/participation date/);assert.match(text,/assigned by others: 3/);
+  assert.equal(JSON.stringify(rec),original);
+  for(const {code} of languages){setLocale(code,false);assert.doesNotMatch(explainRecommendation(rec),/undefined|NaN|\{\w+\}/);}
 });

@@ -11,6 +11,7 @@ export const pages = [
   ["hr-people", "Сотрудники", "HR"],
   ["hr-employee", "Профиль сотрудника", "HR"],
   ["hr-events", "Участие в активностях", "HR"],
+  ["hr-requests", "Заявки на развитие", "HR"],
   ["import", "Импорт данных", "HR"],
   ["settings", "Настройки и приватность", "Сервис"],
   ["login", "Вход", "Сервис"],
@@ -36,4 +37,5 @@ export const hrMenu = [
   ["hr-people", "Сотрудники", "people"],
   ["hr-events", "Активности", "book"],
   ["import", "Импорт данных", "upload"],
+  ["hr-requests", "Заявки на развитие", "path"],
 ];
