@@ -1,0 +1,308 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  role         String
+  employeeId   String?  @unique
+  employee     Employee? @relation(fields: [employeeId], references: [id])
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model ProfessionalRole {
+  id           String @id
+  name         String
+  translations Json   @default("{}")
+  metadata     Json   @default("{}")
+  grades       Grade[]
+  employees    Employee[]
+  activities   ActivityRole[]
+}
+
+model Grade {
+  roleId       String
+  id           String
+  name         String
+  position     Int
+  translations Json @default("{}")
+  metadata     Json @default("{}")
+  role         ProfessionalRole @relation(fields: [roleId], references: [id])
+  requirements RoleGradeRequirement[]
+  employees    Employee[]
+  @@id([roleId, id])
+  @@unique([roleId, position])
+}
+
+model Skill {
+  id           String @id
+  name         String
+  type         String
+  category     String
+  description  String
+  translations Json @default("{}")
+  metadata     Json @default("{}")
+  sourceHash   String
+  requirements RoleGradeRequirement[]
+  employees    EmployeeSkill[]
+  effects      ActivitySkillEffect[]
+  prerequisites ActivityPrerequisite[]
+  changes      SkillChange[]
+}
+
+model RoleGradeRequirement {
+  roleId       String
+  gradeId      String
+  skillId      String
+  requiredLevel Float
+  critical     Boolean @default(false)
+  grade        Grade @relation(fields: [roleId, gradeId], references: [roleId, id])
+  skill        Skill @relation(fields: [skillId], references: [id])
+  @@id([roleId, gradeId, skillId])
+}
+
+model Employee {
+  id                String @id
+  fullName          String
+  roleId            String
+  gradeId           String
+  department        String
+  managerId         String?
+  hireDate          DateTime @db.Date
+  tenureMonths      Int
+  workFormat        String
+  preferredLanguage String
+  careerGoal        Json?
+  lastReviewDate    DateTime @db.Date
+  sourceHash        String
+  metadata          Json @default("{}")
+  version           Int @default(1)
+  role              ProfessionalRole @relation(fields: [roleId], references: [id])
+  grade             Grade @relation(fields: [roleId, gradeId], references: [roleId, id])
+  manager           Employee? @relation("management", fields: [managerId], references: [id])
+  reports           Employee[] @relation("management")
+  user              User?
+  development       EmployeeDevelopmentState?
+  skills            EmployeeSkill[]
+  participations    Participation[]
+  recommendationSets RecommendationSet[]
+  feedback          RecommendationFeedback[]
+  @@index([roleId, gradeId, department])
+}
+
+model EmployeeDevelopmentState {
+  employeeId        String @id
+  version           Int @default(1)
+  historyVersion    Int @default(1)
+  feedbackVersion   Int @default(1)
+  onlineVersion     Int @default(0)
+  baselineHash      String
+  baselineLevels    Json
+  baselineDate      DateTime @db.Date
+  missingSkillLevel Float?
+  employee          Employee @relation(fields: [employeeId], references: [id])
+}
+
+model EmployeeSkill {
+  employeeId String
+  skillId    String
+  level      Float?
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  skill      Skill @relation(fields: [skillId], references: [id])
+  @@id([employeeId, skillId])
+}
+
+model Activity {
+  id               String @id
+  title            String
+  description      String
+  type             String
+  format           String
+  durationHours    Float
+  mandatory        Boolean
+  repeatable       Boolean @default(false)
+  translations     Json @default("{}")
+  metadata         Json @default("{}")
+  sourceHash       String
+  version          Int @default(1)
+  roles            ActivityRole[]
+  grades           ActivityGrade[]
+  effects          ActivitySkillEffect[]
+  prerequisites    ActivityPrerequisite[]
+  sessions         ActivitySession[]
+  participations   Participation[]
+  recommendations  RecommendationItem[]
+  @@index([type, format, mandatory])
+}
+
+model ActivityRole {
+  activityId String
+  roleId     String
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  role ProfessionalRole @relation(fields: [roleId], references: [id])
+  @@id([activityId, roleId])
+}
+
+model ActivityGrade {
+  activityId String
+  gradeId    String
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  @@id([activityId, gradeId])
+}
+
+model ActivitySkillEffect {
+  activityId String
+  skillId    String
+  gain       Float
+  maxLevel   Float
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id])
+  @@id([activityId, skillId])
+}
+
+model ActivityPrerequisite {
+  activityId String
+  skillId String
+  requiredLevel Float
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id])
+  @@id([activityId, skillId])
+}
+
+model ActivitySession {
+  activityId String
+  date DateTime @db.Date
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  @@id([activityId, date])
+}
+
+model Participation {
+  id               String @id @default(uuid())
+  sourceRecordId   String? @unique
+  employeeId       String
+  activityId       String
+  occurrenceKey    String
+  date             DateTime @db.Date
+  dueDate          DateTime? @db.Date
+  status           String
+  completionPct    Int
+  score            Int?
+  feedbackRating   Int?
+  assignedBy       String
+  source           String
+  actorId          String?
+  gainApplied      Boolean @default(false)
+  completionResult Json?
+  sourceHash       String?
+  metadata         Json @default("{}")
+  createdAt        DateTime @default(now()) @db.Timestamptz(3)
+  completedAt      DateTime? @db.Timestamptz(3)
+  employee         Employee @relation(fields: [employeeId], references: [id])
+  activity         Activity @relation(fields: [activityId], references: [id])
+  changes          SkillChange[]
+  @@unique([employeeId, activityId, occurrenceKey])
+  @@index([employeeId, date])
+  @@index([activityId, status, date])
+}
+
+model SkillChange {
+  id              String @id @default(uuid())
+  participationId String
+  skillId         String
+  beforeLevel     Float
+  afterLevel      Float
+  actualGain      Float
+  reason          String
+  rule            Json
+  actorId         String?
+  createdAt       DateTime @default(now()) @db.Timestamptz(3)
+  participation   Participation @relation(fields: [participationId], references: [id])
+  skill           Skill @relation(fields: [skillId], references: [id])
+  @@unique([participationId, skillId])
+}
+
+model RecommendationSet {
+  id              String @id @default(uuid())
+  employeeId      String
+  generatedAt     DateTime @default(now()) @db.Timestamptz(3)
+  locale          String
+  source          String
+  model           String?
+  promptVersion   String
+  rankingVersion  String
+  contextVersion  Json
+  contextSnapshot Json
+  cacheKey        String
+  expiresAt       DateTime @db.Timestamptz(3)
+  status          String
+  diagnostics     Json
+  employee        Employee @relation(fields: [employeeId], references: [id])
+  items           RecommendationItem[]
+  feedback        RecommendationFeedback[]
+  @@index([employeeId, generatedAt])
+  @@index([cacheKey])
+}
+
+model RecommendationItem {
+  id                     String @id @default(uuid())
+  setId                  String
+  activityId             String
+  rank                   Int
+  score                  Float @default(0)
+  explanation            String
+  factors                Json
+  expectedSkillChanges   Json
+  expectedReadinessDelta Float?
+  set                    RecommendationSet @relation(fields: [setId], references: [id])
+  activity               Activity @relation(fields: [activityId], references: [id])
+  @@unique([setId, rank])
+  @@unique([setId, activityId])
+}
+
+model RecommendationFeedback {
+  id         String @id @default(uuid())
+  setId      String
+  employeeId String
+  activityId String?
+  rating     String?
+  reason     String?
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  set        RecommendationSet @relation(fields: [setId], references: [id])
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  @@index([employeeId, createdAt])
+}
+
+model ImportRun {
+  id         String @id @default(uuid())
+  actorId    String?
+  dryRun     Boolean
+  status     String
+  fileHashes Json
+  report     Json
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  completedAt DateTime? @db.Timestamptz(3)
+}
+
+model IdempotencyRecord {
+  actorId     String
+  operation   String
+  key         String
+  requestHash String
+  response    Json
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  @@id([actorId, operation, key])
+}
+
+model CatalogVersion {
+  id       String @id @default("global")
+  version  Int @default(1)
+  asOfDate DateTime @db.Date
+  metadata Json @default("{}")
+}
