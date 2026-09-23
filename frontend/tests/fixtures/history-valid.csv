@@ -1,0 +1,2 @@
+record_id,employee_id,event_id,date,due_date,status,completion_pct,score,feedback_rating,assigned_by
+QA_VUE_RECORD,QA_VUE_001,EV_036,2026-09-01,,no_show,0,,,self
