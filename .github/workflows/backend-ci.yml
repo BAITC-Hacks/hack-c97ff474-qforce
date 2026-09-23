@@ -1,0 +1,87 @@
+name: Backend checks
+on:
+  push:
+    paths: ['backend/**', '.github/workflows/backend-ci.yml']
+  pull_request:
+    paths: ['backend/**', '.github/workflows/backend-ci.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:17.6-bookworm
+        env:
+          POSTGRES_USER: career_quest_test
+          POSTGRES_PASSWORD: isolated-test-password
+          POSTGRES_DB: career_quest_test
+        ports: ['55432:5432']
+        options: >-
+          --health-cmd "pg_isready -U career_quest_test -d career_quest_test"
+          --health-interval 3s --health-timeout 3s --health-retries 30
+    env:
+      DATABASE_URL: postgresql://career_quest_test:isolated-test-password@127.0.0.1:55432/career_quest_test?schema=public
+      TEST_DATABASE_URL: postgresql://career_quest_test:isolated-test-password@127.0.0.1:55432/career_quest_test?schema=public
+      NODE_ENV: test
+      JWT_SECRET: independent-ci-test-secret-32-characters-long
+      DEMO_MODE: 'true'
+      DEMO_HR_PASSWORD: test-hr-password-safe
+      DEMO_EMPLOYEE_PASSWORD: test-employee-password-safe
+      DEMO_EMPLOYEE_ID: fixture_person_a
+      DATA_MODE: fixtures
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run prisma:generate
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm run db:migrate
+      - run: npm test
+      - run: npm run test:architecture
+      - run: npm run test:integration
+      - run: npm run test:e2e
+      - run: |
+          mkdir -p reports
+          npm run evaluate -- --output reports/evaluation.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-evaluation
+          path: backend/reports
+          if-no-files-found: ignore
+
+  compose-smoke:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - run: cp .env.example .env
+      - run: mkdir -p data/input
+      - run: docker compose up --build --detach --wait --wait-timeout 180
+      - run: docker compose exec -T api node dist/scripts/smoke.js --complete
+      - name: Restart and verify repeatable bootstrap
+        run: |
+          docker compose stop api
+          docker compose run --rm bootstrap
+          docker compose up -d --wait api
+          docker compose exec -T api node dist/scripts/smoke.js
+      - run: docker compose logs --no-color
+        if: failure()
+      - run: docker compose down --volumes
+        if: always()
