@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QCareer — карьера как инженерная задача</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        ink: { 950:'#05120D', 900:'#081A14', 800:'#0C241C', 700:'#123327', 600:'#1B4735', 500:'#2A5F47' },
+        acid: '#3DE690',
+        mint: '#A7F3CF',
+        fog:  '#6FA98D'
+      },
+      fontFamily: {
+        display: ['Unbounded','sans-serif'],
+        sans: ['"IBM Plex Sans"','sans-serif'],
+        mono: ['"JetBrains Mono"','monospace']
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior:smooth; }
+  body {
+    background-color:#05120D;
+    background-image:
+      linear-gradient(rgba(167,243,207,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,243,207,.045) 1px, transparent 1px);
+    background-size:56px 56px;
+    color:#E7F6EE;
+  }
+  ::selection { background:#3DE690; color:#05120D; }
+
+  /* матовый полупрозрачный контейнер */
+  .glass {
+    background: rgba(12,36,28,.58);
+    backdrop-filter: blur(12px) saturate(1.1);
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    border:1px solid rgba(167,243,207,.13);
+  }
+  .glass-soft {
+    background: rgba(167,243,207,.045);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border:1px solid rgba(167,243,207,.12);
+  }
+
+  /* угловые инженерные скобки */
+  .brackets { position:relative; }
+  .brackets::before,.brackets::after,
+  .brackets > .bk::before,.brackets > .bk::after {
+    content:''; position:absolute; width:14px; height:14px;
+    border:1.5px solid #3DE690;
+  }
+  .brackets::before { top:-1px; left:-1px; border-right:0; border-bottom:0; }
+  .brackets::after  { top:-1px; right:-1px; border-left:0; border-bottom:0; }
+  .brackets > .bk::before { bottom:-1px; left:-1px; border-right:0; border-top:0; }
+  .brackets > .bk::after  { bottom:-1px; right:-1px; border-left:0; border-top:0; }
+
+  .dash-anim { stroke-dasharray:6 8; animation:dash 30s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset:-700; } }
+
+  .marquee-track { display:flex; width:max-content; animation:marquee 26s linear infinite; }
+  @keyframes marquee { to { transform:translateX(-50%); } }
+
+  .reveal { opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity:1; transform:none; }
+
+  .row-vac { transition:background .25s ease; }
+  .row-vac:hover { background:rgba(167,243,207,.05); }
+  .row-vac.open { background:rgba(167,243,207,.06); }
+
+  input:focus { outline:none; }
+  .field { transition:border-color .2s ease, background .2s ease; }
+  .field:focus-within { border-color:rgba(61,230,144,.6); background:rgba(61,230,144,.04); }
+
+  #blueprint-wrap { transition:transform .25s ease-out; transform-style:preserve-3d; }
+
+  .link-u { position:relative; }
+  .link-u::after { content:''; position:absolute; left:0; bottom:-3px; height:1px; width:0; background:#3DE690; transition:width .25s ease; }
+  .link-u:hover::after, .link-u.active::after { width:100%; }
+
+  @keyframes toast-in { from { opacity:0; transform:translateY(12px);} to { opacity:1; transform:none;} }
+  .toast { animation:toast-in .3s ease; }
+</style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+<!-- ================= HEADER ================= -->
+<header class="glass sticky top-0 z-40 border-x-0 border-t-0">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-4">
+    <a href="#/" class="flex items-center gap-3 group">
+      <!-- Логотип Q -->
+      <svg width="34" height="34" viewBox="0 0 48 48" fill="none" class="shrink-0">
+        <rect x="1" y="1" width="10" height="10" stroke="#3DE690" stroke-width="1.5" opacity=".5"/>
+        <circle cx="24" cy="24" r="15" stroke="#3DE690" stroke-width="3.5"/>
+        <line x1="33" y1="33" x2="43" y2="43" stroke="#3DE690" stroke-width="3.5" stroke-linecap="square"/>
+        <circle cx="24" cy="24" r="3" fill="#A7F3CF"/>
+      </svg>
+      <span class="font-display font-800 tracking-tight text-lg" style="font-weight:800">Q<span class="text-acid">·</span>Career</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 font-mono text-[13px] tracking-widest uppercase" id="main-nav">
+      <a href="#/" data-nav="home" class="link-u text-mint/80 hover:text-white">Главная</a>
+      <a href="#/profile" data-nav="profile" class="link-u text-mint/80 hover:text-white">Профиль</a>
+    </nav>
+    <div class="flex items-center gap-3" id="nav-auth"><!-- js --></div>
+  </div>
+</header>
+
+<main id="app" class="flex-1"><!-- router --></main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="border-t border-mint/10 mt-0">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 py-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <svg width="26" height="26" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="15" stroke="#3DE690" stroke-width="3.5"/>
+        <line x1="33" y1="33" x2="43" y2="43" stroke="#3DE690" stroke-width="3.5" stroke-linecap="square"/>
+      </svg>
+      <span class="font-mono text-xs text-fog">Q·CAREER // v2.4.0 // ALMATY — ASTANA — REMOTE</span>
+    </div>
+    <nav class="flex gap-6 font-mono text-xs uppercase tracking-widest text-fog">
+      <a href="#/" class="hover:text-acid">Главная</a>
+      <a href="#/login" class="hover:text-acid">Вход</a>
+      <a href="#/register" class="hover:text-acid">Регистрация</a>
+      <a href="#/profile" class="hover:text-acid">Профиль</a>
+    </nav>
+    <span class="font-mono text-xs text-fog">© 2025 QCareer. Все сигналы — зашифрованы.</span>
+  </div>
+</footer>
+
+<div id="toasts" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+
+<script>
+/* ============================ ДАННЫЕ ============================ */
+const VACANCIES = [
+  { id:'FR-01', title:'Frontend-инженер', team:'Core Web', level:'MIDDLE', salary:'от 900 000 ₸', loc:'Алматы / гибрид',
+    desc:'Развиваете дизайн-систему и высоконагруженные интерфейсы банковского контура. TypeScript, React, SSR.', tags:['TypeScript','React','Design System'] },
+  { id:'BE-02', title:'Backend-инженер (Go)', team:'Payments Core', level:'MIDDLE+', salary:'от 1 200 000 ₸', loc:'Астана / гибрид',
+    desc:'Проектируете платёжное ядро: гексагональная архитектура, idempotency, поток в тысячи TPS.', tags:['Golang','Kafka','PostgreSQL'] },
+  { id:'DE-03', title:'Data Engineer', team:'Data Platform', level:'SENIOR', salary:'от 1 400 000 ₸', loc:'Удалённо',
+    desc:'Строите ETL/ELT-контуры и витрины данных для продуктовой аналитики компании.', tags:['Spark','Airflow','ClickHouse'] },
+  { id:'ML-04', title:'ML-инженер', team:'Risk & Scoring', level:'MIDDLE', salary:'от 1 100 000 ₸', loc:'Алматы',
+    desc:'Модели скоринга и антифрода: от фичей до продакшн-инференса с мониторингом дрейфа.', tags:['Python','PyTorch','MLflow'] },
+  { id:'OP-05', title:'DevOps / SRE', team:'Infrastructure', level:'SENIOR', salary:'от 1 350 000 ₸', loc:'Астана / гибрид',
+    desc:'Kubernetes-платформа на 200+ сервисов. SLO, автоскейлинг, cost-инжиниринг.', tags:['K8s','Terraform','Observability'] },
+  { id:'QA-06', title:'QA Automation', team:'Core Web', level:'JUNIOR+', salary:'от 550 000 ₸', loc:'Алматы / офис',
+    desc:'Автоматизируете e2e- и контрактные тесты, поддерживаете CI-pipeline качества.', tags:['Playwright','CI/CD','API'] },
+  { id:'AN-07', title:'Продуктовый аналитик', team:'Growth', level:'MIDDLE', salary:'от 850 000 ₸', loc:'Удалённо',
+    desc:'A/B-эксперименты, воронки, unit-экономика. Ваш вывод — следующий релиз.', tags:['SQL','A/B','Metabase'] },
+  { id:'UX-08', title:'UX-исследователь', team:'Design Ops', level:'MIDDLE', salary:'от 700 000 ₸', loc:'Алматы / гибрид',
+    desc:'Глубинные интервью, юзабилити-тесты, исследовательский репозиторий продукта.', tags:['Interviews','Figma','Research Ops'] },
+];
+
+/* ============================ STORE ============================ */
+const store = {
+  get user(){ try { return JSON.parse(localStorage.getItem('qc_user')); } catch { return null; } },
+  set user(u){ localStorage.setItem('qc_user', JSON.stringify(u)); },
+  clear(){ localStorage.removeItem('qc_user'); localStorage.removeItem('qc_apps'); },
+  get apps(){ try { return JSON.parse(localStorage.getItem('qc_apps')) || []; } catch { return []; } },
+  set apps(a){ localStorage.setItem('qc_apps', JSON.stringify(a)); },
+  get skills(){ try { return JSON.parse(localStorage.getItem('qc_skills')) || ['SQL','Коммуникация','Анализ данных']; } catch { return ['SQL','Коммуникация','Анализ данных']; } },
+  set skills(s){ localStorage.setItem('qc_skills', JSON.stringify(s)); }
+};
+
+/* ============================ УТИЛИТЫ ============================ */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+
+function toast(msg, ok=true){
+  const el = document.createElement('div');
+  el.className = 'toast glass brackets px-4 py-3 rounded font-mono text-sm flex items-center gap-3 max-w-xs';
+  el.innerHTML = `<span class="bk"></span><i data-lucide="${ok?'check-circle-2':'alert-triangle'}" class="w-4 h-4 ${ok?'text-acid':'text-red-400'} shrink-0"></i><span class="text-mint/90">${msg}</span>`;
+  $('#toasts').appendChild(el);
+  lucide.createIcons();
+  setTimeout(()=>{ el.style.transition='opacity .4s'; el.style.opacity='0'; setTimeout(()=>el.remove(),400); }, 3200);
+}
+
+function initReveal(){
+  const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}
+
+function countUp(el){
+  const target = +el.dataset.count, suf = el.dataset.suffix || '';
+  const t0 = performance.now(), dur = 1400;
+  (function tick(t){
+    const p = Math.min((t-t0)/dur, 1), e = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(target*e).toLocaleString('ru-RU') + suf;
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+function initCounters(){
+  const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ countUp(e.target); io.unobserve(e.target);} }), {threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
+}
+
+/* ============================ ЛОГОТИП ============================ */
+function logoSVG(size=34){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" class="shrink-0">
+    <rect x="1" y="1" width="10" height="10" stroke="#3DE690" stroke-width="1.5" opacity=".5"/>
+    <circle cx="24" cy="24" r="15" stroke="#3DE690" stroke-width="3.5"/>
+    <line x1="33" y1="33" x2="43" y2="43" stroke="#3DE690" stroke-width="3.5" stroke-linecap="square"/>
+    <circle cx="24" cy="24" r="3" fill="#A7F3CF"/></svg>`;
+}
+
+/* ============================ ЧЕРТЁЖ Q (hero) ============================ */
+function blueprintQ(){
+  return `
+  <svg id="blueprint" viewBox="0 0 520 520" fill="none" class="w-full max-w-[520px] mx-auto">
+    <defs>
+      <pattern id="hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#3DE690" stroke-width="1" opacity=".25"/>
+      </pattern>
+      <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8" stroke="#3DE690" stroke-width="1.2" fill="none"/>
+      </marker>
+    </defs>
+    <!-- координатная сетка-призрак -->
+    <g opacity=".18" stroke="#6FA98D" stroke-width=".6">
+      <line x1="260" y1="10" x2="260" y2="510" stroke-dasharray="2 6"/>
+      <line x1="10" y1="260" x2="510" y2="260" stroke-dasharray="2 6"/>
+    </g>
+    <!-- перекрестие центра -->
+    <g stroke="#A7F3CF" stroke-width="1">
+      <line x1="248" y1="260" x2="272" y2="260"/><line x1="260" y1="248" x2="260" y2="272"/>
+    </g>
+    <!-- основное кольцо Q -->
+    <circle cx="260" cy="260" r="150" stroke="#3DE690" stroke-width="10"/>
+    <circle cx="260" cy="260" r="168" stroke="#3DE690" stroke-width="1" class="dash-anim" opacity=".7"/>
+    <circle cx="260" cy="260" r="128" stroke="#6FA98D" stroke-width="1" stroke-dasharray="3 7" opacity=".6"/>
+    <!-- хвост 45° -->
+    <line x1="366" y1="366" x2="462" y2="462" stroke="#3DE690" stroke-width="10" stroke-linecap="square"/>
+    <path d="M362 336 A96 96 0 0 1 388 362" stroke="#A7F3CF" stroke-width="1.2"/>
+    <text x="398" y="342" fill="#A7F3CF" font-family="JetBrains Mono" font-size="13">45°</text>
+    <!-- размерная линия гориз. -->
+    <g stroke="#3DE690" stroke-width="1">
+      <line x1="110" y1="62" x2="410" y2="62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+      <line x1="110" y1="52" x2="110" y2="72"/><line x1="410" y1="52" x2="410" y2="72"/>
+    </g>
+    <text x="228" y="50" fill="#A7F3CF" font-family="JetBrains Mono" font-size="13">Ø 300.00</text>
+    <!-- размерная линия верт. -->
+    <g stroke="#3DE690" stroke-width="1">
+      <line x1="470" y1="110" x2="470" y2="410" marker-start="url(#arr)" marker-end="url(#arr)"/>
+      <line x1="460" y1="110" x2="480" y2="110"/><line x1="460" y1="410" x2="480" y2="410"/>
+    </g>
+    <text x="482" y="264" fill="#A7F3CF" font-family="JetBrains Mono" font-size="13" transform="rotate(90 482 264)">R 150.00</text>
+    <!-- выноска хвоста -->
+    <g stroke="#6FA98D" stroke-width="1">
+      <line x1="430" y1="436" x2="430" y2="486"/><line x1="418" y1="486" x2="500" y2="486"/>
+    </g>
+    <text x="424" y="500" fill="#6FA98D" font-family="JetBrains Mono" font-size="11">TAIL / SQ-CAP</text>
+    <!-- опорные точки -->
+    <g fill="#3DE690">
+      <circle cx="260" cy="110" r="3.5"/><circle cx="260" cy="410" r="3.5"/>
+      <circle cx="110" cy="260" r="3.5"/><circle cx="410" cy="260" r="3.5"/>
+    </g>
+    <!-- заливка сегмента штриховкой -->
+    <path d="M260 110 A150 150 0 0 1 410 260 L 372 260 A112 112 0 0 0 260 148 Z" fill="url(#hatch)" stroke="none"/>
+    <!-- шильдики -->
+    <g font-family="JetBrains Mono" font-size="11" fill="#6FA98D">
+      <text x="16" y="30">DWG.NO</text><text x="16" y="46" fill="#A7F3CF">Q-01/CAREER.SYS</text>
+      <text x="428" y="30" text-anchor="end">SCALE</text><text x="428" y="46" text-anchor="end" fill="#A7F3CF">1 : 1</text>
+    </g>
+    <rect x="8" y="8" width="504" height="504" stroke="#3DE690" stroke-width="1" opacity=".3"/>
+  </svg>`;
+}
+
+/* ============================ СТРАНИЦА: ГЛАВНАЯ ============================ */
+function renderHome(){
+  const apps = store.apps;
+  app.innerHTML = `
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 pt-14 pb-10 md:pt-20 md:pb-16 grid md:grid-cols-2 gap-10 items-center">
+      <div class="reveal in">
+        <div class="inline-flex items-center gap-2 glass-soft rounded px-3 py-1.5 font-mono text-[11px] uppercase tracking-[.25em] text-acid mb-7">
+          <span class="w-1.5 h-1.5 bg-acid rounded-full animate-pulse"></span> Система набора открыта
+        </div>
+        <h1 class="font-display leading-[1.05] text-[clamp(1.9rem,5.2vw,3.6rem)]" style="font-weight:800">
+          КАРЬЕРА КАК<br><span class="text-acid">ИНЖЕНЕРНАЯ</span><br>ЗАДАЧА.
+        </h1>
+        <p class="mt-6 text-mint/70 max-w-md leading-relaxed">
+          QCareer — платформа роста, где каждый шаг измерим: позиции, навыки и отклики
+          собраны в один контур. Никакого шума — только данные и решения.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a href="#/register" class="group inline-flex items-center gap-2 bg-acid text-ink-950 font-mono text-sm uppercase tracking-widest px-6 py-3.5 rounded hover:bg-mint transition-colors">
+            Создать профиль <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </a>
+          <a href="#vac" class="inline-flex items-center gap-2 glass-soft text-mint font-mono text-sm uppercase tracking-widest px-6 py-3.5 rounded hover:border-acid/50 transition-colors">
+            К направлениям <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+      <div class="reveal in" id="blueprint-wrap" style="perspective:900px">${blueprintQ()}</div>
+    </div>
+    <!-- бегущая строка -->
+    <div class="border-y border-mint/10 py-3 overflow-hidden select-none">
+      <div class="marquee-track font-mono text-xs uppercase tracking-[.3em] text-fog">
+        ${'<span class="px-6">Рост · измерим</span><span class="text-acid px-6">//</span><span class="px-6">Данные · решения</span><span class="text-acid px-6">//</span><span class="px-6">Q·Career · инженерный подход</span><span class="text-acid px-6">//</span>'.repeat(4)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 / НАПРАВЛЕНИЯ -->
+  <section id="vac" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+    <div class="flex items-end justify-between gap-6 mb-8 reveal">
+      <div>
+        <p class="font-mono text-[11px] uppercase tracking-[.3em] text-acid mb-3">01 / Реестр направлений</p>
+        <h2 class="font-display text-2xl md:text-4xl" style="font-weight:600">Открытые позиции</h2>
+      </div>
+      <span class="hidden md:inline font-mono text-xs text-fog" id="apps-counter">откликов в профиле: ${apps.length}</span>
+    </div>
+    <div class="glass brackets rounded"><span class="bk"></span>
+      <div class="hidden md:grid grid-cols-[64px_1fr_130px_170px_48px] gap-4 px-6 py-3 border-b border-mint/10 font-mono text-[10px] uppercase tracking-[.25em] text-fog">
+        <span>No</span><span>Позиция</span><span>Уровень</span><span class="text-right">Вилка</span><span></span>
+      </div>
+      <div id="vac-list">${VACANCIES.map((v,i)=>rowVac(v,i)).join('')}</div>
+    </div>
+  </section>
+
+  <!-- 02 / ПРОТОКОЛ -->
+  <section class="border-t border-mint/10 bg-ink-900/40">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <p class="font-mono text-[11px] uppercase tracking-[.3em] text-acid mb-3 reveal">02 / Протокол</p>
+      <h2 class="font-display text-2xl md:text-4xl mb-12 reveal" style="font-weight:600">Три шага до оффера</h2>
+      <div class="grid md:grid-cols-3 gap-px bg-mint/10 border border-mint/10 reveal">
+        ${[
+          {n:'01', t:'Регистрация', d:'Создайте профиль за минуту: имя, e-mail, пароль. Система выдаст идентификатор кандидата.', i:'user-plus'},
+          {n:'02', t:'Профиль и навыки', d:'Добавьте компетенции и следите за заполненностью профиля — это ваш «чертёж» для рекрутера.', i:'layers'},
+          {n:'03', t:'Отклик', d:'Отправляйте отклики из реестра позиций. Все заявления и статусы видны в профиле.', i:'send'},
+        ].map(s=>`
+        <div class="bg-ink-900/70 p-8 relative group hover:bg-ink-800/70 transition-colors">
+          <span class="font-mono text-acid text-sm">${s.n}</span>
+          <i data-lucide="${s.i}" class="w-7 h-7 text-acid mt-5 mb-5"></i>
+          <h3 class="font-display text-lg mb-3" style="font-weight:600">${s.t}</h3>
+          <p class="text-mint/60 text-sm leading-relaxed">${s.d}</p>
+          <div class="absolute top-0 left-0 w-5 h-5 border-t border-l border-acid opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 / МЕТРИКИ -->
+  <section class="border-t border-mint/10">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-14">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-y-10 reveal">
+        ${[
+          {v:1240, s:'', l:'кандидатов в системе', pre:''},
+          {v:8, s:'', l:'открытых направлений', pre:''},
+          {v:96, s:'%', l:'доходимость до оффера', pre:''},
+          {v:14, s:' дн.', l:'средний цикл найма', pre:''},
+        ].map(m=>`
+        <div class="border-l border-mint/15 pl-5">
+          <div class="font-display text-3xl md:text-4xl text-acid" style="font-weight:600"><span data-count="${m.v}" data-suffix="${m.s}">0</span></div>
+          <div class="font-mono text-[11px] uppercase tracking-widest text-fog mt-2">${m.l}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="border-t border-mint/10 bg-ink-900/40">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 reveal">
+      <div>
+        <h2 class="font-display text-2xl md:text-3xl" style="font-weight:600">Готовы собрать свой <span class="text-acid">Q</span>?</h2>
+        <p class="text-mint/60 mt-3 max-w-md">Заведите профиль и отправьте первый отклик — система всё измерит сама.</p>
+      </div>
+      <a href="${store.user?'#/profile':'#/register'}" class="group inline-flex items-center gap-2 border border-acid text-acid font-mono text-sm uppercase tracking-widest px-7 py-4 rounded hover:bg-acid hover:text-ink-950 transition-colors">
+        ${store.user?'Мой профиль':'Начать сейчас'} <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+      </a>
+    </div>
+  </section>`;
+
+  lucide.createIcons();
+  initReveal(); initCounters(); initBlueprint(); bindVacancies();
+}
+
+function rowVac(v,i){
+  const applied = store.apps.includes(v.id);
+  return `
+  <div class="row-vac border-b border-mint/10 last:border-b-0 ${applied?'open':''}" data-id="${v.id}">
+    <button class="w-full text-left grid grid-cols-[auto_1fr_auto] md:grid-cols-[64px_1fr_130px_170px_48px] gap-4 items-center px-5 md:px-6 py-5">
+      <span class="font-mono text-xs text-fog">${String(i+1).padStart(2,'0')}</span>
+      <span>
+        <span class="block font-medium">${v.title}</span>
+        <span class="block font-mono text-[11px] text-fog mt-1 uppercase tracking-widest">${v.team} · ${v.loc}</span>
+      </span>
+      <span class="hidden md:inline font-mono text-xs text-acid tracking-widest">${v.level}</span>
+      <span class="hidden md:inline font-mono text-xs text-mint/80 text-right">${v.salary}</span>
+      <span class="justify-self-end"><i data-lucide="plus" class="w-4 h-4 text-fog row-icon transition-transform"></i></span>
+    </button>
+    <div class="hidden px-5 md:px-6 pb-6 pt-1 grid md:grid-cols-[64px_1fr] gap-4" data-panel>
+      <span class="hidden md:block font-mono text-xs text-fog pt-1">${v.id}</span>
+      <div class="flex flex-col md:flex-row md:items-center gap-5 justify-between border-t border-mint/10 pt-4">
+        <div class="max-w-xl">
+          <p class="text-sm text-mint/70 leading-relaxed">${v.desc}</p>
+          <div class="flex flex-wrap gap-2 mt-3">${v.tags.map(t=>`<span class="font-mono text-[10px] uppercase tracking-widest px-2.5 py-1 rounded border border-mint/20 text-mint/70">${t}</span>`).join('')}</div>
+        </div>
+        <button data-apply="${v.id}" class="shrink-0 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest px-5 py-3 rounded transition-colors ${applied?'bg-acid/15 text-acid border border-acid/40':'bg-acid text-ink-950 hover:bg-mint'}">
+          <i data-lucide="${applied?'check':'send'}" class="w-3.5 h-3.5"></i>${applied?'Отклик отправлен':'Откликнуться'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindVacancies(){
+  document.querySelectorAll('.row-vac > button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const row = btn.parentElement, panel = row.querySelector('[data-panel]');
+      const open = !panel.classList.contains('hidden');
+      document.querySelectorAll('[data-panel]').forEach(p=>p.classList.add('hidden'));
+      document.querySelectorAll('.row-vac').forEach(r=>r.classList.remove('open'));
+      document.querySelectorAll('.row-icon').forEach(ic=>ic.style.transform='');
+      if(!open){
+        panel.classList.remove('hidden');
+        row.classList.add('open');
+        row.querySelector('.row-icon').style.transform='rotate(45deg)';
+      }
+    });
+  });
+  document.querySelectorAll('[data-apply]').forEach(b=>{
+    b.addEventListener('click', e=>{
+      e.stopPropagation();
+      const id = b.dataset.apply;
+      if(!store.user){
+        toast('Сначала войдите в систему', false);
+        setTimeout(()=>location.hash='#/login', 900);
+        return;
+      }
+      const apps = store.apps;
+      if(apps.includes(id)){ toast('Этот отклик уже в вашем профиле', false); return; }
+      apps.push(id); store.apps = apps;
+      b.className = b.className.replace('bg-acid text-ink-950 hover:bg-mint','bg-acid/15 text-acid border border-acid/40');
+      b.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i>Отклик отправлен`;
+      b.classList.add('pointer-events-none');
+      lucide.createIcons();
+      const c = $('#apps-counter'); if(c) c.textContent = 'откликов в профиле: ' + apps.length;
+      toast('Отклик сохранён — смотрите в профиле');
+    });
+  });
+}
+
+function initBlueprint(){
+  const wrap = $('#blueprint-wrap');
+  if(!wrap) return;
+  const hero = wrap.closest('section');
+  hero.addEventListener('mousemove', e=>{
+    const r = wrap.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+    wrap.style.transform = `rotateY(${x*10}deg) rotateX(${-y*10}deg)`;
+  });
+  hero.addEventListener('mouseleave', ()=> wrap.style.transform='');
+}
+
+/* ============================ АВТ-ФОРМЫ ============================ */
+function fieldHTML(id, type, label, icon, extra=''){
+  return `
+  <label class="block">
+    <span class="font-mono text-[10px] uppercase tracking-[.25em] text-fog flex items-center gap-2 mb-2"><i data-lucide="${icon}" class="w-3.5 h-3.5 text-acid"></i>${label}</span>
+    <span class="field flex items-center gap-3 rounded border border-mint/15 bg-ink-900/60 px-4">
+      <input id="${id}" type="${type}" ${extra} class="w-full bg-transparent py-3.5 text-sm text-white placeholder:text-fog/50" placeholder="${label}">
+      ${type==='password'?`<button type="button" data-eye="${id}" class="text-fog hover:text-acid transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button>`:''}
+    </span>
+    <span class="block font-mono text-[11px] text-red-400 mt-1.5 h-4" data-err="${id}"></span>
+  </label>`;
+}
+
+function bindPasswordToggles(root){
+  root.querySelectorAll('[data-eye]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const inp = document.getElementById(b.dataset.eye);
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      b.innerHTML = `<i data-lucide="${show?'eye-off':'eye'}" class="w-4 h-4"></i>`;
+      lucide.createIcons();
+    });
+  });
+}
+function setErr(id, msg){
+  const el = document.querySelector(`[data-err="${id}"]`);
+  if(el) el.textContent = msg || '';
+}
+
+/* ============================ СТРАНИЦА: ВХОД ============================ */
+function renderLogin(){
+  if(store.user){ location.hash = '#/profile'; return; }
+  app.innerHTML = `
+  <section class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24 flex flex-1 items-center">
+    <div class="grid md:grid-cols-2 gap-12 w-full items-center">
+      <div class="hidden md:block">
+        <p class="font-mono text-[11px] uppercase tracking-[.3em] text-acid mb-4">// ACCESS.TERMINAL</p>
+        <h1 class="font-display text-4xl leading-tight" style="font-weight:800">ВХОД В<br>СИСТЕМУ.</h1>
+        <p class="text-mint/60 mt-5 max-w-sm leading-relaxed">Идентифицируйтесь, чтобы управлять откликами и навыками. Сессия хранится локально.</p>
+        ${blueprintQ().replace('id="blueprint"','id="blueprint" class="w-full max-w-[380px] opacity-60"')}
+      </div>
+      <div class="glass brackets rounded p-8 md:p-10"><span class="bk"></span>
+        <div class="flex items-center gap-3 mb-8">${logoSVG(30)}<span class="font-display font-bold">Q·Career</span></div>
+        <form id="login-form" novalidate class="space-y-2">
+          ${fieldHTML('li-email','email','E-mail','mail')}
+          ${fieldHTML('li-pass','password','Пароль','lock')}
+          <button class="w-full mt-4 bg-acid text-ink-950 font-mono text-sm uppercase tracking-widest py-4 rounded hover:bg-mint transition-colors inline-flex items-center justify-center gap-2">
+            Войти <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+        <p class="font-mono text-xs text-fog mt-6">Нет доступа? <a href="#/register" class="text-acid link-u">Регистрация →</a></p>
+      </div>
+    </div>
+  </section>`;
+  lucide.createIcons();
+  bindPasswordToggles(app);
+  $('#login-form').addEventListener('submit', e=>{
+    e.preventDefault();
+    const email = $('#li-email').value.trim(), pass = $('#li-pass').value;
+    let ok = true;
+    setErr('li-email', !/^\S+@\S+\.\S+$/.test(email) ? 'Некорректный e-mail' : '') || (ok = ok && /^\S+@\S+\.\S+$/.test(email));
+    setErr('li-pass', pass.length < 6 ? 'Минимум 6 символов' : '');
+    if(!/^\S+@\S+\.\S+$/.test(email) || pass.length < 6) return;
+    const saved = store.user;
+    if(saved && saved.email === email){
+      toast(`С возвращением, ${saved.name}`);
+    } else {
+      store.user = { name: email.split('@')[0], email, id:'QC-'+Math.random().toString(36).slice(2,8).toUpperCase(), since:new Date().toISOString() };
+      toast('Демо-вход выполнен');
+    }
+    location.hash = '#/profile';
+  });
+}
+
+/* ============================ СТРАНИЦА: РЕГИСТРАЦИЯ ============================ */
+function renderRegister(){
+  if(store.user){ location.hash = '#/profile'; return; }
+  app.innerHTML = `
+  <section class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24 flex flex-1 items-center">
+    <div class="grid md:grid-cols-2 gap-12 w-full items-center">
+      <div class="glass brackets rounded p-8 md:p-10 order-2 md:order-1"><span class="bk"></span>
+        <div class="flex items-center gap-3 mb-8">${logoSVG(30)}<span class="font-display font-bold">Q·Career</span></div>
+        <p class="font-mono text-[10px] uppercase tracking-[.25em] text-fog mb-6">Форма QC-01 // новый кандидат</p>
+        <form id="reg-form" novalidate class="space-y-2">
+          ${fieldHTML('rg-name','text','Имя и фамилия','user')}
+          ${fieldHTML('rg-email','email','E-mail','mail')}
+          ${fieldHTML('rg-pass','password','Пароль (мин. 6)','lock')}
+          ${fieldHTML('rg-pass2','password','Повторите пароль','shield-check')}
+          <button class="w-full mt-4 bg-acid text-ink-950 font-mono text-sm uppercase tracking-widest py-4 rounded hover:bg-mint transition-colors inline-flex items-center justify-center gap-2">
+            Создать профиль <i data-lucide="user-plus" class="w-4 h-4"></i>
+          </button>
+        </form>
+        <p class="font-mono text-xs text-fog mt-6">Уже есть доступ? <a href="#/login" class="text-acid link-u">Вход →</a></p>
+      </div>
+      <div class="order-1 md:order-2">
+        <p class="font-mono text-[11px] uppercase tracking-[.3em] text-acid mb-4">// INIT.SEQUENCE</p>
+        <h1 class="font-display text-4xl leading-tight" style="font-weight:800">РЕГИСТРАЦИЯ<br><span class="text-acid">КАНДИДАТА.</span></h1>
+        <ul class="mt-8 space-y-4 max-w-sm">
+          ${[['hash','Локальное хранение — данные не покидают браузер'],['radar','Идентификатор кандидата генерируется автоматически'],['git-branch','Отклики синхронизируются с вашим профилем']].map(([i,t])=>`
+          <li class="flex gap-4 items-start">
+            <span class="glass-soft rounded p-2 mt-0.5"><i data-lucide="${i}" class="w-4 h-4 text-acid"></i></span>
+            <span class="text-sm text-mint/70 leading-relaxed">${t}</span>
+          </li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  </section>`;
+  lucide.createIcons();
+  bindPasswordToggles(app);
+  $('#reg-form').addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = $('#rg-name').value.trim(), email = $('#rg-email').value.trim();
+    const p1 = $('#rg-pass').value, p2 = $('#rg-pass2').value;
+    let valid = true;
+    const checks = [
+      ['rg-name',  name.length >= 2, 'Введите имя'],
+      ['rg-email', /^\S+@\S+\.\S+$/.test(email), 'Некорректный e-mail'],
+      ['rg-pass',  p1.length >= 6, 'Минимум 6 символов'],
+      ['rg-pass2', p1 === p2 && p2.length > 0, 'Пароли не совпадают'],
+    ];
+    checks.forEach(([id, cond, msg])=>{ setErr(id, cond?'':msg); if(!cond) valid=false; });
+    if(!valid) return;
+    store.user = { name, email, id:'QC-'+Math.random().toString(36).slice(2,8).toUpperCase(), since:new Date().toISOString() };
+    toast(`Добро пожаловать, ${name.split(' ')[0]}!`);
+    location.hash = '#/profile';
+  });
+}
+
+/* ============================ СТРАНИЦА: ПРОФИЛЬ ============================ */
+function renderProfile(){
+  const u = store.user;
+  if(!u){ toast('Требуется авторизация', false); location.hash = '#/login'; return; }
+  const apps = store.apps, skills = store.skills;
+  const initials = u.name.split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  const appliedVacs = apps.map(id => VACANCIES.find(v=>v.id===id)).filter(Boolean);
+  const fill = Math.min(100, 35 + skills.length*8 + appliedVacs.length*9);
+
+  app.innerHTML = `
+  <section class="max-w-7xl mx-auto px-5 md:px-8 py-12 md:py-16 flex-1">
+    <p class="font-mono text-[11px] uppercase tracking-[.3em] text-acid mb-6">// CANDIDATE.CONSOLE</p>
+    <div class="grid lg:grid-cols-[1fr_380px] gap-6">
+
+      <!-- левая колонка -->
+      <div class="space-y-6">
+        <div class="glass brackets rounded p-7 md:p-9"><span class="bk"></span>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+            <div class="w-20 h-20 rounded border border-acid/40 bg-ink-800 flex items-center justify-center font-display text-2xl text-acid shrink-0" style="font-weight:800">${initials}</div>
+            <div class="min-w-0">
+              <h1 class="font-display text-2xl md:text-3xl truncate" style="font-weight:600">${u.name}</h1>
+              <p class="text-mint/60 text-sm mt-1 truncate">${u.email}</p>
+              <div class="flex flex-wrap gap-x-6 gap-y-1 mt-3 font-mono text-[11px] uppercase tracking-widest text-fog">
+                <span>ID: <span class="text-acid">${u.id}</span></span>
+                <span>С нами с: <span class="text-mint/80">${new Date(u.since).toLocaleDateString('ru-RU')}</span></span>
+              </div>
+            </div>
+            <button id="logout" class="sm:ml-auto shrink-0 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest px-4 py-3 rounded border border-red-400/30 text-red-300 hover:bg-red-400/10 transition-colors">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>Выйти
+            </button>
+          </div>
+        </div>
+
+        <!-- отклики -->
+        <div class="glass rounded">
+          <div class="flex items-center justify-between px-7 py-4 border-b border-mint/10">
+            <h2 class="font-display text-lg" style="font-weight:600">Мои отклики</h2>
+            <span class="font-mono text-xs text-fog">${appliedVacs.length} активн.</span>
+          </div>
+          ${appliedVacs.length ? appliedVacs.map(v=>`
+          <div class="flex items-center gap-5 px-7 py-5 border-b border-mint/10 last:border-b-0">
+            <span class="font-mono text-xs text-fog hidden sm:block">${v.id}</span>
+            <div class="min-w-0">
+              <p class="font-medium truncate">${v.title}</p>
+              <p class="font-mono text-[11px] text-fog uppercase tracking-widest mt-0.5">${v.team} · ${v.loc}</p>
+            </div>
+            <span class="ml-auto shrink-0 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-acid border border-acid/30 rounded px-2.5 py-1.5">
+              <i data-lucide="clock-3" class="w-3 h-3"></i>На рассмотрении
+            </span>
+          </div>`).join('')
+          : `
+          <div class="px-7 py-12 text-center">
+            <i data-lucide="inbox" class="w-8 h-8 text-fog mx-auto mb-4"></i>
+            <p class="text-mint/60 text-sm mb-5">Пока ни одного отклика. Реестр направлений ждёт.</p>
+            <a href="#/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-acid border border-acid/40 rounded px-5 py-3 hover:bg-acid/10 transition-colors">
+              К позициям <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>`}
+        </div>
+      </div>
+
+      <!-- правая колонка -->
+      <div class="space-y-6">
+        <div class="glass rounded p-7">
+          <h2 class="font-display text-lg mb-5" style="font-weight:600">Заполненность профиля</h2>
+          <div class="flex items-end gap-2 mb-2">
+            <span class="font-display text-4xl text-acid" style="font-weight:600">${fill}%</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-fog mb-1.5">готовности</span>
+          </div>
+          <div class="h-2 rounded bg-ink-700 overflow-hidden">
+            <div class="h-full bg-acid rounded transition-all duration-1000" style="width:${fill}%"></div>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-3 font-mono text-[11px] uppercase tracking-widest text-fog">
+            <span class="flex items-center gap-2"><i data-lucide="${skills.length?'check':'circle'}" class="w-3 h-3 text-acid"></i>Навыки: ${skills.length}</span>
+            <span class="flex items-center gap-2"><i data-lucide="${appliedVacs.length?'check':'circle'}" class="w-3 h-3 text-acid"></i>Отклики: ${appliedVacs.length}</span>
+          </div>
+        </div>
+
+        <div class="glass rounded p-7">
+          <h2 class="font-display text-lg mb-5" style="font-weight:600">Навыки</h2>
+          <div id="skills-box" class="flex flex-wrap gap-2 mb-5">
+            ${skills.map(s=>`
+            <span class="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest px-3 py-2 rounded border border-mint/20 text-mint/80 bg-ink-800/60">
+              ${s}<button data-skill="${s}" class="text-fog hover:text-red-300 transition-colors"><i data-lucide="x" class="w-3 h-3"></i></button>
+            </span>`).join('')}
+          </div>
+          <form id="skill-form" class="field flex items-center gap-2 rounded border border-mint/15 bg-ink-900/60 px-4">
+            <i data-lucide="plus" class="w-4 h-4 text-acid shrink-0"></i>
+            <input id="skill-input" class="w-full bg-transparent py-3 text-sm placeholder:text-fog/50" placeholder="Добавить навык…">
+          </form>
+        </div>
+
+        <a href="#/" class="glass-soft rounded p-5 flex items-center justify-between group hover:border-acid/40 transition-colors">
+          <span class="font-mono text-xs uppercase tracking-widest text-mint/80">Продолжить отклики</span>
+          <i data-lucide="arrow-up-right" class="w-4 h-4 text-acid group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+        </a>
+      </div>
+    </div>
+  </section>`;
+
+  lucide.createIcons();
+  $('#logout').addEventListener('click', ()=>{
+    store.clear(); toast('Сессия завершена'); location.hash = '#/';
+  });
+  $('#skill-form').addEventListener('submit', e=>{
+    e.preventDefault();
+    const v = $('#skill-input').value.trim();
+    if(!v) return;
+    const s = store.skills;
+    if(s.some(x=>x.toLowerCase()===v.toLowerCase())){ toast('Такой навык уже есть', false); return; }
+    s.push(v); store.skills = s; renderProfile(); toast(`Навык «${v}» добавлен`);
+  });
+  document.querySelectorAll('[data-skill]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const s = store.skills.filter(x=>x!==b.dataset.skill);
+      store.skills = s; renderProfile(); toast('Навык удалён');
+    });
+  });
+}
+
+/* ============================ РОУТЕР ============================ */
+const routes = { '':renderHome, 'home':renderHome, 'login':renderLogin, 'register':renderRegister, 'profile':renderProfile };
+function router(){
+  const hash = location.hash.replace('#/','').replace('#','');
+  (routes[hash] || renderHome)();
+  window.scrollTo({top:0});
+  renderNav();
+}
+function renderNav(){
+  const u = store.user;
+  const current = location.hash.replace('#/','').replace('#','');
+  document.querySelectorAll('[data-nav]').forEach(a=>{
+    a.classList.toggle('active', a.dataset.nav === current || (a.dataset.nav==='home' && current===''));
+    a.classList.toggle('text-acid', a.dataset.nav === current || (a.dataset.nav==='home' && current===''));
+  });
+  $('#nav-auth').innerHTML = u
+    ? `<a href="#/profile" class="hidden sm:flex items-center gap-2.5 glass-soft rounded pl-2 pr-4 py-1.5 hover:border-acid/40 transition-colors">
+         <span class="w-7 h-7 rounded-sm bg-acid text-ink-950 font-mono text-xs font-bold flex items-center justify-center">${u.name[0].toUpperCase()}</span>
+         <span class="font-mono text-xs text-mint/80 max-w-[120px] truncate">${u.name}</span>
+       </a>`
+    : `<a href="#/login" class="font-mono text-xs uppercase tracking-widest text-mint/80 hover:text-acid transition-colors px-2">Вход</a>
+       <a href="#/register" class="font-mono text-xs uppercase tracking-widest bg-acid text-ink-950 px-4 py-2.5 rounded hover:bg-mint transition-colors">Регистрация</a>`;
+}
+window.addEventListener('hashchange', router);
+router();
+lucide.createIcons();
+</script>
+</body>
+</html>
