@@ -9,7 +9,7 @@ import { ZodValidationPipe, pageSchema } from '../../../shared/infrastructure/ht
 import { ApiErrors, ApiZodBody, ApiZodResponse } from '../../../shared/infrastructure/http/swagger';
 import { profileSchema, trajectorySchema, participationSchema, completionSchema, eligibleSchema } from './development.dto';
 import { DomainError } from '../../../shared/domain/domain-error';
-const registerSchema = z.object({ activityId: z.string().min(1).max(128), sessionDate: z.string().date().optional() }).strict();
+const registerSchema = z.object({ activityId: z.string().min(1).max(200), sessionDate: z.string().date().optional() }).strict();
 const statusSchema = z.object({ status: z.enum(['in_progress','dropped','no_show','declined']) }).strict();
 const completeSchema = z.object({ note: z.string().max(500).optional() }).strict();
 @ApiTags('development') @ApiBearerAuth() @ApiErrors() @EmployeeScoped() @Controller('employees/:id')

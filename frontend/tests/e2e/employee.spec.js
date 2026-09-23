@@ -67,7 +67,8 @@ test("employee loads actual profile and recommendations, enrolls/completes and r
   await expect(page.locator(".rec-card")).toHaveCount(
     set.recommendations.length,
   );
-  if (set.recommendations.length) {
+  expect(set.recommendations.length, "Fresh fixture stack must return recommendations").toBeGreaterThan(0);
+  {
     const feedback = page.waitForResponse((response) =>
       response.url().endsWith("/feedback"),
     );
@@ -85,7 +86,8 @@ test("employee loads actual profile and recommendations, enrolls/completes and r
   const activity = eligible.eligible.find(
     (row) => row.activity.format === "self_paced",
   )?.activity;
-  if (activity) {
+  expect(activity, "Run this business-cycle test against a fresh isolated fixture stack").toBeTruthy();
+  {
     await page.goto("/event?id=" + encodeURIComponent(activity.id));
     await expect(
       page.getByRole("heading", { name: activity.title, exact: true }),
@@ -165,24 +167,6 @@ test("employee loads actual profile and recommendations, enrolls/completes and r
       path: testInfo.outputPath("completion-desktop.png"),
       fullPage: true,
     });
-  } else {
-    // Repeated runs preserve existing local progress and verify its recorded result.
-    const completed = history.find(
-      (row) =>
-        row.status === "completed" && row.completionResult?.trajectoryAfter,
-    );
-    expect(
-      completed,
-      "Run against the documented fixtures for an available or previously completed activity",
-    ).toBeTruthy();
-    await page.goto("/completion?id=" + encodeURIComponent(completed.id));
-    await expect(
-      page.getByText("После завершения", { exact: true }),
-    ).toBeVisible();
-    await page.reload();
-    await expect(
-      page.getByText("После завершения", { exact: true }),
-    ).toBeVisible();
   }
   expect(errors).toEqual([]);
 });

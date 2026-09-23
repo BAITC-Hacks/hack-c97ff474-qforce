@@ -1,12 +1,17 @@
 <script setup>
+import { t } from '../utils/i18n.js';
+import { localeState } from "../utils/i18n.js";
 import { date, formats, reasonLabel } from "../utils/labels.js";
 const route = useRoute(),
   { request } = useApi();
-const { store, loadEmployee, skillName } = useCareer();
+const { store, loadEmployee, loadCatalogs, skillName } = useCareer();
+const hr = computed(() => store.user?.role === 'HR');
+const employeeId = computed(() => hr.value ? (typeof route.query.employee === 'string' ? route.query.employee : '') : store.user?.employeeId);
 const activity = ref(null),
   loading = ref(true),
   error = ref(""),
   actionError = ref(""),
+  catalogError = ref(""),
   busy = ref(false),
   sessionDate = ref("");
 const id = computed(() =>
@@ -23,12 +28,12 @@ const participation = computed(() =>
   ),
 );
 const recommendation = computed(() =>
-  store.recommendations?.recommendations.find(
+  employeeId.value && store.profile?.id === employeeId.value && store.recommendations?.recommendations.find(
     (row) => row.activityId === id.value,
   ),
 );
 const eligibility = computed(() =>
-  store.eligible?.eligible.find((row) => row.activity.id === id.value),
+  employeeId.value && store.profile?.id === employeeId.value && store.eligible?.eligible.find((row) => row.activity.id === id.value),
 );
 const excluded = computed(
   () =>
@@ -40,6 +45,11 @@ const sessions = computed(() =>
     (value) => value >= (store.eligible?.asOfDate || ""),
   ),
 );
+watch(sessions, values => { if (!values.includes(sessionDate.value)) sessionDate.value = values[0] || ''; });
+async function loadEventCatalog() {
+  catalogError.value = '';
+  try { await loadCatalogs(); } catch (cause) { catalogError.value = cause.message; }
+}
 let version = 0;
 async function load() {
   const current = ++version;
@@ -54,26 +64,27 @@ async function load() {
   try {
     const [result] = await Promise.all([
       request("/activities/" + encodeURIComponent(id.value), {
-        query: { locale: "ru" },
+        query: { locale: localeState.locale },
       }),
-      loadEmployee(),
+      employeeId.value ? loadEmployee(employeeId.value, { waitForOptional: false }) : Promise.resolve(),
     ]);
     if (current !== version) return;
     activity.value = result.data;
+    if (!employeeId.value) void loadEventCatalog();
     sessionDate.value =
       result.data.upcomingSessions.find(
         (value) => value >= (store.eligible?.asOfDate || ""),
       ) || "";
-    if (store.error) error.value = store.error;
+    if (employeeId.value && store.error) error.value = store.error;
   } catch (e) {
     if (current === version) error.value = e.message;
   } finally {
     if (current === version) loading.value = false;
   }
 }
-watch(id, load, { immediate: true });
+watch([id, employeeId, () => localeState.locale], load, { immediate: true });
 async function enroll() {
-  if (busy.value || !store.profile) return;
+  if (hr.value || busy.value || !store.profile) return;
   busy.value = true;
   actionError.value = "";
   try {
@@ -105,44 +116,46 @@ async function enroll() {
   <CqAsync :loading="loading" :error="error" @retry="load"
     ><div v-if="activity">
       <CqHeading :title="activity.title" :subtitle="activity.id"
-        ><NuxtLink to="/catalog" class="btn secondary"
-          >К каталогу <CqIcon name="back" /></NuxtLink
+        ><NuxtLink :to="hr ? (employeeId ? { path: '/hr-employee', query: { id: employeeId } } : '/hr-events') : '/catalog'" class="btn secondary"
+          >{{ t(hr ? 'Назад' : 'К каталогу') }} <CqIcon name="back" /></NuxtLink
       ></CqHeading>
+      <CqDataWarnings v-if="employeeId" />
+      <div v-if="catalogError" role="alert"><CqNotice color="gold">{{ t(catalogError) }}</CqNotice><button class="btn secondary" @click="loadEventCatalog">{{ t('Повторить загрузку блока') }}</button></div>
       <div class="grid main-aside">
         <div class="stack">
           <section class="panel">
             <div class="event-cover">
               <div>
-                <div class="eyebrow text-primary">Развивающая активность</div>
-                <h2 class="my-2.5">От обучения —<br />к конкретному навыку</h2>
+                <div class="eyebrow text-primary"> {{ t("Развивающая активность") }} </div>
+                <h2 class="my-2.5"> {{ t("От обучения —") }} <br /> {{ t("к конкретному навыку") }} </h2>
                 <div class="tags">
-                  <CqTag color="green">{{ formats[activity.format] }}</CqTag
+                  <CqTag color="green">{{ t(formats[activity.format]) }}</CqTag
                   ><CqTag color="outline">{{ activity.type }}</CqTag>
                 </div>
               </div>
               <div class="cover-icon"><CqIcon name="layers" /></div>
             </div>
-            <h2>Об активности</h2>
+            <h2> {{ t("Об активности") }} </h2>
             <p class="small muted section">{{ activity.description }}</p>
             <div class="event-facts">
               <div>
-                <small>Трудозатраты</small
-                ><strong>{{ activity.durationHours }} часов</strong>
+                <small> {{ t("Трудозатраты") }} </small
+                ><strong>{{ activity.durationHours }} {{ t("часов") }} </strong>
               </div>
               <div>
-                <small>Формат</small
-                ><strong>{{ formats[activity.format] }}</strong>
+                <small> {{ t("Формат") }} </small
+                ><strong>{{ t(formats[activity.format]) }}</strong>
               </div>
               <div>
-                <small>Начало</small
+                <small> {{ t("Начало") }} </small
                 ><strong>{{
-                  activity.format === "self_paced"
+                  t(activity.format === "self_paced"
                     ? "В своём темпе"
-                    : date(sessionDate)
+                    : date(sessionDate))
                 }}</strong>
               </div>
             </div>
-            <h3>Навыки и правила активности</h3>
+            <h3> {{ t("Навыки и правила активности") }} </h3>
             <div
               v-for="effect in activity.effects"
               :key="effect.skillId"
@@ -150,15 +163,11 @@ async function enroll() {
             >
               <div>
                 <strong>{{ skillName(effect.skillId) }}</strong>
-                <div class="small muted">
-                  Прирост по правилу: {{ effect.gain }} · потолок:
-                  {{ effect.maxLevel }}
+                <div class="small muted"> {{ t("Прирост по правилу:") }} {{ effect.gain }} {{ t("· потолок:") }} {{ effect.maxLevel }}
                 </div>
               </div>
             </div>
-            <p v-if="!activity.effects.length" class="empty-inline">
-              Изменение навыков для активности не задано.
-            </p>
+            <p v-if="!activity.effects.length" class="empty-inline"> {{ t("Изменение навыков для активности не задано.") }} </p>
             <div
               v-for="change in eligibility?.expectedSkillChanges || []"
               :key="change.skillId"
@@ -172,54 +181,49 @@ async function enroll() {
               >
             </div>
             <CqNotice
-              >Фактическое изменение навыков сохраняется после завершения и
-              учитывает ваш текущий уровень.</CqNotice
+              > {{ t("Фактическое изменение навыков сохраняется после завершения и учитывает ваш текущий уровень.") }} </CqNotice
             >
           </section>
         <section v-if="recommendation" class="panel">
-          <h2>Почему этот шаг?</h2>
-          <CqNotice v-if="store.recommendations?.stale" color="gold">
-            Это объяснение из предыдущего подбора. Обновите рекомендации с учётом текущего профиля.
-          </CqNotice>
+          <h2> {{ t("Почему этот шаг?") }} </h2>
+          <CqNotice v-if="store.recommendations?.stale" color="gold"> {{ t("Это объяснение из предыдущего подбора. Обновите рекомендации с учётом текущего профиля.") }} </CqNotice>
           <CqEvidence :rec="recommendation" />
           </section>
         </div>
         <div class="stack">
-          <section class="panel">
+          <section v-if="!hr" class="panel">
             <h2>
               {{
-                activity.mandatory
+                t(activity.mandatory
                   ? "Обязательное обучение"
-                  : "Участие в активности"
+                  : "Участие в активности")
               }}
             </h2>
             <div v-if="activity.format !== 'self_paced'" class="field">
-              <label for="sessionDate">Дата сессии</label
+              <label for="sessionDate"> {{ t("Дата сессии") }} </label
               ><select
                 id="sessionDate"
                 v-model="sessionDate"
                 class="select"
                 :disabled="busy"
               >
-                <option value="" disabled>Нет доступной сессии</option>
+                <option value="" disabled> {{ t("Нет доступной сессии") }} </option>
                 <option v-for="value in sessions" :key="value" :value="value">
                   {{ date(value) }}
                 </option>
               </select>
             </div>
             <CqNotice v-if="excluded.length" color="gold"
-              >Не включена в рекомендации:
-              {{ excluded.map(reasonLabel).join(" · ") }}. Возможность записи
-              дополнительно проверяется при отправке.</CqNotice
+              > {{ t("Не включена в рекомендации:") }} {{ excluded.map(reasonLabel).join(" · ") }} {{ t(". Возможность записи дополнительно проверяется при отправке.") }} </CqNotice
             >
             <CqNotice v-if="actionError" color="red" role="alert">{{
-              actionError
+              t(actionError)
             }}</CqNotice>
             <NuxtLink
               v-if="participation"
               to="/activities"
               class="btn wide section"
-              >Открыть моё участие</NuxtLink
+              > {{ t("Открыть моё участие") }} </NuxtLink
             >
             <button
               v-else
@@ -231,11 +235,12 @@ async function enroll() {
               "
               @click="enroll"
             >
-              {{ busy ? "Сохраняем…" : "Записаться" }} <CqIcon name="check" />
+              {{ t(busy ? "Сохраняем…" : "Записаться") }} <CqIcon name="check" />
             </button>
           </section>
+          <section v-if="hr" class="panel"><h2>{{ t('Просмотр активности') }}</h2><CqNotice>{{ t('HR может изучать активность. Запись, завершение и отказ доступны самому сотруднику.') }}</CqNotice></section>
           <section class="panel">
-            <h3>Входные требования</h3>
+            <h3> {{ t("Входные требования") }} </h3>
             <p
               v-for="(level, skill) in activity.prerequisites"
               :key="skill"
@@ -246,9 +251,7 @@ async function enroll() {
             <p
               v-if="!Object.keys(activity.prerequisites).length"
               class="small muted section"
-            >
-              Требования к навыкам не заданы.
-            </p>
+            > {{ t("Требования к навыкам не заданы.") }} </p>
           </section>
         </div>
       </div>

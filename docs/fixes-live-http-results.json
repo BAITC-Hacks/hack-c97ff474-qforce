@@ -1,0 +1,652 @@
+{
+  "timestamp": "2026-09-23T11:32:46.209Z",
+  "base": "http://127.0.0.1:3001",
+  "checks": [
+    {
+      "name": "health",
+      "status": 200
+    },
+    {
+      "name": "full_dataset",
+      "employeeCount": 200
+    },
+    {
+      "name": "live_recommendation",
+      "employeeId": "E0001",
+      "status": 201,
+      "ms": 1970,
+      "source": "AI_ASSISTED",
+      "aiUsed": true,
+      "model": "gpt-4.1-mini",
+      "fallbackReason": null,
+      "recommendations": [
+        {
+          "activityId": "EV_005",
+          "rank": 1,
+          "score": 0.534375,
+          "explanation": "Роль Backend Engineer, переход Junior → Middle. История есть, но сопоставимого добровольного обучения по этим навыкам пока нет; предпочтение неизвестно. System Design: уровень 1, требование 2; ожидаемый прирост 1, до 2. API Design: уровень 2, требование 3 (критичный навык); ожидаемый прирост 1, до 3.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Backend Engineer",
+                "nextGradeId": "Middle",
+                "currentGradeId": "Junior"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_005",
+              "facts": {
+                "type": "course",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "online",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 7,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RELEVANT_HISTORY"
+            },
+            {
+              "id": "gap:EV_005:SK_SYSTEM_DESIGN",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_SYSTEM_DESIGN",
+                "critical": false,
+                "nextLevel": 2,
+                "skillName": "System Design",
+                "actualGain": 1,
+                "skillNameKk": "System Design",
+                "skillNameRu": "System Design",
+                "currentLevel": 1,
+                "requiredLevel": 2
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            },
+            {
+              "id": "gap:EV_005:SK_API_DESIGN",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_API_DESIGN",
+                "critical": true,
+                "nextLevel": 3,
+                "skillName": "API Design",
+                "actualGain": 1,
+                "skillNameKk": "API Design",
+                "skillNameRu": "API Design",
+                "currentLevel": 2,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_SYSTEM_DESIGN",
+              "actualGain": 1
+            },
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_API_DESIGN",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 6.060606
+        },
+        {
+          "activityId": "EV_036",
+          "rank": 2,
+          "score": 0.478125,
+          "explanation": "Роль Backend Engineer, переход Junior → Middle. История есть, но сопоставимого добровольного обучения по этим навыкам пока нет; предпочтение неизвестно. Public Speaking: уровень 0, требование 1; ожидаемый прирост 1, до 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Backend Engineer",
+                "nextGradeId": "Middle",
+                "currentGradeId": "Junior"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_036",
+              "facts": {
+                "type": "meetup",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "offline",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 7,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RELEVANT_HISTORY"
+            },
+            {
+              "id": "gap:EV_036:SK_PUBLIC_SPEAKING",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_PUBLIC_SPEAKING",
+                "critical": false,
+                "nextLevel": 1,
+                "skillName": "Public Speaking",
+                "actualGain": 1,
+                "skillNameKk": "Public Speaking",
+                "skillNameRu": "Public Speaking",
+                "currentLevel": 0,
+                "requiredLevel": 1
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PUBLIC_SPEAKING",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 3.030303
+        }
+      ]
+    },
+    {
+      "name": "live_recommendation",
+      "employeeId": "E0090",
+      "status": 201,
+      "ms": 1834,
+      "source": "AI_ASSISTED",
+      "aiUsed": true,
+      "model": "gpt-4.1-mini",
+      "fallbackReason": null,
+      "recommendations": [
+        {
+          "activityId": "EV_021",
+          "rank": 1,
+          "score": 0.54375,
+          "explanation": "Роль Data Analyst, переход Middle → Senior. История есть, но сопоставимого добровольного обучения по этим навыкам пока нет; предпочтение неизвестно. A/B Testing: уровень 1, требование 4 (критичный навык); ожидаемый прирост 1, до 2. Statistics: уровень 2, требование 4 (критичный навык); ожидаемый прирост 1, до 3.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Data Analyst",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_021",
+              "facts": {
+                "type": "workshop",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "online",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 10,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RELEVANT_HISTORY"
+            },
+            {
+              "id": "gap:EV_021:SK_AB_TESTING",
+              "facts": {
+                "gap": 3,
+                "skillId": "SK_AB_TESTING",
+                "critical": true,
+                "nextLevel": 2,
+                "skillName": "A/B Testing",
+                "actualGain": 1,
+                "skillNameKk": "A/B Testing",
+                "skillNameRu": "A/B Testing",
+                "currentLevel": 1,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            },
+            {
+              "id": "gap:EV_021:SK_STATISTICS",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_STATISTICS",
+                "critical": true,
+                "nextLevel": 3,
+                "skillName": "Statistics",
+                "actualGain": 1,
+                "skillNameKk": "Statistics",
+                "skillNameRu": "Statistics",
+                "currentLevel": 2,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_AB_TESTING",
+              "actualGain": 1
+            },
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_STATISTICS",
+              "actualGain": 1
+            },
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PRODUCT_ANALYTICS",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 6.382979
+        },
+        {
+          "activityId": "EV_023",
+          "rank": 2,
+          "score": 0.472056,
+          "explanation": "Роль Data Analyst, переход Middle → Senior. Сопоставимое добровольное обучение: завершений 1, пропусков и отказов 0, прерванных активностей 0. Недавний опыт и совпадение формата и типа имеют больший вес; это мягкий сигнал предпочтения. Public Speaking: уровень 0, требование 2; ожидаемый прирост 1, до 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Data Analyst",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_023",
+              "facts": {
+                "type": "workshop",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "offline",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 10,
+                "relevantDropped": 0,
+                "relevantCompleted": 1,
+                "weightedCompleted": 0.092213,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 1,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_RELEVANT_HISTORY"
+            },
+            {
+              "id": "gap:EV_023:SK_PUBLIC_SPEAKING",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_PUBLIC_SPEAKING",
+                "critical": false,
+                "nextLevel": 1,
+                "skillName": "Public Speaking",
+                "actualGain": 1,
+                "skillNameKk": "Public Speaking",
+                "skillNameRu": "Public Speaking",
+                "currentLevel": 0,
+                "requiredLevel": 2
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PUBLIC_SPEAKING",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2.12766
+        },
+        {
+          "activityId": "EV_025",
+          "rank": 3,
+          "score": 0.46875,
+          "explanation": "Роль Data Analyst, переход Middle → Senior. История есть, но сопоставимого добровольного обучения по этим навыкам пока нет; предпочтение неизвестно. Data Modeling: уровень 2, требование 3; ожидаемый прирост 1, до 3.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Data Analyst",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_025",
+              "facts": {
+                "type": "course",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "online",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 10,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RELEVANT_HISTORY"
+            },
+            {
+              "id": "gap:EV_025:SK_DATA_MODELING",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_DATA_MODELING",
+                "critical": false,
+                "nextLevel": 3,
+                "skillName": "Data Modeling",
+                "actualGain": 1,
+                "skillNameKk": "Data Modeling",
+                "skillNameRu": "Data Modeling",
+                "currentLevel": 2,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_DATA_MODELING",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2.12766
+        }
+      ]
+    },
+    {
+      "name": "live_recommendation",
+      "employeeId": "E0028",
+      "status": 201,
+      "ms": 1912,
+      "source": "AI_ASSISTED",
+      "aiUsed": true,
+      "model": "gpt-4.1-mini",
+      "fallbackReason": null,
+      "recommendations": [
+        {
+          "activityId": "EV_037",
+          "rank": 1,
+          "score": 0.38,
+          "explanation": "Роль Backend Engineer, переход Middle → Senior. История есть, но сопоставимого добровольного обучения по этим навыкам пока нет; предпочтение неизвестно. Mentoring: уровень 2, требование 3; ожидаемый прирост 1, до 3.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Backend Engineer",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_037",
+              "facts": {
+                "type": "mentoring",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "online",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 17,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RELEVANT_HISTORY"
+            },
+            {
+              "id": "novelty:EV_037",
+              "facts": {
+                "activityId": "EV_037"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            },
+            {
+              "id": "gap:EV_037:SK_MENTORING",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_MENTORING",
+                "critical": false,
+                "nextLevel": 3,
+                "skillName": "Mentoring",
+                "actualGain": 1,
+                "skillNameKk": "Mentoring",
+                "skillNameRu": "Mentoring",
+                "currentLevel": 2,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_MENTORING",
+              "actualGain": 1
+            },
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_FEEDBACK",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2
+        },
+        {
+          "activityId": "EV_009",
+          "rank": 2,
+          "score": 0.404954,
+          "explanation": "Роль Backend Engineer, переход Middle → Senior. Сопоставимое добровольное обучение: завершений 0, пропусков и отказов 0, прерванных активностей 3. Недавний опыт и совпадение формата и типа имеют больший вес; это мягкий сигнал предпочтения. Cloud Platforms: уровень 1, требование 3; ожидаемый прирост 1, до 2.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Backend Engineer",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_009",
+              "facts": {
+                "type": "certification",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "self_paced",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 17,
+                "relevantDropped": 3,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 1.002788,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_RELEVANT_HISTORY"
+            },
+            {
+              "id": "novelty:EV_009",
+              "facts": {
+                "activityId": "EV_009"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "REPEATED_ACTIVITY"
+            },
+            {
+              "id": "gap:EV_009:SK_CLOUD",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_CLOUD",
+                "critical": false,
+                "nextLevel": 2,
+                "skillName": "Cloud Platforms",
+                "actualGain": 1,
+                "skillNameKk": "Cloud Platforms",
+                "skillNameRu": "Cloud Platforms",
+                "currentLevel": 1,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_CLOUD",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2
+        },
+        {
+          "activityId": "EV_010",
+          "rank": 3,
+          "score": 0.319013,
+          "explanation": "Роль Backend Engineer, переход Middle → Senior. Сопоставимое добровольное обучение: завершений 0, пропусков и отказов 0, прерванных активностей 3. Недавний опыт и совпадение формата и типа имеют больший вес; это мягкий сигнал предпочтения. Containers & Orchestration: уровень 1, требование 3; ожидаемый прирост 1, до 2.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Backend Engineer",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_010",
+              "facts": {
+                "type": "course",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "online",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 17,
+                "relevantDropped": 3,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0.343272,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_RELEVANT_HISTORY"
+            },
+            {
+              "id": "novelty:EV_010",
+              "facts": {
+                "activityId": "EV_010"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "REPEATED_ACTIVITY"
+            },
+            {
+              "id": "gap:EV_010:SK_CONTAINERS",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_CONTAINERS",
+                "critical": false,
+                "nextLevel": 2,
+                "skillName": "Containers & Orchestration",
+                "actualGain": 1,
+                "skillNameKk": "Containers & Orchestration",
+                "skillNameRu": "Containers & Orchestration",
+                "currentLevel": 1,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_CONTAINERS",
+              "actualGain": 1
+            },
+            {
+              "after": 4,
+              "before": 3,
+              "skillId": "SK_CICD",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2
+        }
+      ]
+    }
+  ],
+  "secretsRecorded": false,
+  "passed": true
+}

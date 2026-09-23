@@ -1,0 +1,298 @@
+{
+  "baseURL": "http://127.0.0.1:3100",
+  "time": "2026-09-23T11:12:16.793Z",
+  "pageErrors": [],
+  "probes": [
+    {
+      "name": "hr_activity_link_redirect",
+      "href": "/event?id=FX_BASELINE_HISTORY",
+      "actual": "/hr-dashboard"
+    },
+    {
+      "name": "hr_employee_recommendation_controls",
+      "buttons": [
+        "Выйти "
+      ],
+      "recommendationLinks": 0,
+      "recommendationCards": 0
+    },
+    {
+      "name": "full_dataset_ui_dry_run",
+      "elapsedMs": 217,
+      "httpStatus": 200,
+      "result": {
+        "data": {
+          "id": "9518ac74-1c99-459f-9f05-7cbffee92b65",
+          "status": "REJECTED",
+          "report": {
+            "valid": false,
+            "diagnostics": [
+              {
+                "file": "skills.json",
+                "recordId": "Backend Engineer/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Backend Engineer/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Backend Engineer/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Backend Engineer/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Frontend Engineer/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Frontend Engineer/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Frontend Engineer/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Frontend Engineer/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Data Analyst/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Data Analyst/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Data Analyst/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Data Analyst/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "QA Engineer/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "QA Engineer/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "QA Engineer/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "QA Engineer/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Product Manager/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Product Manager/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Product Manager/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Product Manager/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "HR Business Partner/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "HR Business Partner/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "HR Business Partner/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "HR Business Partner/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Sales Manager/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Sales Manager/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Sales Manager/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Sales Manager/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Customer Support Specialist/Junior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Customer Support Specialist/Middle",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Customer Support Specialist/Senior",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              },
+              {
+                "file": "skills.json",
+                "recordId": "Customer Support Specialist/Lead",
+                "field": "grade",
+                "code": "UNKNOWN_GRADE_ORDER",
+                "message": "Provide this grade in dataset-rules.json gradeOrder"
+              }
+            ],
+            "counts": {
+              "create": 0,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 60,
+              "grades": 32,
+              "employees": 200,
+              "activities": 40,
+              "history": 2743
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            }
+          }
+        },
+        "meta": {
+          "requestId": "a9cfcc48-2fe7-4b7d-a2cd-912a2fcbbd58"
+        }
+      }
+    },
+    {
+      "name": "optional_recommendation_failure_hides_profile",
+      "profileHeadingCount": 0,
+      "errorVisible": true
+    },
+    {
+      "name": "profile_retry_latency_fixture",
+      "elapsedMs": 116
+    }
+  ]
+}

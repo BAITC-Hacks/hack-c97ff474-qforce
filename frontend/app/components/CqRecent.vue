@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { date, statuses } from "../utils/labels.js";
 const props = defineProps({
   history: { type: Array, default: () => [] },
@@ -29,8 +30,8 @@ const rows = computed(() =>
       </div>
     </div>
     <CqTag :color="statuses[row.status]?.[1]">{{
-      statuses[row.status]?.[0] || row.status
+      t(statuses[row.status]?.[0] || row.status)
     }}</CqTag>
   </div>
-  <div v-if="!rows.length" class="empty-inline">Истории участия пока нет.</div>
+  <div v-if="!rows.length" class="empty-inline"> {{ t("Истории участия пока нет.") }} </div>
 </template>

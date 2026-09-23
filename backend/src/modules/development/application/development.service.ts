@@ -46,11 +46,21 @@ export class DevelopmentService {
         throw new DomainError('INVALID_SESSION', 'A future catalog session date is required');
       if (activity.format === 'self_paced' && input.sessionDate && input.sessionDate !== context.asOfDate)
         throw new DomainError('INVALID_SESSION', 'Self paced enrolment uses the current as-of date');
-      const occurrenceKey = activity.repeatable ? `session:${date}` : 'once';
-      const existing = await tx.occurrence(employeeId, activity.id, occurrenceKey);
-      if (existing) return existing;
+      const occurrence = activity.repeatable ? `session:${date}` : 'once';
+      let occurrenceKey = occurrence;
+      let existing = await tx.occurrence(employeeId, activity.id, occurrenceKey);
+      // Keep unsuccessful attempts as history. Concurrent request retries find the
+      // same new attempt under the employee lock; completed attempts never reopen.
+      while (existing) {
+        if (!['declined', 'dropped', 'no_show'].includes(existing.status.toLowerCase())) return existing;
+        occurrenceKey = `${occurrence}:retry:${existing.id}`;
+        existing = await tx.occurrence(employeeId, activity.id, occurrenceKey);
+      }
       const sameSession = context.history.find(p => p.activityId === activity.id && p.date === date && ['registered','in_progress','completed','overdue'].includes(p.status.toLowerCase()));
-      if (sameSession) return tx.participation(sameSession.id);
+      if (sameSession) {
+        const participation = await tx.participation(sameSession.id);
+        if (participation) return participation;
+      }
       this.assertCanRegister(context, activity);
       return tx.register(employeeId, activity.id, date, occurrenceKey, actor);
     });
@@ -103,6 +113,8 @@ export class DevelopmentService {
       if (!activity) throw new DomainError('NOT_FOUND', 'Activity not found', 404);
       if (activity.format !== 'self_paced' && participation.date > beforeContext.asOfDate)
         throw new DomainError('SESSION_NOT_OCCURRED', 'Cannot complete a scheduled session before it occurs', 409);
+      if (!activity.repeatable && beforeContext.history.some(p => p.id !== pid && p.activityId === activity.id && p.status.toLowerCase() === 'completed'))
+        throw new DomainError('ACTIVITY_ALREADY_COMPLETED', 'This non-repeatable activity has already been completed; no additional skill gain can be applied', 409);
       const changes = activity.effects.map(e => ({ skillId: e.skillId, ...growth(beforeContext.levels[e.skillId], e.gain, e.maxLevel), rule: { gain: e.gain, maxLevel: e.maxLevel } })).filter(c => c.actualGain > 0);
       const afterContext = { ...beforeContext, stateVersion: beforeContext.stateVersion + 1, levels: { ...beforeContext.levels } };
       for (const change of changes) afterContext.levels[change.skillId] = change.after;

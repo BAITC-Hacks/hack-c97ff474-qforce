@@ -1,211 +1,844 @@
 {
-  "generatedAt": "2026-09-23T09:52:13.946Z",
+  "generatedAt": "2026-09-23T11:33:15.745Z",
   "environment": {
-    "node": "v24.21.0",
+    "node": "v24.20.0",
     "platform": "win32",
     "arch": "x64"
   },
-  "dataset": "six independent synthetic adversarial fixtures; no official or jury profiles",
-  "sampleSize": 6,
+  "verificationVersion": "authoritative-context-v2",
+  "dataset": "Independent synthetic adversarial fixtures using the supported event format enum; no official or jury profiles",
+  "sampleSize": 11,
   "liveRequested": false,
+  "liveCalls": 0,
   "model": null,
+  "comparison": "Compare rows only at the same stepBudget (1 against 1, or 3 against 3). All modes share eligibility and sequential gain policies. A provider plan is called once and evaluated at both budgets.",
   "limitations": [
     "Rules latency measures pure recommendation calculation, not HTTP or PostgreSQL.",
-    "No engagement or jury-set accuracy claim is supported by this small set.",
+    "Equal step budgets do not guarantee equal total learning duration.",
+    "No engagement or jury-set accuracy claim is supported by this small synthetic set.",
+    "Baseline selection uses only the lowest eligible skill; its explanation metric is not claimed.",
     "Mocked adapters are covered in Jest and never labelled live."
   ],
   "summaries": [
     {
       "mode": "minimum-skill-baseline",
-      "cases": 6,
-      "admissibleIdRate": 0.8333333333333334,
-      "meanGapReduction": 0.16666666666666666,
-      "threeVerifiedFactorRate": 0,
-      "nonemptyCases": 4,
-      "expectedPreferenceRate": 0.16666666666666666,
+      "stepBudget": 1,
+      "cases": 11,
+      "admissibleIdRate": 1,
+      "meanGapReduction": 0.303030303030303,
+      "meanSelectedCount": 0.8181818181818182,
+      "threeVerifiedFactorRate": null,
+      "nonemptyCases": 9,
+      "expectedPreferenceRate": 0.2727272727272727,
       "fallbackRate": 0,
-      "p50Ms": 0.008199999999987995,
-      "p95Ms": 0.08169999999995525
+      "p50Ms": 0.05009999999992942,
+      "p95Ms": 0.8693999999998141
     },
     {
       "mode": "rules",
-      "cases": 6,
+      "stepBudget": 1,
+      "cases": 11,
       "admissibleIdRate": 1,
-      "meanGapReduction": 0.5555555555555556,
+      "meanGapReduction": 0.303030303030303,
+      "meanSelectedCount": 0.8181818181818182,
       "threeVerifiedFactorRate": 1,
-      "nonemptyCases": 4,
+      "nonemptyCases": 9,
       "expectedPreferenceRate": 1,
       "fallbackRate": 0,
-      "p50Ms": 0.08240000000000691,
-      "p95Ms": 0.7626000000000204
+      "p50Ms": 0.12000000000011823,
+      "p95Ms": 1.3677000000000135
+    },
+    {
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "cases": 11,
+      "admissibleIdRate": 1,
+      "meanGapReduction": 0.7575757575757577,
+      "meanSelectedCount": 2.1818181818181817,
+      "threeVerifiedFactorRate": null,
+      "nonemptyCases": 9,
+      "expectedPreferenceRate": 0.2727272727272727,
+      "fallbackRate": 0,
+      "p50Ms": 0.0965000000001055,
+      "p95Ms": 0.19450000000006185
+    },
+    {
+      "mode": "rules",
+      "stepBudget": 3,
+      "cases": 11,
+      "admissibleIdRate": 1,
+      "meanGapReduction": 0.7575757575757577,
+      "meanSelectedCount": 2.1818181818181817,
+      "threeVerifiedFactorRate": 1,
+      "nonemptyCases": 9,
+      "expectedPreferenceRate": 1,
+      "fallbackRate": 0,
+      "p50Ms": 0.23630000000002838,
+      "p95Ms": 0.44849999999996726
     }
   ],
   "results": [
     {
       "fixture": "critical-gap-with-skips",
       "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
       "selectedIds": [
         "SPEAKING"
       ],
+      "selectedCount": 1,
       "admissibleIds": true,
       "gapReduction": 0.3333333333333333,
-      "threeVerifiedFactors": false,
+      "threeVerifiedFactors": null,
       "expectedPreference": false,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.08169999999995525
+      "latencyMs": 0.8693999999998141,
+      "modelUsed": false
     },
     {
       "fixture": "critical-gap-with-skips",
       "mode": "rules",
+      "stepBudget": 1,
       "selectedIds": [
-        "DESIGN_COURSE",
-        "DESIGN_LAB",
-        "SPEAKING"
+        "DESIGN_COURSE"
       ],
-      "admissibleIds": true,
-      "gapReduction": 1,
-      "threeVerifiedFactors": true,
-      "expectedPreference": true,
-      "fallback": false,
-      "fallbackReason": null,
-      "latencyMs": 0.7626000000000204
-    },
-    {
-      "fixture": "cold-start",
-      "mode": "minimum-skill-baseline",
-      "selectedIds": [
-        "SPEAKING"
-      ],
+      "selectedCount": 1,
       "admissibleIds": true,
       "gapReduction": 0.3333333333333333,
-      "threeVerifiedFactors": false,
-      "expectedPreference": false,
-      "fallback": false,
-      "fallbackReason": null,
-      "latencyMs": 0.008100000000013097
-    },
-    {
-      "fixture": "cold-start",
-      "mode": "rules",
-      "selectedIds": [
-        "DESIGN_COURSE",
-        "DESIGN_LAB",
-        "SPEAKING"
-      ],
-      "admissibleIds": true,
-      "gapReduction": 1,
       "threeVerifiedFactors": true,
       "expectedPreference": true,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.1355999999998403
+      "latencyMs": 1.3677000000000135,
+      "modelUsed": false
     },
     {
-      "fixture": "audience-and-cap",
+      "fixture": "critical-gap-with-skips",
       "mode": "minimum-skill-baseline",
-      "selectedIds": [],
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
       "admissibleIds": true,
-      "gapReduction": 0,
+      "gapReduction": 1,
       "threeVerifiedFactors": null,
       "expectedPreference": false,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.0072999999999865395
+      "latencyMs": 0.19450000000006185,
+      "modelUsed": false
+    },
+    {
+      "fixture": "critical-gap-with-skips",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.44849999999996726,
+      "modelUsed": false
+    },
+    {
+      "fixture": "cold-start",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.116800000000012,
+      "modelUsed": false
+    },
+    {
+      "fixture": "cold-start",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.12000000000011823,
+      "modelUsed": false
+    },
+    {
+      "fixture": "cold-start",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.11099999999987631,
+      "modelUsed": false
+    },
+    {
+      "fixture": "cold-start",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.23630000000002838,
+      "modelUsed": false
     },
     {
       "fixture": "audience-and-cap",
-      "mode": "rules",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
       "selectedIds": [
         "VALID_DESIGN"
       ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.04140000000006694,
+      "modelUsed": false
+    },
+    {
+      "fixture": "audience-and-cap",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
       "admissibleIds": true,
       "gapReduction": 0.3333333333333333,
       "threeVerifiedFactors": true,
       "expectedPreference": true,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.08240000000000691
+      "latencyMs": 0.10009999999988395,
+      "modelUsed": false
+    },
+    {
+      "fixture": "audience-and-cap",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.05029999999987922,
+      "modelUsed": false
+    },
+    {
+      "fixture": "audience-and-cap",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "VALID_DESIGN"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.1434999999999036,
+      "modelUsed": false
     },
     {
       "fixture": "no-valid-candidate",
       "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
       "selectedIds": [],
+      "selectedCount": 0,
       "admissibleIds": true,
       "gapReduction": 0,
       "threeVerifiedFactors": null,
       "expectedPreference": true,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.008199999999987995
+      "latencyMs": 0.02970000000004802,
+      "modelUsed": false
     },
     {
       "fixture": "no-valid-candidate",
       "mode": "rules",
+      "stepBudget": 1,
       "selectedIds": [],
+      "selectedCount": 0,
       "admissibleIds": true,
       "gapReduction": 0,
       "threeVerifiedFactors": null,
       "expectedPreference": true,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.018700000000080763
+      "latencyMs": 0.016499999999950887,
+      "modelUsed": false
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "admissibleIds": true,
+      "gapReduction": 0,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.020199999999931606,
+      "modelUsed": false
+    },
+    {
+      "fixture": "no-valid-candidate",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "admissibleIds": true,
+      "gapReduction": 0,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.021500000000060027,
+      "modelUsed": false
     },
     {
       "fixture": "history-changes-choice",
       "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
       "selectedIds": [
         "SPEAKING"
       ],
+      "selectedCount": 1,
       "admissibleIds": true,
       "gapReduction": 0.3333333333333333,
-      "threeVerifiedFactors": false,
+      "threeVerifiedFactors": null,
       "expectedPreference": false,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.008199999999987995
+      "latencyMs": 0.07619999999997162,
+      "modelUsed": false
     },
     {
       "fixture": "history-changes-choice",
       "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.13769999999999527,
+      "modelUsed": false
+    },
+    {
+      "fixture": "history-changes-choice",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.11599999999998545,
+      "modelUsed": false
+    },
+    {
+      "fixture": "history-changes-choice",
+      "mode": "rules",
+      "stepBudget": 3,
       "selectedIds": [
         "DESIGN_LAB",
         "SPEAKING",
         "DESIGN_COURSE"
       ],
+      "selectedCount": 3,
       "admissibleIds": true,
       "gapReduction": 1,
       "threeVerifiedFactors": true,
       "expectedPreference": true,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.10269999999991342
+      "latencyMs": 0.28909999999996217,
+      "modelUsed": false
     },
     {
       "fixture": "unknown-level",
       "mode": "minimum-skill-baseline",
-      "selectedIds": [
-        "SPEAKING"
-      ],
-      "admissibleIds": false,
-      "gapReduction": 0,
-      "threeVerifiedFactors": false,
-      "expectedPreference": false,
-      "fallback": false,
-      "fallbackReason": null,
-      "latencyMs": 0.010199999999940701
-    },
-    {
-      "fixture": "unknown-level",
-      "mode": "rules",
+      "stepBudget": 1,
       "selectedIds": [],
+      "selectedCount": 0,
       "admissibleIds": true,
       "gapReduction": 0,
       "threeVerifiedFactors": null,
       "expectedPreference": true,
       "fallback": false,
       "fallbackReason": null,
-      "latencyMs": 0.031799999999975626
+      "latencyMs": 0.026899999999841384,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unknown-level",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "admissibleIds": true,
+      "gapReduction": 0,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.021299999999882857,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unknown-level",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "admissibleIds": true,
+      "gapReduction": 0,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.02299999999991087,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unknown-level",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [],
+      "selectedCount": 0,
+      "admissibleIds": true,
+      "gapReduction": 0,
+      "threeVerifiedFactors": null,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.021100000000160435,
+      "modelUsed": false
+    },
+    {
+      "fixture": "repeated-drops",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.08709999999996398,
+      "modelUsed": false
+    },
+    {
+      "fixture": "repeated-drops",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.13259999999991123,
+      "modelUsed": false
+    },
+    {
+      "fixture": "repeated-drops",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.18810000000007676,
+      "modelUsed": false
+    },
+    {
+      "fixture": "repeated-drops",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "SPEAKING",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.30340000000001055,
+      "modelUsed": false
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.05399999999985994,
+      "modelUsed": false
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.14850000000001273,
+      "modelUsed": false
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.18060000000014043,
+      "modelUsed": false
+    },
+    {
+      "fixture": "mandatory-history-not-preference",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.345299999999952,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.049299999999902866,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.09809999999993124,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.09090000000014697,
+      "modelUsed": false
+    },
+    {
+      "fixture": "unrelated-topic-not-preference",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB",
+        "SPEAKING"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.23479999999995016,
+      "modelUsed": false
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
+      "selectedIds": [
+        "SPEAKING"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.05009999999992942,
+      "modelUsed": false
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.3333333333333333,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.12049999999999272,
+      "modelUsed": false
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "SPEAKING",
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.0965000000001055,
+      "modelUsed": false
+    },
+    {
+      "fixture": "recent-experience-matters",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "SPEAKING",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 3,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.2518000000000029,
+      "modelUsed": false
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.6666666666666666,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.04239999999981592,
+      "modelUsed": false
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "mode": "rules",
+      "stepBudget": 1,
+      "selectedIds": [
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 1,
+      "admissibleIds": true,
+      "gapReduction": 0.6666666666666666,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.06719999999995707,
+      "modelUsed": false
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "mode": "minimum-skill-baseline",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_LAB",
+        "DESIGN_COURSE"
+      ],
+      "selectedCount": 2,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": null,
+      "expectedPreference": false,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.04860000000007858,
+      "modelUsed": false
+    },
+    {
+      "fixture": "sequential-mixed-effects",
+      "mode": "rules",
+      "stepBudget": 3,
+      "selectedIds": [
+        "DESIGN_COURSE",
+        "DESIGN_LAB"
+      ],
+      "selectedCount": 2,
+      "admissibleIds": true,
+      "gapReduction": 1,
+      "threeVerifiedFactors": true,
+      "expectedPreference": true,
+      "fallback": false,
+      "fallbackReason": null,
+      "latencyMs": 0.11560000000008586,
+      "modelUsed": false
     }
   ]
 }

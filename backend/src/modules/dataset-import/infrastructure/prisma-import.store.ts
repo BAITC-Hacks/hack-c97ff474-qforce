@@ -17,11 +17,11 @@ const json = (value: unknown): Prisma.InputJsonValue => JSON.parse(JSON.stringif
 async function readState(tx: Prisma.TransactionClient): Promise<ExistingImportState> {
   const [skills, grades, employees, activities, history] = await Promise.all([
     tx.skill.findMany({ select: { id: true, sourceHash: true } }), tx.grade.findMany({ select: { roleId: true, id: true, position: true, metadata: true, translations: true, requirements: { select: { skillId: true, requiredLevel: true, critical: true } } } }),
-    tx.employee.findMany({ select: { id: true, sourceHash: true, development: { select: { baselineHash: true, onlineVersion: true, baselineDate: true } } } }),
+    tx.employee.findMany({ select: { id: true, sourceHash: true, hireDate: true, development: { select: { baselineHash: true, onlineVersion: true, baselineDate: true } } } }),
     tx.activity.findMany({ select: { id: true, sourceHash: true } }),
     tx.participation.findMany({ where: { sourceRecordId: { not: null } }, select: { sourceRecordId: true, sourceHash: true, employeeId: true, date: true, status: true } }),
   ]);
-  return { skillIds: skills.map((s) => s.id), skillHashes: Object.fromEntries(skills.map((s) => [s.id, s.sourceHash])), grades: grades.map((grade) => ({ ...grade, metadata: grade.metadata as Record<string, unknown>, translations: grade.translations as Record<string, unknown> })), employees: employees.map((e) => ({ id: e.id, sourceHash: e.sourceHash, baselineHash: e.development?.baselineHash ?? '', onlineVersion: e.development?.onlineVersion ?? 0, baselineDate: e.development?.baselineDate.toISOString().slice(0, 10) ?? '' })), activities, history: history.map((h) => ({ id: h.sourceRecordId!, sourceHash: h.sourceHash, employeeId: h.employeeId, date: h.date.toISOString().slice(0, 10), status: h.status })) };
+  return { skillIds: skills.map((s) => s.id), skillHashes: Object.fromEntries(skills.map((s) => [s.id, s.sourceHash])), grades: grades.map((grade) => ({ ...grade, metadata: grade.metadata as Record<string, unknown>, translations: grade.translations as Record<string, unknown> })), employees: employees.map((e) => ({ id: e.id, sourceHash: e.sourceHash, hireDate: e.hireDate.toISOString().slice(0, 10), baselineHash: e.development?.baselineHash ?? '', onlineVersion: e.development?.onlineVersion ?? 0, baselineDate: e.development?.baselineDate.toISOString().slice(0, 10) ?? '' })), activities, history: history.map((h) => ({ id: h.sourceRecordId!, sourceHash: h.sourceHash, employeeId: h.employeeId, date: h.date.toISOString().slice(0, 10), status: h.status })) };
 }
 @Injectable()
 export class PrismaImportStore implements ImportStore {

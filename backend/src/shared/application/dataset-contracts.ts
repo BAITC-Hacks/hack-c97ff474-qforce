@@ -16,7 +16,7 @@ export interface ImportDiagnostic { file: string; row?: number; recordId?: strin
 export interface ImportReport { valid: boolean; counts: { create: number; update: number; skip: number; conflict: number }; diagnostics: ImportDiagnostic[]; records: Record<string, number>; rules: DatasetRules; elapsedMs?: number }
 export interface ExistingImportState {
   skillIds: string[]; skillHashes?: Record<string, string>; grades: { roleId: string; id: string; position?: number; requirements?: { skillId: string; requiredLevel: number; critical: boolean }[]; metadata?: Metadata; translations?: Metadata }[];
-  employees: { id: string; sourceHash: string; baselineHash: string; onlineVersion: number; baselineDate: string }[];
+  employees: { id: string; sourceHash: string; baselineHash: string; onlineVersion: number; baselineDate: string; hireDate: string }[];
   activities: { id: string; sourceHash: string }[];
   history: { id: string; sourceHash: string | null; employeeId: string; date: string; status: string }[];
 }

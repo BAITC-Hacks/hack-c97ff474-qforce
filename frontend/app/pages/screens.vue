@@ -1,13 +1,14 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { pages } from "../utils/pages.js";
 </script>
 <template>
   <div>
     <CqHeading
-      title="Все экраны QCareer"
-      subtitle="Карта разделов Career Quest. Доступ зависит от роли учётной записи."
+      :title="t('Все экраны QCareer')"
+      :subtitle="t('Карта разделов Career Quest. Доступ зависит от роли учётной записи.')"
       ><NuxtLink to="/login" class="btn secondary"
-        >Войти <CqIcon name="arrow" /></NuxtLink
+        > {{ t("Войти") }} <CqIcon name="arrow" /></NuxtLink
     ></CqHeading>
     <div
       v-for="group in [

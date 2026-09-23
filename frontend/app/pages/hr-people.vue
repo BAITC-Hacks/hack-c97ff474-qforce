@@ -1,4 +1,6 @@
 <script setup>
+import { t } from '../utils/i18n.js';
+import { localeState } from "../utils/i18n.js";
 const { request } = useApi();
 const department = ref(""),
   roleId = ref(""),
@@ -52,25 +54,31 @@ function turnPage(value) {
   page.value = value;
   load();
 }
-onMounted(async () => {
+let catalogGeneration = 0;
+async function initialize() {
+  const version = ++catalogGeneration;
+  catalogError.value = "";
   const results = await Promise.allSettled([
     load(),
-    request("/roles", { query: { locale: "ru" } }),
+    request("/roles", { query: { locale: localeState.locale } }),
   ]);
+  if (version !== catalogGeneration) return;
   if (results[1].status === "fulfilled") roles.value = results[1].value.data;
   else
     catalogError.value =
       "Справочник ролей недоступен. Подразделение и грейд можно фильтровать отдельно.";
-});
+}
+onMounted(initialize);
+watch(() => localeState.locale, initialize);
 </script>
 <template>
   <div>
     <CqHeading
-      title="Сотрудники"
-      subtitle="Рабочий список HR. Без публичного ранжирования по результативности."
+      :title="t('Сотрудники')"
+      :subtitle="t('Рабочий список HR. Без публичного ранжирования по результативности.')"
     >
       <NuxtLink to="/import" class="btn secondary"
-        >Импортировать профили <CqIcon name="upload"
+        > {{ t("Импортировать профили") }} <CqIcon name="upload"
       /></NuxtLink>
     </CqHeading>
     <form class="filters" @submit.prevent="applyFilters">
@@ -78,10 +86,10 @@ onMounted(async () => {
       <select
         v-model="roleId"
         class="select"
-        aria-label="Роль"
+        :aria-label="t('Роль')"
         :disabled="loading"
       >
-        <option value="">Все роли</option>
+        <option value=""> {{ t("Все роли") }} </option>
         <option v-for="role in roles" :key="role.id" :value="role.id">
           {{ role.name }}
         </option>
@@ -89,32 +97,26 @@ onMounted(async () => {
       <input
         v-model="gradeId"
         class="input"
-        placeholder="Грейд: точный ID"
-        aria-label="Грейд: точный ID"
+        :placeholder="t('Грейд: точный ID')"
+        :aria-label="t('Грейд: точный ID')"
         :disabled="loading"
       />
-      <button type="submit" class="btn secondary" :disabled="loading">
-        Применить <CqIcon name="search" />
+      <button type="submit" class="btn secondary" :disabled="loading"> {{ t("Применить") }} <CqIcon name="search" />
       </button>
     </form>
-    <p class="small muted section">
-      Фильтры используют точное совпадение. Поиск по имени пока недоступен.
-    </p>
-    <CqNotice v-if="catalogError" color="gold">{{ catalogError }}</CqNotice>
+    <p class="small muted section"> {{ t("Фильтры используют точное совпадение. Поиск по имени пока недоступен.") }} </p>
+    <CqNotice v-if="catalogError" color="gold">{{ t(catalogError) }}</CqNotice>
     <section class="panel section" :aria-busy="loading">
       <div class="panel-head">
-        <h2>Профили развития</h2>
+        <h2> {{ t("Профили развития") }} </h2>
         <CqTag v-if="!loading && !error" color="outline"
-          >{{ total }} сотрудников</CqTag
+          >{{ total }} {{ t("сотрудников") }} </CqTag
         >
       </div>
-      <div v-if="loading" class="empty-inline" role="status">
-        Загружаем сотрудников…
-      </div>
+      <div v-if="loading" class="empty-inline" role="status"> {{ t("Загружаем сотрудников…") }} </div>
       <div v-else-if="error" role="alert">
-        <CqNotice color="red">{{ error }}</CqNotice>
-        <button class="btn secondary section" @click="load">
-          Повторить <CqIcon name="refresh" />
+        <CqNotice color="red">{{ t(error) }}</CqNotice>
+        <button class="btn secondary section" @click="load"> {{ t("Повторить") }} <CqIcon name="refresh" />
         </button>
       </div>
       <template v-else>
@@ -122,11 +124,11 @@ onMounted(async () => {
           <table v-if="rows.length">
             <thead>
               <tr>
-                <th>Сотрудник</th>
-                <th>Подразделение</th>
-                <th>Роль / грейд</th>
-                <th>Карьерная цель</th>
-                <th>Профиль</th>
+                <th> {{ t("Сотрудник") }} </th>
+                <th> {{ t("Подразделение") }} </th>
+                <th> {{ t("Роль / грейд") }} </th>
+                <th> {{ t("Карьерная цель") }} </th>
+                <th> {{ t("Профиль") }} </th>
               </tr>
             </thead>
             <tbody>
@@ -156,37 +158,33 @@ onMounted(async () => {
                   {{ roleName(employee.careerGoal.target_role) }}
                   <div class="sub">{{ employee.careerGoal.target_grade }}</div>
                 </td>
-                <td v-else><span class="muted">Не указана</span></td>
+                <td v-else><span class="muted"> {{ t("Не указана") }} </span></td>
                 <td>
                   <NuxtLink
                     :to="{ path: '/hr-employee', query: { id: employee.id } }"
                     class="btn ghost"
-                    >Открыть <CqIcon name="arrow"
+                    > {{ t("Открыть") }} <CqIcon name="arrow"
                   /></NuxtLink>
                 </td>
               </tr>
             </tbody>
           </table>
-          <div v-else class="empty-inline">
-            Сотрудники не найдены. Измените фильтры.
-          </div>
+          <div v-else class="empty-inline"> {{ t("Сотрудники не найдены. Измените фильтры.") }} </div>
         </div>
         <div class="pagination">
-          <span>Страница {{ page }} из {{ pages }} · порядок по ID</span>
+          <span> {{ t("Страница") }} {{ page }} {{ t("из") }} {{ pages }} {{ t("· порядок по ID") }} </span>
           <div class="actions">
             <button
               class="btn secondary"
               :disabled="page <= 1"
               @click="turnPage(page - 1)"
             >
-              <CqIcon name="back" /> Назад
-            </button>
+              <CqIcon name="back" /> {{ t("Назад") }} </button>
             <button
               class="btn secondary"
               :disabled="page >= pages"
               @click="turnPage(page + 1)"
-            >
-              Далее <CqIcon name="arrow" />
+            > {{ t("Далее") }} <CqIcon name="arrow" />
             </button>
           </div>
         </div>
@@ -194,9 +192,7 @@ onMounted(async () => {
     </section>
     <div class="section">
       <CqNotice color="gold"
-        >Покрытие навыков и следующий шаг доступны в профиле сотрудника.
-        Проценты для разных целей не образуют общий рейтинг
-        эффективности.</CqNotice
+        > {{ t("Покрытие навыков и следующий шаг доступны в профиле сотрудника. Проценты для разных целей не образуют общий рейтинг эффективности.") }} </CqNotice
       >
     </div>
   </div>

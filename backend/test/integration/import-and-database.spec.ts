@@ -1,4 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import type { PrismaService } from '../../src/shared/infrastructure/database/prisma.service';
 import { ImportService } from '../../src/modules/dataset-import/public';
 import { clearTestDatabase, fixtureFiles, testApplication } from '../support/database';
@@ -107,5 +109,55 @@ describe('real PostgreSQL imports, constraints and baseline replay', () => {
     expect(invalid.report.valid).toBe(false);
     expect(invalid.report.diagnostics[0]).toMatchObject({ file: 'employees.json' });
     expect(await prisma.employee.count()).toBe(6);
+  });
+
+  it('imports the four-file starter kit after fixtures while retaining both catalogues and repeatability', async () => {
+    await imports.run(fixtureFiles(), false);
+    const fixtureGradesBefore = await prisma.grade.findMany({where: {roleId: 'Fixture Engineer'}, orderBy: {position: 'asc'}});
+    const fullFiles = Object.fromEntries(['skills.json', 'employees.json', 'events.json', 'activity_history.csv'].map(name => [name, readFileSync(resolve(__dirname, '../../../frontend/app/data', name))]));
+    const imported = await imports.run(fullFiles, false);
+    expect(imported.report.diagnostics).toEqual([]);
+    expect(imported.report.valid).toBe(true);
+    expect(await prisma.employee.count()).toBe(206);
+    expect(await prisma.activity.count()).toBe(48);
+    expect(await prisma.grade.findMany({where: {roleId: 'Fixture Engineer'}, orderBy: {position: 'asc'}})).toEqual(fixtureGradesBefore);
+    expect((await prisma.grade.findMany({where: {roleId: 'Backend Engineer'}, orderBy: {position: 'asc'}})).map(grade => grade.id)).toEqual(['Junior', 'Middle', 'Senior', 'Lead']);
+    expect((await prisma.activity.findUniqueOrThrow({where: {id: 'EV_036'}})).repeatable).toBe(true);
+    expect((await prisma.activity.findUniqueOrThrow({where: {id: 'FX_SPEAKING'}})).repeatable).toBe(true);
+    const ledgerBefore = await prisma.skillChange.count();
+    expect((await imports.run(fullFiles, false)).report.valid).toBe(true);
+    expect(await prisma.skillChange.count()).toBe(ledgerBefore);
+  });
+
+  it('rejects null JSON and history before an existing employee hire date without business writes', async () => {
+    await imports.run(fixtureFiles(), false);
+    for (const name of ['employees.json', 'skills.json', 'events.json', 'dataset-rules.json']) {
+      const result = await imports.run({[name]: Buffer.from('null')}, false);
+      expect(result.status).toBe('REJECTED');
+      expect(result.report.diagnostics).toContainEqual(expect.objectContaining({file: name, code: 'INVALID_FIELD'}));
+    }
+    const history = 'record_id,employee_id,event_id,date,due_date,status,completion_pct,score,feedback_rating,assigned_by\nBEFORE_HIRE,fixture_person_a,FX_SQL,2000-01-01,,declined,0,,,self\n';
+    const result = await imports.run({'activity_history.csv': Buffer.from(history)}, false);
+    expect(result.status).toBe('REJECTED');
+    expect(result.report.diagnostics).toContainEqual(expect.objectContaining({recordId: 'BEFORE_HIRE', code: 'INVALID_DATE'}));
+    expect(await prisma.participation.count()).toBe(7);
+    expect(await prisma.employee.count()).toBe(6);
+  });
+
+  it('preserves conflicting assessments and supports an explicit isolated comparison profile with copied history', async () => {
+    await imports.run(fixtureFiles(), false);
+    const original = await prisma.employee.findUniqueOrThrow({where: {id: 'fixture_person_a'}, include: {skills: true, participations: true}});
+    const source = employeeFile();
+    source.employees = [{...source.employees[0], skills: {...source.employees[0].skills, SK_SYSTEM_DESIGN: 3}}];
+    const conflict = await imports.run({'employees.json': Buffer.from(JSON.stringify(source))}, false);
+    expect(conflict.status).toBe('REJECTED');
+    expect(conflict.report.diagnostics).toContainEqual(expect.objectContaining({code: 'BASELINE_CONFLICT', message: expect.stringContaining('new employee_id')}));
+    source.employees[0].employee_id = 'comparison_profile';
+    const history = 'record_id,employee_id,event_id,date,due_date,status,completion_pct,score,feedback_rating,assigned_by\nCOMPARISON_HISTORY,comparison_profile,FX_SQL,2026-09-20,,declined,0,,,self\n';
+    const applied = await imports.run({'employees.json': Buffer.from(JSON.stringify(source)), 'activity_history.csv': Buffer.from(history)}, false);
+    expect(applied.status).toBe('APPLIED');
+    expect((await prisma.employeeSkill.findUniqueOrThrow({where: {employeeId_skillId: {employeeId: 'comparison_profile', skillId: 'SK_SYSTEM_DESIGN'}}})).level).toBe(3);
+    expect(await prisma.participation.count({where: {employeeId: 'comparison_profile'}})).toBe(1);
+    expect(await prisma.employee.findUniqueOrThrow({where: {id: 'fixture_person_a'}, include: {skills: true, participations: true}})).toEqual(original);
   });
 });

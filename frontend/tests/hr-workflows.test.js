@@ -10,7 +10,7 @@ function importScreen(request) {
   const source = readFileSync(
     new URL("../app/pages/import.vue", import.meta.url),
     "utf8",
-  ).match(/<script setup>([\s\S]*?)<\/script>/)[1];
+  ).match(/<script setup>([\s\S]*?)<\/script>/)[1].replace(/^import .*?;\s*$/gm, '');
   const route = { query: {} };
   const router = {
     replace: async ({ query }) => {

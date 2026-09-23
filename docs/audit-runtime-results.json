@@ -1,0 +1,497 @@
+{
+  "base": "http://127.0.0.1:3101",
+  "timestamp": "2026-09-23T11:11:54.333Z",
+  "checks": {
+    "newProfiles": {
+      "status": 201,
+      "ms": 60.39,
+      "body": {
+        "data": {
+          "id": "202807b5-5ed1-482e-b9af-429791a36f76",
+          "status": "APPLIED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 4,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 4,
+              "activities": 0,
+              "history": 0
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 46
+          }
+        },
+        "meta": {
+          "requestId": "515c4fb1-6a87-42a7-9e05-2aae8ba447cc"
+        }
+      }
+    },
+    "declined": {
+      "initialStatus": 201,
+      "cancelledStatus": "declined",
+      "eligibleAgain": true,
+      "recommendedAgain": false,
+      "reregisterStatus": 201,
+      "reregisterState": "declined",
+      "sameParticipation": true,
+      "completion": {
+        "status": 409,
+        "ms": 28.63,
+        "body": {
+          "code": "INVALID_TRANSITION",
+          "message": "Cannot transition declined to completed",
+          "details": null,
+          "requestId": "219eed55-f16d-441b-89c5-4fd5ff608050"
+        }
+      }
+    },
+    "dropped": {
+      "initialStatus": 201,
+      "cancelledStatus": "dropped",
+      "eligibleAgain": true,
+      "recommendedAgain": false,
+      "reregisterStatus": 201,
+      "reregisterState": "dropped",
+      "sameParticipation": true,
+      "completion": {
+        "status": 409,
+        "ms": 15.23,
+        "body": {
+          "code": "INVALID_TRANSITION",
+          "message": "Cannot transition dropped to completed",
+          "details": null,
+          "requestId": "58755cf2-543d-41a5-aefe-78a426616b66"
+        }
+      }
+    },
+    "null_employees": {
+      "status": 500,
+      "ms": 6.4,
+      "body": {
+        "code": "INTERNAL_ERROR",
+        "message": "Internal server error",
+        "details": null,
+        "requestId": "d8fe83dc-7fe8-4eeb-a8b0-d81da3e31911"
+      }
+    },
+    "null_skills": {
+      "status": 500,
+      "ms": 6.48,
+      "body": {
+        "code": "INTERNAL_ERROR",
+        "message": "Internal server error",
+        "details": null,
+        "requestId": "f5a316b7-f6f5-4f03-bc93-b4f723429ac2"
+      }
+    },
+    "null_events": {
+      "status": 500,
+      "ms": 8.53,
+      "body": {
+        "code": "INTERNAL_ERROR",
+        "message": "Internal server error",
+        "details": null,
+        "requestId": "165f9d52-05e4-4446-a09f-fec06ef0af8d"
+      }
+    },
+    "import_dropped": {
+      "status": 201,
+      "ms": 41.17,
+      "body": {
+        "data": {
+          "id": "dadb31a0-aa23-4afb-b7b4-91cdee59029c",
+          "status": "APPLIED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 3,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 3
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 22
+          }
+        },
+        "meta": {
+          "requestId": "0d312251-723a-42cd-b818-f122770a57d6"
+        }
+      }
+    },
+    "import_declined": {
+      "status": 201,
+      "ms": 30.16,
+      "body": {
+        "data": {
+          "id": "06ceefaf-368e-4291-b642-e6ce5ab50194",
+          "status": "APPLIED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 3,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 3
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 21
+          }
+        },
+        "meta": {
+          "requestId": "0404994d-4bd7-42e1-b1d6-1afe83663ff5"
+        }
+      }
+    },
+    "hrAttention": {
+      "status": 200,
+      "threeDroppedVisible": false,
+      "threeDeclinedVisible": false
+    },
+    "prehireHistory": {
+      "status": 200,
+      "ms": 39.39,
+      "body": {
+        "data": {
+          "id": "462d40e4-2e20-4ee3-b647-1468de401888",
+          "status": "VALIDATED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 1,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 1
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 16
+          }
+        },
+        "meta": {
+          "requestId": "4ad25d05-e14c-44f1-a1ce-3f59ce7a3b47"
+        }
+      }
+    },
+    "defaultRecommendationMode": {
+      "recommendationSetId": "9a72ec53-e8d4-4d2c-b340-2b8c57e379c1",
+      "employeeId": "audit_null_history_mue06lh2",
+      "generatedAt": "2026-09-23T11:11:55.015Z",
+      "expiresAt": "2026-09-23T11:26:55.015Z",
+      "locale": "ru",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "model": null,
+      "promptVersion": "evidence-selection-v1",
+      "rankingVersion": "multifactor-v1",
+      "contextVersion": {
+        "skills": 1,
+        "catalog": 1,
+        "history": 1,
+        "profile": 1,
+        "asOfDate": "2026-10-01",
+        "feedback": 1
+      },
+      "cacheKey": "7d5c05e172d8f29d48f91676cc1bb9714cab4c6035b0f7e3368ed2de3fc7da5b",
+      "stale": false,
+      "status": "READY",
+      "diagnostics": {
+        "excluded": [
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "FX_BASELINE_HISTORY"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "FX_CAPPED"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "FX_MANDATORY"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "FX_WRONG_AUDIENCE"
+          }
+        ],
+        "latencyMs": 13,
+        "shortlisted": 4,
+        "fallbackReason": "LLM_DISABLED"
+      },
+      "recommendations": [
+        {
+          "activityId": "FX_DESIGN_COURSE",
+          "rank": 1,
+          "score": 0.6,
+          "explanation": "Роль Fixture Engineer, переход Apprentice → Practitioner. История участия отсутствует; предпочтения по формату неизвестны. SK_SYSTEM_DESIGN: уровень 1, требование 4; ожидаемый прирост 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Fixture Engineer",
+                "nextGradeId": "Practitioner",
+                "currentGradeId": "Apprentice"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:FX_DESIGN_COURSE",
+              "facts": {
+                "format": "self_paced",
+                "totalRecorded": 0,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY"
+            },
+            {
+              "id": "gap:FX_DESIGN_COURSE:SK_SYSTEM_DESIGN",
+              "facts": {
+                "gap": 3,
+                "skillId": "SK_SYSTEM_DESIGN",
+                "critical": true,
+                "nextLevel": 2,
+                "actualGain": 1,
+                "currentLevel": 1,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            },
+            {
+              "id": "novelty:FX_DESIGN_COURSE",
+              "facts": {
+                "activityId": "FX_DESIGN_COURSE"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_SYSTEM_DESIGN",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 10
+        },
+        {
+          "activityId": "FX_SPEAKING",
+          "rank": 2,
+          "score": 0.55,
+          "explanation": "Роль Fixture Engineer, переход Apprentice → Practitioner. История участия отсутствует; предпочтения по формату неизвестны. SK_PUBLIC_SPEAKING: уровень 0, требование 1; ожидаемый прирост 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Fixture Engineer",
+                "nextGradeId": "Practitioner",
+                "currentGradeId": "Apprentice"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:FX_SPEAKING",
+              "facts": {
+                "format": "offline",
+                "totalRecorded": 0,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY"
+            },
+            {
+              "id": "gap:FX_SPEAKING:SK_PUBLIC_SPEAKING",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_PUBLIC_SPEAKING",
+                "critical": false,
+                "nextLevel": 1,
+                "actualGain": 1,
+                "currentLevel": 0,
+                "requiredLevel": 1
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            },
+            {
+              "id": "novelty:FX_SPEAKING",
+              "facts": {
+                "activityId": "FX_SPEAKING"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PUBLIC_SPEAKING",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 10
+        },
+        {
+          "activityId": "FX_SQL",
+          "rank": 3,
+          "score": 0.55,
+          "explanation": "Роль Fixture Engineer, переход Apprentice → Practitioner. История участия отсутствует; предпочтения по формату неизвестны. SK_SQL: уровень 2, требование 3; ожидаемый прирост 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Fixture Engineer",
+                "nextGradeId": "Practitioner",
+                "currentGradeId": "Apprentice"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:FX_SQL",
+              "facts": {
+                "format": "self_paced",
+                "totalRecorded": 0,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY"
+            },
+            {
+              "id": "gap:FX_SQL:SK_SQL",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_SQL",
+                "critical": false,
+                "nextLevel": 3,
+                "actualGain": 1,
+                "currentLevel": 2,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            },
+            {
+              "id": "novelty:FX_SQL",
+              "facts": {
+                "activityId": "FX_SQL"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_SQL",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 10
+        }
+      ]
+    }
+  }
+}

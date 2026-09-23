@@ -1,0 +1,565 @@
+{
+  "generatedAt": "2026-09-23T11:12:01.567Z",
+  "scope": "Pure functions and in-memory ports; no HTTP/database/live LLM",
+  "tests": [
+    {
+      "id": "stale-gap-evidence-after-earlier-step",
+      "outcome": "DEFECT_REPRODUCED",
+      "details": {
+        "items": [
+          {
+            "activityId": "DESIGN_COURSE",
+            "rank": 1,
+            "score": 0.82,
+            "explanation": "Role SYNTH_ENGINEER, progression SYNTH_START → SYNTH_NEXT. No recorded participation history; format preferences are unknown. SYSTEM_DESIGN: level 2, requirement 4; expected gain 2.",
+            "factors": [
+              {
+                "id": "career",
+                "category": "CAREER_CONTEXT",
+                "reasonCode": "NEXT_GRADE_CONTEXT",
+                "facts": {
+                  "roleId": "SYNTH_ENGINEER",
+                  "currentGradeId": "SYNTH_START",
+                  "nextGradeId": "SYNTH_NEXT"
+                }
+              },
+              {
+                "id": "history:DESIGN_COURSE",
+                "category": "PARTICIPATION_HISTORY",
+                "reasonCode": "NO_RECORDED_HISTORY",
+                "facts": {
+                  "format": "self-paced",
+                  "totalRecorded": 0,
+                  "sameFormatCompleted": 0,
+                  "sameFormatMissedOrDeclined": 0
+                }
+              },
+              {
+                "id": "gap:DESIGN_COURSE:SYSTEM_DESIGN",
+                "category": "SKILL_GAP",
+                "reasonCode": "CRITICAL_REQUIREMENT_GAP",
+                "facts": {
+                  "skillId": "SYSTEM_DESIGN",
+                  "currentLevel": 2,
+                  "requiredLevel": 4,
+                  "gap": 2,
+                  "actualGain": 2,
+                  "nextLevel": 4,
+                  "critical": true
+                }
+              },
+              {
+                "id": "novelty:DESIGN_COURSE",
+                "category": "NOVELTY",
+                "reasonCode": "NEW_ACTIVITY",
+                "facts": {
+                  "activityId": "DESIGN_COURSE"
+                }
+              }
+            ],
+            "expectedSkillChanges": [
+              {
+                "skillId": "SYSTEM_DESIGN",
+                "before": 2,
+                "after": 4,
+                "actualGain": 2
+              }
+            ],
+            "expectedReadinessDelta": 40
+          },
+          {
+            "activityId": "DESIGN_LAB",
+            "rank": 2,
+            "score": 0.74,
+            "explanation": "Role SYNTH_ENGINEER, progression SYNTH_START → SYNTH_NEXT. No recorded participation history; format preferences are unknown. SYSTEM_DESIGN: level 2, requirement 4; expected gain 1. PUBLIC_SPEAKING: level 0, requirement 1; expected gain 1.",
+            "factors": [
+              {
+                "id": "career",
+                "category": "CAREER_CONTEXT",
+                "reasonCode": "NEXT_GRADE_CONTEXT",
+                "facts": {
+                  "roleId": "SYNTH_ENGINEER",
+                  "currentGradeId": "SYNTH_START",
+                  "nextGradeId": "SYNTH_NEXT"
+                }
+              },
+              {
+                "id": "history:DESIGN_LAB",
+                "category": "PARTICIPATION_HISTORY",
+                "reasonCode": "NO_RECORDED_HISTORY",
+                "facts": {
+                  "format": "workshop",
+                  "totalRecorded": 0,
+                  "sameFormatCompleted": 0,
+                  "sameFormatMissedOrDeclined": 0
+                }
+              },
+              {
+                "id": "gap:DESIGN_LAB:SYSTEM_DESIGN",
+                "category": "SKILL_GAP",
+                "reasonCode": "CRITICAL_REQUIREMENT_GAP",
+                "facts": {
+                  "skillId": "SYSTEM_DESIGN",
+                  "currentLevel": 2,
+                  "requiredLevel": 4,
+                  "gap": 2,
+                  "actualGain": 1,
+                  "nextLevel": 3,
+                  "critical": true
+                }
+              },
+              {
+                "id": "gap:DESIGN_LAB:PUBLIC_SPEAKING",
+                "category": "SKILL_GAP",
+                "reasonCode": "REQUIREMENT_GAP",
+                "facts": {
+                  "skillId": "PUBLIC_SPEAKING",
+                  "currentLevel": 0,
+                  "requiredLevel": 1,
+                  "gap": 1,
+                  "actualGain": 1,
+                  "nextLevel": 1,
+                  "critical": false
+                }
+              },
+              {
+                "id": "novelty:DESIGN_LAB",
+                "category": "NOVELTY",
+                "reasonCode": "NEW_ACTIVITY",
+                "facts": {
+                  "activityId": "DESIGN_LAB"
+                }
+              }
+            ],
+            "expectedSkillChanges": [
+              {
+                "skillId": "PUBLIC_SPEAKING",
+                "before": 0,
+                "after": 1,
+                "actualGain": 1
+              }
+            ],
+            "expectedReadinessDelta": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "model-evidence-can-explain-only-a-now-closed-gap",
+      "outcome": "DEFECT_REPRODUCED",
+      "details": {
+        "item": {
+          "activityId": "DESIGN_LAB",
+          "rank": 2,
+          "score": 0.74,
+          "explanation": "Role SYNTH_ENGINEER, progression SYNTH_START → SYNTH_NEXT. No recorded participation history; format preferences are unknown. SYSTEM_DESIGN: level 2, requirement 4; expected gain 1.",
+          "factors": [
+            {
+              "id": "career",
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT",
+              "facts": {
+                "roleId": "SYNTH_ENGINEER",
+                "currentGradeId": "SYNTH_START",
+                "nextGradeId": "SYNTH_NEXT"
+              }
+            },
+            {
+              "id": "history:DESIGN_LAB",
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY",
+              "facts": {
+                "format": "workshop",
+                "totalRecorded": 0,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 0
+              }
+            },
+            {
+              "id": "gap:DESIGN_LAB:SYSTEM_DESIGN",
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP",
+              "facts": {
+                "skillId": "SYSTEM_DESIGN",
+                "currentLevel": 2,
+                "requiredLevel": 4,
+                "gap": 2,
+                "actualGain": 1,
+                "nextLevel": 3,
+                "critical": true
+              }
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "skillId": "PUBLIC_SPEAKING",
+              "before": 0,
+              "after": 1,
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 20
+        }
+      }
+    },
+    {
+      "id": "three-dropped-activities-ignore-format-history",
+      "outcome": "GAP_REPRODUCED",
+      "details": {
+        "dropped": {
+          "activityId": "DESIGN_COURSE",
+          "format": "self-paced",
+          "skillIds": [
+            "SYSTEM_DESIGN"
+          ],
+          "components": {
+            "gapReduction": 0.4,
+            "nextGradeRelevance": 1,
+            "roleFit": 1,
+            "historyFit": 0.5,
+            "novelty": 0,
+            "feedback": 0.5
+          },
+          "score": 0.56,
+          "evidence": [
+            {
+              "id": "career",
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT",
+              "facts": {
+                "roleId": "SYNTH_ENGINEER",
+                "currentGradeId": "SYNTH_START",
+                "nextGradeId": "SYNTH_NEXT"
+              }
+            },
+            {
+              "id": "history:DESIGN_COURSE",
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_FORMAT_HISTORY",
+              "facts": {
+                "format": "self-paced",
+                "totalRecorded": 3,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 0
+              }
+            },
+            {
+              "id": "gap:DESIGN_COURSE:SYSTEM_DESIGN",
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP",
+              "facts": {
+                "skillId": "SYSTEM_DESIGN",
+                "currentLevel": 2,
+                "requiredLevel": 4,
+                "gap": 2,
+                "actualGain": 1,
+                "nextLevel": 3,
+                "critical": true
+              }
+            },
+            {
+              "id": "novelty:DESIGN_COURSE",
+              "category": "NOVELTY",
+              "reasonCode": "REPEATED_ACTIVITY",
+              "facts": {
+                "activityId": "DESIGN_COURSE"
+              }
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "skillId": "SYSTEM_DESIGN",
+              "before": 2,
+              "after": 3,
+              "actualGain": 1
+            }
+          ]
+        },
+        "declined": {
+          "activityId": "DESIGN_COURSE",
+          "format": "self-paced",
+          "skillIds": [
+            "SYSTEM_DESIGN"
+          ],
+          "components": {
+            "gapReduction": 0.4,
+            "nextGradeRelevance": 1,
+            "roleFit": 1,
+            "historyFit": 0.2,
+            "novelty": 0,
+            "feedback": 0.5
+          },
+          "score": 0.515,
+          "evidence": [
+            {
+              "id": "career",
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT",
+              "facts": {
+                "roleId": "SYNTH_ENGINEER",
+                "currentGradeId": "SYNTH_START",
+                "nextGradeId": "SYNTH_NEXT"
+              }
+            },
+            {
+              "id": "history:DESIGN_COURSE",
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_FORMAT_HISTORY",
+              "facts": {
+                "format": "self-paced",
+                "totalRecorded": 3,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 3
+              }
+            },
+            {
+              "id": "gap:DESIGN_COURSE:SYSTEM_DESIGN",
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP",
+              "facts": {
+                "skillId": "SYSTEM_DESIGN",
+                "currentLevel": 2,
+                "requiredLevel": 4,
+                "gap": 2,
+                "actualGain": 1,
+                "nextLevel": 3,
+                "critical": true
+              }
+            },
+            {
+              "id": "novelty:DESIGN_COURSE",
+              "category": "NOVELTY",
+              "reasonCode": "REPEATED_ACTIVITY",
+              "facts": {
+                "activityId": "DESIGN_COURSE"
+              }
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "skillId": "SYSTEM_DESIGN",
+              "before": 2,
+              "after": 3,
+              "actualGain": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hr-ten-drops-zero-completions-not-in-attention",
+      "outcome": "GAP_REPRODUCED",
+      "details": {
+        "participations": 10,
+        "completions": 0,
+        "response": {
+          "data": [],
+          "meta": {
+            "asOfDate": "2025-06-01",
+            "dateFrom": "2024-06-01",
+            "dateTo": "2025-06-01",
+            "interpretation": "OBSERVABLE_SIGNALS_ONLY",
+            "total": 0,
+            "page": 1,
+            "pageSize": 100
+          }
+        }
+      }
+    },
+    {
+      "id": "structurally-valid-model-can-fail-published-jury-trap",
+      "outcome": "RISK_DEMONSTRATED_WITH_FAKE",
+      "details": {
+        "expectedFirst": "DESIGN_COURSE",
+        "actualFirst": "SPEAKING",
+        "source": "AI_ASSISTED",
+        "aiUsed": true
+      }
+    },
+    {
+      "id": "growth-fractional-global-cap-and-no-decrease",
+      "outcome": "PASS",
+      "details": {
+        "cases": 4
+      }
+    },
+    {
+      "id": "wrong-role",
+      "outcome": "PASS",
+      "details": {
+        "eligible": false,
+        "reasons": [
+          "ROLE_MISMATCH"
+        ],
+        "expectedSkillChanges": [
+          {
+            "skillId": "SYSTEM_DESIGN",
+            "before": 2,
+            "after": 3,
+            "actualGain": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong-grade",
+      "outcome": "PASS",
+      "details": {
+        "eligible": false,
+        "reasons": [
+          "GRADE_MISMATCH"
+        ],
+        "expectedSkillChanges": [
+          {
+            "skillId": "SYSTEM_DESIGN",
+            "before": 2,
+            "after": 3,
+            "actualGain": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "mandatory",
+      "outcome": "PASS",
+      "details": {
+        "eligible": false,
+        "reasons": [
+          "MANDATORY_ACTIVITY"
+        ],
+        "expectedSkillChanges": [
+          {
+            "skillId": "SYSTEM_DESIGN",
+            "before": 2,
+            "after": 3,
+            "actualGain": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unmet-prerequisite",
+      "outcome": "PASS",
+      "details": {
+        "eligible": false,
+        "reasons": [
+          "PREREQUISITES_NOT_MET"
+        ],
+        "expectedSkillChanges": [
+          {
+            "skillId": "SYSTEM_DESIGN",
+            "before": 2,
+            "after": 3,
+            "actualGain": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "past-session",
+      "outcome": "PASS",
+      "details": {
+        "eligible": false,
+        "reasons": [
+          "NO_UPCOMING_SESSION"
+        ],
+        "expectedSkillChanges": [
+          {
+            "skillId": "SYSTEM_DESIGN",
+            "before": 2,
+            "after": 3,
+            "actualGain": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "self-paced-no-session",
+      "outcome": "PASS",
+      "details": {
+        "eligible": true,
+        "reasons": [],
+        "expectedSkillChanges": [
+          {
+            "skillId": "SYSTEM_DESIGN",
+            "before": 2,
+            "after": 3,
+            "actualGain": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "invented-id",
+      "outcome": "PASS",
+      "details": {}
+    },
+    {
+      "id": "extra-prose",
+      "outcome": "PASS",
+      "details": {}
+    },
+    {
+      "id": "duplicate-id",
+      "outcome": "PASS",
+      "details": {}
+    },
+    {
+      "id": "missing-history",
+      "outcome": "PASS",
+      "details": {}
+    }
+  ],
+  "suppliedDataset": {
+    "records": {
+      "skills": 60,
+      "grades": 32,
+      "employees": 200,
+      "activities": 40,
+      "history": 2743
+    },
+    "replayedPositiveChanges": 308,
+    "historyStatuses": {
+      "COMPLETED": 2178,
+      "DECLINED": 104,
+      "DROPPED": 160,
+      "NO_SHOW": 195,
+      "OVERDUE": 90,
+      "IN_PROGRESS": 16
+    },
+    "recommendationStatuses": {
+      "READY": 158,
+      "NO_NEXT_GRADE": 16,
+      "NO_ELIGIBLE_ACTIVITIES": 26
+    },
+    "recommendedEmployees": 158,
+    "itemCount": 366,
+    "totalExplanationGapFacts": 475,
+    "mismatchedExplanationGapFacts": 1,
+    "mismatchExamples": [
+      {
+        "employeeId": "E0090",
+        "activityId": "EV_021",
+        "rank": 3,
+        "fact": {
+          "id": "gap:EV_021:SK_STATISTICS",
+          "category": "SKILL_GAP",
+          "reasonCode": "CRITICAL_REQUIREMENT_GAP",
+          "facts": {
+            "skillId": "SK_STATISTICS",
+            "currentLevel": 2,
+            "requiredLevel": 4,
+            "gap": 2,
+            "actualGain": 1,
+            "nextLevel": 3,
+            "critical": true
+          }
+        },
+        "actualChange": null,
+        "explanation": "Role Data Analyst, progression Middle → Senior. Format online: 0 completions and 0 skips or declines; this is a soft preference signal. SK_AB_TESTING: level 1, requirement 4; expected gain 1. SK_STATISTICS: level 2, requirement 4; expected gain 1. SK_PRODUCT_ANALYTICS: level 0, requirement 3; expected gain 1."
+      }
+    ],
+    "droppedAffectedEmployees": 95,
+    "durationMs": 187.79340000000002
+  }
+}

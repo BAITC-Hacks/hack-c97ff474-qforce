@@ -1,0 +1,158 @@
+﻿{
+  "time": "2026-09-23T11:13:49.939Z",
+  "dataset": "200 employees / 40 events / 60 skills / 2743 history",
+  "errors": [],
+  "measurements": [
+    {
+      "path": "/dashboard",
+      "mode": "full browser navigation after UI login; browser cache warm",
+      "runsMs": [
+        440,
+        233,
+        261,
+        231,
+        248
+      ],
+      "maxMs": 440,
+      "p95Ms": 440
+    },
+    {
+      "path": "/profile",
+      "mode": "full browser navigation after UI login; browser cache warm",
+      "runsMs": [
+        230,
+        235,
+        233,
+        149,
+        237
+      ],
+      "maxMs": 237,
+      "p95Ms": 237
+    },
+    {
+      "path": "/path",
+      "mode": "full browser navigation after UI login; browser cache warm",
+      "runsMs": [
+        231,
+        232,
+        235,
+        134,
+        239
+      ],
+      "maxMs": 239,
+      "p95Ms": 239
+    },
+    {
+      "path": "/catalog",
+      "mode": "full browser navigation after UI login; browser cache warm",
+      "runsMs": [
+        138,
+        144,
+        256,
+        122,
+        116
+      ],
+      "maxMs": 256,
+      "p95Ms": 256
+    },
+    {
+      "path": "/activities",
+      "mode": "full browser navigation after UI login; browser cache warm",
+      "runsMs": [
+        239,
+        235,
+        232,
+        153,
+        221
+      ],
+      "maxMs": 239,
+      "p95Ms": 239
+    },
+    {
+      "path": "/recommendations",
+      "mode": "full browser navigation after UI login; browser cache warm",
+      "runsMs": [
+        140,
+        187,
+        147,
+        181,
+        167
+      ],
+      "maxMs": 187,
+      "p95Ms": 187
+    },
+    {
+      "path": "/hr-dashboard",
+      "runsMs": [
+        1419,
+        854,
+        854,
+        872,
+        886
+      ],
+      "maxMs": 1419,
+      "p95Ms": 1419
+    },
+    {
+      "path": "/hr-people",
+      "runsMs": [
+        120,
+        133,
+        80,
+        80,
+        147
+      ],
+      "maxMs": 147,
+      "p95Ms": 147
+    },
+    {
+      "path": "/hr-events",
+      "runsMs": [
+        859,
+        883,
+        869,
+        869,
+        870
+      ],
+      "maxMs": 883,
+      "p95Ms": 883
+    }
+  ],
+  "checks": [
+    {
+      "name": "recommendations_render",
+      "ms": 102,
+      "status": "READY",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "name": "E0090_saved_recommendations_in_hr",
+      "httpStatus": 201,
+      "savedCount": 3,
+      "uiCards": 0,
+      "recommendationLinks": 0
+    },
+    {
+      "name": "full_data_mobile_overflow",
+      "path": "/hr-dashboard",
+      "overflow": false
+    },
+    {
+      "name": "full_data_mobile_overflow",
+      "path": "/hr-people",
+      "overflow": false
+    },
+    {
+      "name": "full_data_mobile_overflow",
+      "path": "/hr-events",
+      "overflow": false
+    },
+    {
+      "name": "full_data_mobile_overflow",
+      "path": "/hr-employee?id=E0090",
+      "overflow": false
+    }
+  ],
+  "employeeId": "E0001"
+}

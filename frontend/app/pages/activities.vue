@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { date, statuses } from "../utils/labels.js";
 const { store, loadEmployee, activityName, notify } = useCareer(),
   { request } = useApi();
@@ -14,6 +15,7 @@ const rows = computed(() =>
 );
 const canComplete = (row) =>
   ["registered", "in_progress", "overdue"].includes(row.status);
+const scheduleKnown = (row) => !!store.eligible?.asOfDate && store.activities.some(activity => activity.id === row.activityId);
 const scheduledFuture = (row) =>
   store.activities.find((a) => a.id === row.activityId)?.format !==
     "self_paced" && row.date > store.eligible?.asOfDate;
@@ -56,13 +58,13 @@ async function act(row, status) {
 <template>
   <div>
     <CqHeading
-      title="Мои активности"
-      subtitle="План и история участия сохраняются в вашем профиле."
+      :title="t('Мои активности')"
+      :subtitle="t('План и история участия сохраняются в вашем профиле.')"
       ><NuxtLink to="/catalog" class="btn secondary"
-        >Найти следующий шаг <CqIcon name="book" /></NuxtLink
+        > {{ t("Найти следующий шаг") }} <CqIcon name="book" /></NuxtLink
     ></CqHeading>
     <CqNotice v-if="actionError" color="red" role="alert">{{
-      actionError
+      t(actionError)
     }}</CqNotice>
     <CqAsync
       :loading="store.loading"
@@ -70,11 +72,13 @@ async function act(row, status) {
       :empty="!store.profile"
       @retry="loadEmployee()"
     >
+      <CqDataWarnings />
+      <p v-if="store.blockLoading.history" role="status">{{ t("Загружаем историю…") }}</p>
       <div class="filters">
-        <select v-model="filter" class="select" aria-label="Статус участия">
-          <option value="">Все статусы</option>
+        <select v-model="filter" class="select" :aria-label="t('Статус участия')">
+          <option value=""> {{ t("Все статусы") }} </option>
           <option v-for="(label, key) in statuses" :key="key" :value="key">
-            {{ label[0] }}
+            {{ t(label[0]) }}
           </option>
         </select>
       </div>
@@ -93,7 +97,7 @@ async function act(row, status) {
               </div>
             </div>
             <CqTag :color="statuses[row.status]?.[1]">{{
-              statuses[row.status]?.[0] || row.status
+              t(statuses[row.status]?.[0] || row.status)
             }}</CqTag>
           </div>
           <div class="actions">
@@ -102,36 +106,31 @@ async function act(row, status) {
               class="btn secondary"
               :disabled="!!busy"
               @click="act(row, 'in_progress')"
-            >
-              Начать
-            </button>
+            > {{ t("Начать") }} </button>
             <button
               v-if="canComplete(row)"
               class="btn"
-              :disabled="!!busy || scheduledFuture(row)"
+              :disabled="!!busy || !scheduleKnown(row) || store.blockLoading.eligible || !!store.blockErrors.eligible || !!store.blockErrors.catalogs || scheduledFuture(row)"
               @click="act(row, 'completed')"
             >
-              {{ busy === row.id ? "Сохраняем…" : "Завершить" }}
+              {{ t(busy === row.id ? "Сохраняем…" : "Завершить") }}
             </button>
             <button
               v-if="['registered', 'overdue'].includes(row.status)"
               class="btn ghost"
               :disabled="!!busy"
               @click="act(row, 'declined')"
-            >
-              Отказаться
-            </button>
+            > {{ t("Отказаться") }} </button>
             <button
               v-if="['in_progress', 'overdue'].includes(row.status)"
               class="btn ghost"
               :disabled="!!busy"
               @click="act(row, 'dropped')"
-            >
-              Прервать
-            </button>
+            > {{ t("Прервать") }} </button>
             <button
               v-if="
                 row.status === 'registered' &&
+                scheduleKnown(row) &&
                 !scheduledFuture(row) &&
                 store.activities.find((a) => a.id === row.activityId)
                   ?.format !== 'self_paced'
@@ -139,26 +138,20 @@ async function act(row, status) {
               class="btn ghost"
               :disabled="!!busy"
               @click="act(row, 'no_show')"
-            >
-              Не участвовал
-            </button>
+            > {{ t("Не участвовал") }} </button>
             <NuxtLink
               v-if="row.status === 'completed'"
               :to="{ path: '/completion', query: { id: row.id } }"
               class="btn ghost"
-              >Результат выполнения <CqIcon name="arrow"
+              > {{ t("Результат выполнения") }} <CqIcon name="arrow"
             /></NuxtLink>
           </div>
           <p
             v-if="canComplete(row) && scheduledFuture(row)"
             class="small muted section"
-          >
-            Завершение станет доступно после даты сессии.
-          </p>
+          > {{ t("Завершение станет доступно после даты сессии.") }} </p>
         </div>
-        <p v-if="!rows.length" class="empty-inline">
-          Участий с таким статусом пока нет.
-        </p>
+        <p v-if="!rows.length && !store.blockLoading.history && !store.blockErrors.history" class="empty-inline"> {{ t("Участий с таким статусом пока нет.") }} </p>
       </section>
     </CqAsync>
   </div>

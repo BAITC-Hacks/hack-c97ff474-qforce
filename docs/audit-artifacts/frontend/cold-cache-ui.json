@@ -1,0 +1,30 @@
+{
+  "time": "2026-09-23T11:15:23.933Z",
+  "mode": "Empty browser context for first load; auth token provisioned in sessionStorage before navigation, /auth/me included; no network/CPU throttling, localhost, 200 profiles",
+  "rows": [
+    {
+      "path": "/profile",
+      "coldMs": 227,
+      "warmMs": [
+        233,
+        233
+      ]
+    },
+    {
+      "path": "/hr-dashboard",
+      "coldMs": 931,
+      "warmMs": [
+        868,
+        862
+      ]
+    },
+    {
+      "path": "/hr-events",
+      "coldMs": 924,
+      "warmMs": [
+        857,
+        869
+      ]
+    }
+  ]
+}

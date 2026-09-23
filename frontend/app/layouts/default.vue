@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { titles, employeeMenu, hrMenu } from "../utils/pages.js";
 import { initials } from "../utils/labels.js";
 const route = useRoute(),
@@ -21,18 +22,18 @@ function signOut() {
 }
 </script>
 <template>
-  <a href="#main" class="skip-link">Перейти к содержимому</a>
+  <a href="#main" class="skip-link"> {{ t("Перейти к содержимому") }} </a>
   <div v-if="mobileOpen" class="nav-overlay" @click="mobileOpen = false" />
   <aside class="sidebar" :class="{ 'mobile-open': mobileOpen }">
     <CqBrand /><button
       class="mobile-close"
-      aria-label="Закрыть меню"
+      :aria-label="t('Закрыть меню')"
       @click="mobileOpen = false"
     >
       <CqIcon name="x" />
     </button>
     <div class="nav-group">
-      {{ hr ? "HR-ПРОСТРАНСТВО" : "МОЁ ПРОСТРАНСТВО" }}
+      {{ t(hr ? "HR-ПРОСТРАНСТВО" : "МОЁ ПРОСТРАНСТВО") }}
     </div>
     <NuxtLink
       v-for="item in menu"
@@ -41,27 +42,24 @@ function signOut() {
       class="nav-item"
       :class="{ active: page === item[0] }"
       :aria-current="page === item[0] ? 'page' : undefined"
-      ><CqIcon :name="item[2]" />{{ item[1] }}</NuxtLink
+      ><CqIcon :name="item[2]" />{{ t(item[1]) }}</NuxtLink
     >
     <div class="sidebar-bottom">
       <div class="side-note">
-        <strong><CqIcon name="shield" /> Развитие без сравнения</strong>Ваш путь
-        — не соревнование. Здесь нет публичных рейтингов сотрудников.
-      </div>
+        <strong><CqIcon name="shield" /> {{ t("Развитие без сравнения") }} </strong> {{ t("Ваш путь — не соревнование. Здесь нет публичных рейтингов сотрудников.") }} </div>
       <NuxtLink to="/settings" class="nav-item"
-        ><CqIcon name="settings" />Настройки</NuxtLink
+        ><CqIcon name="settings" /> {{ t("Настройки") }} </NuxtLink
       >
       <button v-if="store.user" class="nav-item" @click="signOut">
-        <CqIcon name="logout" />Выйти
-      </button>
-      <NuxtLink v-else to="/login" class="nav-item">Войти</NuxtLink>
+        <CqIcon name="logout" /> {{ t("Выйти") }} </button>
+      <NuxtLink v-else to="/login" class="nav-item"> {{ t("Войти") }} </NuxtLink>
     </div>
   </aside>
   <div class="shell">
     <header class="topbar">
       <button
         class="mobile-menu"
-        aria-label="Открыть меню"
+        :aria-label="t('Открыть меню')"
         :aria-expanded="mobileOpen"
         @click="mobileOpen = !mobileOpen"
       >
@@ -71,11 +69,11 @@ function signOut() {
         <NuxtLink :to="hr ? '/hr-dashboard' : '/dashboard'" class="hide-mobile"
           >QCareer</NuxtLink
         ><span class="hide-mobile">/</span
-        ><span>{{ titles[page] || "Обзор" }}</span>
+        ><span>{{ t(titles[page] || "Обзор") }}</span>
       </div>
       <div class="top-controls">
-        <CqTag color="green">{{ hr ? "HR" : "Сотрудник" }}</CqTag
-        ><span class="lang small muted">RU</span>
+        <CqTag color="green">{{ t(hr ? "HR" : "Сотрудник") }}</CqTag
+        ><CqLanguage />
         <div class="avatar">
           {{
             initials(
@@ -88,21 +86,21 @@ function signOut() {
     <main id="main" class="content" tabindex="-1">
       <slot />
       <footer class="bottom-note">
-        <span>QCareer · развитие в своём темпе</span
-        ><span>Данные и прогресс сохраняются на сервере</span>
+        <span> {{ t("QCareer · развитие в своём темпе") }} </span
+        ><span> {{ t("Данные и прогресс сохраняются на сервере") }} </span>
       </footer>
     </main>
   </div>
-  <nav class="mobile-nav" aria-label="Основная навигация">
+  <nav class="mobile-nav" :aria-label="t('Основная навигация')">
     <NuxtLink
       v-for="item in menu.slice(0, 4)"
       :key="item[0]"
       :to="'/' + item[0]"
       :class="{ active: page === item[0] }"
-      ><CqIcon :name="item[2]" /><span>{{ item[1] }}</span></NuxtLink
+      ><CqIcon :name="item[2]" /><span>{{ t(item[1]) }}</span></NuxtLink
     >
     <button @click="mobileOpen = true">
-      <CqIcon name="layers" /><span>Ещё</span>
+      <CqIcon name="layers" /><span> {{ t("Ещё") }} </span>
     </button>
   </nav>
 </template>

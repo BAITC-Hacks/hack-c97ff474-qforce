@@ -40,7 +40,39 @@ describe('dataset input precision and canonical hashes', () => {
     const files = { 'activity_history.csv': Buffer.from(Object.keys(row).join(',') + '\n' + Object.values({ ...row, date: '2026-02-01', status: 'completed', completion_pct: '100' }).join(',') + '\n') };
     const parsed = new JsonCsvDatasetParser().parse(files);
     parsed.plan.rules.baseline = baseline;
-    validateImport(parsed.plan, { skillIds: [], grades: [], employees: [{ id: 'employee', sourceHash: '', baselineHash: '', onlineVersion: 1, baselineDate: '2026-01-01' }], activities: [{ id: 'event', sourceHash: '' }], history: [] }, parsed.report);
+    validateImport(parsed.plan, { skillIds: [], grades: [], employees: [{ id: 'employee', sourceHash: '', baselineHash: '', onlineVersion: 1, baselineDate: '2026-01-01', hireDate: '2025-01-01' }], activities: [{ id: 'event', sourceHash: '' }], history: [] }, parsed.report);
     expect(parsed.report.valid).toBe(baseline === 'current_snapshot');
+  });
+  test.each(['employees.json', 'skills.json', 'events.json', 'dataset-rules.json'])('reports JSON null in %s without throwing', file => {
+    const parsed = new JsonCsvDatasetParser().parse({[file]: Buffer.from('null')});
+    expect(parsed.report.valid).toBe(false);
+    expect(parsed.report.diagnostics).toContainEqual(expect.objectContaining({file, code: 'INVALID_FIELD'}));
+  });
+  test('validates history-only dates against an existing employee hire date', () => {
+    const parsed = new JsonCsvDatasetParser().parse({'activity_history.csv': Buffer.from(Object.keys(row).join(',') + '\n' + Object.values({...row, date: '2000-01-01'}).join(',') + '\n')});
+    validateImport(parsed.plan, {skillIds: [], grades: [], employees: [{id: 'employee', sourceHash: '', baselineHash: '', onlineVersion: 0, baselineDate: '2026-01-01', hireDate: '2025-01-01'}], activities: [{id: 'event', sourceHash: ''}], history: []}, parsed.report);
+    expect(parsed.report.valid).toBe(false);
+    expect(parsed.report.diagnostics).toContainEqual(expect.objectContaining({code: 'INVALID_DATE', recordId: 'x'}));
+  });
+  test('merges the known starter-kit grade order into fixture rules without reordering fixtures', () => {
+    const fixtureRules = JSON.parse(readFileSync('data/fixtures/dataset-rules.json', 'utf8'));
+    const starterSkills = {skills: [], role_profiles: ['Lead', 'Middle', 'Junior', 'Senior'].map(grade => ({role: 'Engineer', grade, required_skills: {}, critical_skills: []}))};
+    const parsed = new JsonCsvDatasetParser().parse({'skills.json': Buffer.from(JSON.stringify(starterSkills))}, fixtureRules);
+    expect(parsed.report.valid).toBe(true);
+    expect(parsed.plan.rules.gradeOrder).toEqual([...fixtureRules.gradeOrder, 'Junior', 'Middle', 'Senior', 'Lead']);
+    expect([...parsed.plan.grades].sort((a,b) => a.position-b.position).map(grade => grade.id)).toEqual(['Junior','Middle','Senior','Lead']);
+    expect(fixtureRules.gradeOrder).toEqual(['Apprentice', 'Practitioner', 'Expert']);
+  });
+  test('keeps unknown and conflicting grade orders diagnostic and respects explicit rules', () => {
+    const source = {skills: [], role_profiles: [{role: 'Engineer', grade: 'UnknownGrade', required_skills: {}, critical_skills: []}]};
+    const parser = new JsonCsvDatasetParser();
+    const parsed = parser.parse({'skills.json': Buffer.from(JSON.stringify(source))});
+    expect(parsed.report.diagnostics).toContainEqual(expect.objectContaining({code: 'UNKNOWN_GRADE_ORDER'}));
+    const configured = JSON.parse(readFileSync('data/dataset-rules.json', 'utf8'));
+    const rules = {...configured, gradeOrder: ['UnknownGrade']};
+    expect(parser.parse({'skills.json': Buffer.from(JSON.stringify(source)), 'dataset-rules.json': Buffer.from(JSON.stringify(rules))}).report.valid).toBe(true);
+    source.role_profiles[0].grade = 'Junior';
+    const conflicting = parser.parse({'skills.json': Buffer.from(JSON.stringify(source))}, {...configured, gradeOrder: ['Senior']});
+    expect(conflicting.report.diagnostics).toContainEqual(expect.objectContaining({code: 'UNKNOWN_GRADE_ORDER'}));
   });
 });

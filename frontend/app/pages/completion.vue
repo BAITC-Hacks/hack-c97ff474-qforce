@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { percent } from "../utils/labels.js";
 const route = useRoute(),
   { store, loadEmployee, skillName, activityName } = useCareer();
@@ -21,24 +22,26 @@ const result = computed(() => {
 <template>
   <CqAsync :loading="store.loading" :error="store.error" @retry="loadEmployee()"
     ><div>
+      <CqDataWarnings :blocks="['history', 'catalogs']" />
+      <p v-if="store.blockLoading.history" role="status">{{ t('Загружаем историю…') }}</p>
       <CqHeading
-        title="Результат выполнения"
-        subtitle="Сохранённый результат участия и изменение навыков."
+        :title="t('Результат выполнения')"
+        :subtitle="t('Сохранённый результат участия и изменение навыков.')"
       />
       <section v-if="record" class="panel">
-        <div class="section-kicker">Завершено</div>
+        <div class="section-kicker"> {{ t("Завершено") }} </div>
         <h2>{{ activityName(record.activityId) }}</h2>
         <template v-if="result"
           ><div class="grid two section">
             <CqMetric
-              label="До завершения"
+              :label="t('До завершения')"
               :value="percent(result.trajectoryBefore.readinessPercent)"
-              caption="Соответствие следующему грейду"
+              :caption="t('Соответствие следующему грейду')"
               icon="target"
             /><CqMetric
-              label="После завершения"
+              :label="t('После завершения')"
               :value="percent(result.trajectoryAfter.readinessPercent)"
-              caption="Результат на момент выполнения"
+              :caption="t('Результат на момент выполнения')"
               icon="check"
             />
           </div>
@@ -54,23 +57,17 @@ const result = computed(() => {
               }})</CqTag
             >
           </div>
-          <p v-if="!result.changedSkills.length" class="empty-inline">
-            Дополнительного прироста навыков нет.
-          </p></template
+          <p v-if="!result.changedSkills.length" class="empty-inline"> {{ t("Дополнительного прироста навыков нет.") }} </p></template
         >
         <CqNotice v-else color="gold"
-          >Участие завершено, но подробный результат изменения навыков не
-          сохранён. Так бывает с импортированной историей.</CqNotice
+          > {{ t("Участие завершено, но подробный результат изменения навыков не сохранён. Так бывает с импортированной историей.") }} </CqNotice
         >
       </section>
-      <section v-else class="panel empty-inline">
-        Завершённое участие не найдено. Откройте результат из истории
-        активностей.
-      </section>
+      <section v-else-if="!store.blockLoading.history && !store.blockErrors.history" class="panel empty-inline"> {{ t("Завершённое участие не найдено. Откройте результат из истории активностей.") }} </section>
       <div class="actions section">
         <NuxtLink to="/recommendations" class="btn"
-          >Подобрать следующий шаг <CqIcon name="arrow" /></NuxtLink
-        ><NuxtLink to="/activities" class="btn secondary">К истории</NuxtLink>
+          > {{ t("Подобрать следующий шаг") }} <CqIcon name="arrow" /></NuxtLink
+        ><NuxtLink to="/activities" class="btn secondary"> {{ t("К истории") }} </NuxtLink>
       </div>
     </div></CqAsync
   >

@@ -1,0 +1,19 @@
+# Disposable fixture verification overlay, never a production configuration.
+# Run with compose.yaml under a distinct project name; no external LLM calls.
+services:
+  migrate:
+    environment:
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: "false"
+  bootstrap:
+    environment:
+      DATA_MODE: fixtures
+      DEMO_EMPLOYEE_ID: fixture_person_a
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: "false"
+  api:
+    environment:
+      DATA_MODE: fixtures
+      DEMO_EMPLOYEE_ID: fixture_person_a
+      LLM_PROVIDER: disabled
+      ALLOW_EXTERNAL_LLM: "false"

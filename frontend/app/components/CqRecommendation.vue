@@ -1,9 +1,12 @@
 <script setup>
+import { t } from '../utils/i18n.js';
+import { localeState } from "../utils/i18n.js";
 import { formats } from "../utils/labels.js";
 const props = defineProps({
   rec: { type: Object, required: true },
   index: { type: Number, default: 0 },
   compact: Boolean,
+  readonly: Boolean,
 });
 const { store, skillName, activityName, notify } = useCareer();
 const { request, session } = useApi();
@@ -13,7 +16,7 @@ const activity = computed(() =>
 const busy = ref(false),
   error = ref("");
 async function feedback(rating) {
-  if (busy.value || !store.profile || !store.recommendations) return;
+  if (props.readonly || session.user?.role === 'HR' || busy.value || !store.profile || !store.recommendations) return;
   const employeeId = store.profile.id,
     setId = store.recommendations.recommendationSetId,
     sessionVersion = session.version;
@@ -26,7 +29,7 @@ async function feedback(rating) {
     );
     const latest = await request(
       `/employees/${encodeURIComponent(employeeId)}/recommendations/latest`,
-      { query: { locale: "ru" } },
+      { query: { locale: localeState.locale } },
     );
     if (
       session.version === sessionVersion &&
@@ -48,13 +51,13 @@ async function feedback(rating) {
     <div class="rec-top">
       <div class="rec-number">0{{ rec.rank }}</div>
       <CqTag :color="index === 0 ? 'green' : 'outline'">{{
-        index === 0 ? "Приоритетный шаг" : "Альтернатива"
+        t('Шаг') + ' ' + rec.rank
       }}</CqTag>
     </div>
     <h3>{{ activityName(rec.activityId) }}</h3>
     <div v-if="activity" class="tags">
-      <CqTag>{{ formats[activity.format] || activity.format }}</CqTag
-      ><CqTag>{{ activity.durationHours }} ч</CqTag>
+      <CqTag>{{ t(formats[activity.format] || activity.format) }}</CqTag
+      ><CqTag>{{ activity.durationHours }} {{ t("ч") }} </CqTag>
     </div>
     <div class="tags section">
       <CqTag
@@ -68,20 +71,17 @@ async function feedback(rating) {
     <NuxtLink
       class="btn"
       :class="{ secondary: index !== 0 }"
-      :to="{ path: '/event', query: { id: rec.activityId } }"
-      >Подробнее о шаге <CqIcon name="arrow"
+      :to="{ path: '/event', query: { id: rec.activityId, ...(readonly ? { employee: store.profile.id } : {}) } }"
+      > {{ t("Подробнее о шаге") }} <CqIcon name="arrow"
     /></NuxtLink>
-    <div v-if="!compact" class="actions section">
-      <button class="btn ghost" :disabled="busy" @click="feedback('HELPFUL')">
-        Полезно</button
+    <div v-if="!compact && !readonly" class="actions section">
+      <button class="btn ghost" :disabled="busy" @click="feedback('HELPFUL')"> {{ t("Полезно") }} </button
       ><button
         class="btn ghost"
         :disabled="busy"
         @click="feedback('NOT_HELPFUL')"
-      >
-        Не подходит
-      </button>
+      > {{ t("Не подходит") }} </button>
     </div>
-    <CqNotice v-if="error" color="red" role="alert">{{ error }}</CqNotice>
+    <CqNotice v-if="error" color="red" role="alert">{{ t(error) }}</CqNotice>
   </article>
 </template>

@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { percent, trajectoryStatus } from "../utils/labels.js";
 definePageMeta({ alias: ["/dashboard"] });
 const { store, loadEmployee, gradeName, roleName } = useCareer();
@@ -17,15 +18,16 @@ const gaps = computed(() =>
     @retry="loadEmployee()"
   >
     <div v-if="store.profile">
+      <CqDataWarnings />
       <CqHeading
-        title="Развивайтесь в своём темпе"
+        :title="t('Развивайтесь в своём темпе')"
         :subtitle="
-          'Здравствуйте, ' +
+          t('Здравствуйте,') + ' ' +
           store.profile.fullName +
-          '. Здесь ваш путь, следующий шаг и прогресс.'
+          t('. Здесь ваш путь, следующий шаг и прогресс.')
         "
         ><NuxtLink to="/profile" class="btn secondary"
-          >Мой профиль <CqIcon name="user" /></NuxtLink
+          > {{ t("Мой профиль") }} <CqIcon name="user" /></NuxtLink
       ></CqHeading>
       <section class="hero">
         <div>
@@ -33,34 +35,33 @@ const gaps = computed(() =>
             {{ roleName(store.profile.roleId) }} ·
             {{ gradeName(store.profile.gradeId) }}
           </div>
-          <h2>Понятный шаг.<br />Заметный рост.</h2>
+          <h2> {{ t("Понятный шаг.") }} <br /> {{ t("Заметный рост.") }} </h2>
           <p>
-            {{ trajectoryStatus[store.trajectory.status] }}. Следующий грейд:
-            {{ gradeName(store.trajectory.nextGradeId) }}.
+            {{ t(trajectoryStatus[store.trajectory.status]) }} {{ t(". Следующий грейд:") }} {{ gradeName(store.trajectory.nextGradeId) }}.
           </p>
           <div class="actions">
             <NuxtLink to="/path" class="btn gold"
-              >Посмотреть мой путь <CqIcon name="arrow" /></NuxtLink
-            ><CqTag color="dark">Личная траектория</CqTag>
+              > {{ t("Посмотреть мой путь") }} <CqIcon name="arrow" /></NuxtLink
+            ><CqTag color="dark"> {{ t("Личная траектория") }} </CqTag>
           </div>
         </div>
         <div class="hero-art"><CqProgress :profile="store.trajectory" /></div>
       </section>
       <div class="grid three stats">
         <CqMetric
-          label="Соответствие навыков"
+          :label="t('Соответствие навыков')"
           :value="percent(store.trajectory.readinessPercent)"
-          caption="Не вероятность повышения"
+          :caption="t('Не вероятность повышения')"
           icon="target"
         />
         <CqMetric
-          label="Данные о навыках"
+          :label="t('Данные о навыках')"
           :value="percent(store.trajectory.coverage * 100)"
-          caption="Покрытие требований известными данными"
+          :caption="t('Покрытие требований известными данными')"
           icon="layers"
         />
         <CqMetric
-          label="Критические навыки"
+          :label="t('Критические навыки')"
           :value="
             store.trajectory.criticalSkillsMet === null
               ? 'Нет данных'
@@ -68,63 +69,64 @@ const gaps = computed(() =>
                 ? 'Закрыты'
                 : 'Есть разрывы'
           "
-          caption="По требованиям следующего грейда"
+          :caption="t('По требованиям следующего грейда')"
           icon="check"
         />
       </div>
       <div class="section panel-head">
-        <h2>Ваш следующий шаг</h2>
+        <h2> {{ t("Ваш следующий шаг") }} </h2>
         <NuxtLink to="/recommendations" class="btn ghost"
-          >Все рекомендации <CqIcon name="arrow"
+          > {{ t("Все рекомендации") }} <CqIcon name="arrow"
         /></NuxtLink>
       </div>
       <div class="grid main-aside">
         <div>
+          <p v-if="store.blockLoading.recommendations" role="status">{{ t('Загружаем рекомендации…') }}</p>
           <CqNotice v-if="store.recommendations?.stale" color="gold"
-            >Профиль изменился. Обновите рекомендации.</CqNotice
+            > {{ t("Профиль изменился. Обновите рекомендации.") }} </CqNotice
           >
           <CqRecommendation
             v-if="store.recommendations?.recommendations.length"
             :rec="store.recommendations.recommendations[0]"
             compact
           />
-          <section v-else class="panel">
+          <section v-else-if="!store.blockLoading.recommendations && !store.blockErrors.recommendations" class="panel">
             <p>
               {{
-                store.recommendations
+                t(store.recommendations
                   ? "Подходящих рекомендаций сейчас нет."
-                  : "Подбор ещё не выполнялся."
+                  : "Подбор ещё не выполнялся.")
               }}
             </p>
             <NuxtLink to="/recommendations" class="btn section"
-              >Подобрать следующий шаг</NuxtLink
+              > {{ t("Подобрать следующий шаг") }} </NuxtLink
             >
           </section>
         </div>
         <section class="panel">
-          <h2>Что приблизит к цели</h2>
+          <h2> {{ t("Что приблизит к цели") }} </h2>
           <CqSkill
             v-for="gap in gaps.slice(0, 4)"
             :key="gap.skillId"
             :gap="gap"
           />
           <p v-if="!gaps.length" class="empty-inline">
-            {{ trajectoryStatus[store.trajectory.status] }}
+            {{ t(trajectoryStatus[store.trajectory.status]) }}
           </p>
           <CqNotice
-            >Прогресс рассчитан по требованиям роли, а не по количеству
-            курсов.</CqNotice
+            > {{ t("Прогресс рассчитан по требованиям роли, а не по количеству курсов.") }} </CqNotice
           >
         </section>
       </div>
       <section class="panel section">
         <div class="panel-head">
-          <h2>Последняя активность</h2>
+          <h2> {{ t("Последняя активность") }} </h2>
           <NuxtLink to="/activities" class="btn ghost"
-            >Вся история <CqIcon name="arrow"
+            > {{ t("Вся история") }} <CqIcon name="arrow"
           /></NuxtLink>
         </div>
-        <CqRecent :history="store.history" :limit="3" />
+        <p v-if="store.blockLoading.history" role="status">{{ t('Загружаем историю…') }}</p>
+        <CqRecent v-else-if="!store.blockErrors.history" :history="store.history" :limit="3" />
       </section>
     </div>
   </CqAsync>

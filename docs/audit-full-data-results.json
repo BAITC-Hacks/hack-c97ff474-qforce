@@ -1,0 +1,498 @@
+{
+  "timestamp": "2026-09-23T11:12:40.322Z",
+  "dataVolume": {
+    "asOfDate": "2026-10-01",
+    "dateFrom": "2025-10-01",
+    "dateTo": "2026-10-01",
+    "employeeCount": 200,
+    "participationCount": 1483,
+    "uniqueParticipants": 200,
+    "completedParticipations": 1135,
+    "completionRate": 0.7653405259608901,
+    "completionRateDenominator": "ALL_RECORDED_PARTICIPATIONS_IN_WINDOW",
+    "employeesWithEligibleNextStep": 158
+  },
+  "timings": {
+    "/auth/login": {
+      "count": 1,
+      "p50Ms": 95.47,
+      "p95Ms": 95.47,
+      "maxMs": 95.47,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/overview": {
+      "count": 6,
+      "p50Ms": 239.36,
+      "p95Ms": 364.36,
+      "maxMs": 364.36,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/skill-gaps": {
+      "count": 5,
+      "p50Ms": 189.03,
+      "p95Ms": 213.65,
+      "maxMs": 213.65,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/needs-attention": {
+      "count": 5,
+      "p50Ms": 223.26,
+      "p95Ms": 242.88,
+      "maxMs": 242.88,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/activity-participation": {
+      "count": 5,
+      "p50Ms": 180.78,
+      "p95Ms": 208.35,
+      "maxMs": 208.35,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/recommendation-coverage": {
+      "count": 5,
+      "p50Ms": 213.36,
+      "p95Ms": 230.46,
+      "maxMs": 230.46,
+      "statuses": [
+        200
+      ]
+    },
+    "/employees/E0090": {
+      "count": 20,
+      "p50Ms": 29.67,
+      "p95Ms": 31.48,
+      "maxMs": 33.83,
+      "statuses": [
+        200
+      ]
+    },
+    "forcedRecommendations": {
+      "count": 20,
+      "p50Ms": 54.48,
+      "p95Ms": 69.22,
+      "maxMs": 70.66,
+      "statuses": [
+        201
+      ]
+    },
+    "/hr/needs-attention:concurrent5": {
+      "count": 3,
+      "p50Ms": 563.12,
+      "p95Ms": 575.16,
+      "maxMs": 575.16,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/activity-participation:concurrent5": {
+      "count": 3,
+      "p50Ms": 563.75,
+      "p95Ms": 576.72,
+      "maxMs": 576.72,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/recommendation-coverage:concurrent5": {
+      "count": 3,
+      "p50Ms": 542.31,
+      "p95Ms": 603.88,
+      "maxMs": 603.88,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/overview:concurrent5": {
+      "count": 3,
+      "p50Ms": 591.84,
+      "p95Ms": 644.41,
+      "maxMs": 644.41,
+      "statuses": [
+        200
+      ]
+    },
+    "/hr/skill-gaps:concurrent5": {
+      "count": 3,
+      "p50Ms": 593.95,
+      "p95Ms": 647,
+      "maxMs": 647,
+      "statuses": [
+        200
+      ]
+    }
+  },
+  "concurrent5RoundMs": [
+    647,
+    579,
+    594
+  ],
+  "recommendationSamples": [
+    {
+      "employeeId": "E0090",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3,
+      "recommendations": [
+        {
+          "activityId": "EV_020",
+          "rank": 1,
+          "score": 0.589583,
+          "explanation": "Роль Data Analyst, переход Middle → Senior. Формат self_paced: завершений 6, пропусков и отказов 0; это мягкий сигнал предпочтения. SK_STATISTICS: уровень 2, требование 4; ожидаемый прирост 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Data Analyst",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_020",
+              "facts": {
+                "format": "self_paced",
+                "totalRecorded": 10,
+                "sameFormatCompleted": 6,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_FORMAT_HISTORY"
+            },
+            {
+              "id": "gap:EV_020:SK_STATISTICS",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_STATISTICS",
+                "critical": true,
+                "nextLevel": 3,
+                "actualGain": 1,
+                "currentLevel": 2,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            },
+            {
+              "id": "novelty:EV_020",
+              "facts": {
+                "activityId": "EV_020"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_STATISTICS",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2.12766
+        },
+        {
+          "activityId": "EV_023",
+          "rank": 2,
+          "score": 0.561667,
+          "explanation": "Роль Data Analyst, переход Middle → Senior. Формат offline: завершений 3, пропусков и отказов 0; это мягкий сигнал предпочтения. SK_PUBLIC_SPEAKING: уровень 0, требование 2; ожидаемый прирост 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Data Analyst",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_023",
+              "facts": {
+                "format": "offline",
+                "totalRecorded": 10,
+                "sameFormatCompleted": 3,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_FORMAT_HISTORY"
+            },
+            {
+              "id": "gap:EV_023:SK_PUBLIC_SPEAKING",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_PUBLIC_SPEAKING",
+                "critical": false,
+                "nextLevel": 1,
+                "actualGain": 1,
+                "currentLevel": 0,
+                "requiredLevel": 2
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            },
+            {
+              "id": "novelty:EV_023",
+              "facts": {
+                "activityId": "EV_023"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PUBLIC_SPEAKING",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 2.12766
+        },
+        {
+          "activityId": "EV_021",
+          "rank": 3,
+          "score": 0.583333,
+          "explanation": "Роль Data Analyst, переход Middle → Senior. Формат online: завершений 0, пропусков и отказов 0; это мягкий сигнал предпочтения. SK_AB_TESTING: уровень 1, требование 4; ожидаемый прирост 1. SK_STATISTICS: уровень 2, требование 4; ожидаемый прирост 1. SK_PRODUCT_ANALYTICS: уровень 0, требование 3; ожидаемый прирост 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Data Analyst",
+                "nextGradeId": "Senior",
+                "currentGradeId": "Middle"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:EV_021",
+              "facts": {
+                "format": "online",
+                "totalRecorded": 10,
+                "sameFormatCompleted": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "OBSERVED_FORMAT_HISTORY"
+            },
+            {
+              "id": "gap:EV_021:SK_AB_TESTING",
+              "facts": {
+                "gap": 3,
+                "skillId": "SK_AB_TESTING",
+                "critical": true,
+                "nextLevel": 2,
+                "actualGain": 1,
+                "currentLevel": 1,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            },
+            {
+              "id": "gap:EV_021:SK_STATISTICS",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_STATISTICS",
+                "critical": true,
+                "nextLevel": 3,
+                "actualGain": 1,
+                "currentLevel": 2,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            },
+            {
+              "id": "gap:EV_021:SK_PRODUCT_ANALYTICS",
+              "facts": {
+                "gap": 3,
+                "skillId": "SK_PRODUCT_ANALYTICS",
+                "critical": false,
+                "nextLevel": 1,
+                "actualGain": 1,
+                "currentLevel": 0,
+                "requiredLevel": 3
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            },
+            {
+              "id": "novelty:EV_021",
+              "facts": {
+                "activityId": "EV_021"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_AB_TESTING",
+              "actualGain": 1
+            },
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PRODUCT_ANALYTICS",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 4.255319
+        }
+      ]
+    },
+    {
+      "employeeId": "E0001",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0002",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3
+    },
+    {
+      "employeeId": "E0003",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0004",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3
+    },
+    {
+      "employeeId": "E0005",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3
+    },
+    {
+      "employeeId": "E0006",
+      "status": "NO_NEXT_GRADE",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 0
+    },
+    {
+      "employeeId": "E0007",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0008",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0009",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0010",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3
+    },
+    {
+      "employeeId": "E0011",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0012",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 1
+    },
+    {
+      "employeeId": "E0013",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3
+    },
+    {
+      "employeeId": "E0014",
+      "status": "NO_NEXT_GRADE",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 0
+    },
+    {
+      "employeeId": "E0015",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    },
+    {
+      "employeeId": "E0016",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 3
+    },
+    {
+      "employeeId": "E0017",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 1
+    },
+    {
+      "employeeId": "E0018",
+      "status": "NO_ELIGIBLE_ACTIVITIES",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 0
+    },
+    {
+      "employeeId": "E0019",
+      "status": "READY",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "count": 2
+    }
+  ],
+  "limitations": "Local sequential and concurrency-5 sample. LLM disabled. API timings do not establish browser/real-network/AI latency SLA."
+}

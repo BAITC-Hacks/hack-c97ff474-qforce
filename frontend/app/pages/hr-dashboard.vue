@@ -1,4 +1,6 @@
 <script setup>
+import { t } from '../utils/i18n.js';
+import { localeState } from "../utils/i18n.js";
 import { date } from "../utils/labels.js";
 const { request } = useApi();
 const department = ref(""),
@@ -33,6 +35,8 @@ const reasons = {
   INCOMPLETE_REQUIREMENTS_OR_LEVELS: "Не хватает требований или оценок навыков",
   NO_ELIGIBLE_ACTIVITIES: "Нет доступных активностей",
   NO_PARTICIPATION_IN_WINDOW: "Нет записей участия за период",
+  REPEATED_DROPS_IN_WINDOW: "Повторные прерывания за период",
+  REPEATED_DECLINES_IN_WINDOW: "Повторные отказы за период",
   REPEATED_SKIPS_IN_WINDOW: "Повторные пропуски за период",
 };
 const coverageLabels = {
@@ -91,87 +95,85 @@ function paginate(section, page) {
   else attentionPage.value = page;
   load();
 }
-onMounted(async () => {
+let catalogGeneration = 0;
+async function initialize() {
+  const version = ++catalogGeneration;
+  catalogError.value = "";
   const results = await Promise.allSettled([
     load(),
-    request("/skills", { query: { locale: "ru" } }),
-    request("/roles", { query: { locale: "ru" } }),
+    request("/skills", { query: { locale: localeState.locale } }),
+    request("/roles", { query: { locale: localeState.locale } }),
   ]);
+  if (version !== catalogGeneration) return;
   if (results[1].status === "fulfilled") skills.value = results[1].value.data;
   if (results[2].status === "fulfilled") roles.value = results[2].value.data;
   if (results.slice(1).some((result) => result.status === "rejected"))
     catalogError.value =
       "Некоторые названия недоступны. Показаны исходные идентификаторы.";
-});
+}
+onMounted(initialize);
+watch(() => localeState.locale, initialize);
 </script>
 <template>
   <div>
     <CqHeading
-      title="Команда растёт. Вы видите — как."
-      subtitle="Разрывы по компетенциям, доступность развития и участие — без рейтингов людей."
+      :title="t('Команда растёт. Вы видите — как.')"
+      :subtitle="t('Разрывы по компетенциям, доступность развития и участие — без рейтингов людей.')"
     />
     <form class="filters" @submit.prevent="applyFilters">
       <CqDepartment v-model="department" :disabled="loading" />
       <label class="small"
-        >С
-        <input
+        > {{ t("С") }} <input
           v-model="dateFrom"
           type="date"
           class="input"
-          aria-label="Начало периода"
+          :aria-label="t('Начало периода')"
           :max="dateTo || undefined"
           :disabled="loading"
       /></label>
       <label class="small"
-        >По
-        <input
+        > {{ t("По") }} <input
           v-model="dateTo"
           type="date"
           class="input"
-          aria-label="Конец периода"
+          :aria-label="t('Конец периода')"
           :min="dateFrom || undefined"
           :disabled="loading"
       /></label>
-      <button class="btn secondary" :disabled="loading">
-        Применить <CqIcon name="search" />
+      <button class="btn secondary" :disabled="loading"> {{ t("Применить") }} <CqIcon name="search" />
       </button>
     </form>
-    <CqNotice v-if="catalogError" color="gold">{{ catalogError }}</CqNotice>
-    <div v-if="loading" class="panel empty-inline section" role="status">
-      Загружаем HR-аналитику…
-    </div>
+    <CqNotice v-if="catalogError" color="gold">{{ t(catalogError) }}</CqNotice>
+    <div v-if="loading" class="panel empty-inline section" role="status"> {{ t("Загружаем HR-аналитику…") }} </div>
     <section v-else-if="error" class="panel section" role="alert">
-      <CqNotice color="red">{{ error }}</CqNotice>
-      <button class="btn secondary section" @click="load">
-        Повторить <CqIcon name="refresh" />
+      <CqNotice color="red">{{ t(error) }}</CqNotice>
+      <button class="btn secondary section" @click="load"> {{ t("Повторить") }} <CqIcon name="refresh" />
       </button>
     </section>
     <template v-else-if="overview">
-      <p class="small muted section">
-        Период: {{ date(overview.dateFrom) }} — {{ date(overview.dateTo) }} ·
-        Дата среза: {{ date(overview.asOfDate) }}
+      <p class="small muted section"> {{ t("Период:") }} {{ date(overview.dateFrom) }} — {{ date(overview.dateTo) }} {{ t("· Дата среза:") }} {{ date(overview.asOfDate) }}
       </p>
       <div class="grid four section">
         <CqMetric
-          label="Сотрудников"
+          :label="t('Сотрудников')"
           :value="overview.employeeCount"
-          caption="В выбранном подразделении"
+          :caption="t('В выбранном подразделении')"
           icon="people"
         />
         <CqMetric
-          label="Доступен следующий шаг"
+          :label="t('Доступен следующий шаг')"
           :value="overview.employeesWithEligibleNextStep"
-          caption="По условиям доступности каталога"
+          :caption="t('По условиям доступности каталога')"
           icon="path"
         />
         <CqMetric
-          label="Участников"
+          :label="t('Участников')"
           :value="overview.uniqueParticipants"
-          caption="Уникальные сотрудники за период"
+          :caption="t('Уникальные сотрудники за период')"
           icon="target"
         />
         <CqMetric
-          label="Завершение участия"
+          :label="t('Завершение участия')"
           :value="percentage(overview.completionRate)"
           :caption="
             overview.completedParticipations +
@@ -185,12 +187,10 @@ onMounted(async () => {
       <div class="grid main-aside section">
         <section class="panel">
           <div class="panel-head">
-            <h2>Разрывы по навыкам</h2>
-            <CqTag color="outline">{{ gapMeta.total }} групп</CqTag>
+            <h2> {{ t("Разрывы по навыкам") }} </h2>
+            <CqTag color="outline">{{ gapMeta.total }} {{ t("групп") }} </CqTag>
           </div>
-          <div v-if="!gaps.length" class="empty-inline">
-            Нет требований для анализа в этой выборке.
-          </div>
+          <div v-if="!gaps.length" class="empty-inline"> {{ t("Нет требований для анализа в этой выборке.") }} </div>
           <div
             v-for="row in gaps"
             :key="
@@ -222,25 +222,17 @@ onMounted(async () => {
               </div>
               <strong>{{ percentage(row.deficitShare) }}</strong>
             </div>
-            <p class="small muted">
-              Разрыв: {{ row.employeesWithGap }} из
-              {{ row.knownLevelEmployees }} сотрудников с известным уровнем. Нет
-              оценки: {{ row.incompleteDataEmployees }}.
+            <p class="small muted"> {{ t("Разрыв:") }} {{ row.employeesWithGap }} {{ t("из") }} {{ row.knownLevelEmployees }} {{ t("сотрудников с известным уровнем. Нет оценки:") }} {{ row.incompleteDataEmployees }}.
             </p>
           </div>
-          <p class="small muted section">
-            Доля относится к сотрудникам с применимым требованием и известным
-            уровнем навыка. Требования не заданы для
-            {{ gapMeta.employeesWithoutTargetRequirements }} сотрудников со
-            следующим грейдом.
-          </p>
+          <p class="small muted section"> {{ t("Доля относится к сотрудникам с применимым требованием и известным уровнем навыка. Требования не заданы для") }} {{ gapMeta.employeesWithoutTargetRequirements }} {{ t("сотрудников со следующим грейдом.") }} </p>
           <div v-if="gapPages > 1" class="pagination">
             <span>{{ gapPage }} / {{ gapPages }}</span>
             <div class="actions">
               <button
                 class="btn secondary"
                 :disabled="gapPage <= 1"
-                aria-label="Предыдущая страница навыков"
+                :aria-label="t('Предыдущая страница навыков')"
                 @click="paginate('gaps', gapPage - 1)"
               >
                 <CqIcon name="back" />
@@ -248,7 +240,7 @@ onMounted(async () => {
               <button
                 class="btn secondary"
                 :disabled="gapPage >= gapPages"
-                aria-label="Следующая страница навыков"
+                :aria-label="t('Следующая страница навыков')"
                 @click="paginate('gaps', gapPage + 1)"
               >
                 <CqIcon name="arrow" />
@@ -258,20 +250,16 @@ onMounted(async () => {
         </section>
         <div class="stack">
           <section class="panel bg-[#EDF5E8]">
-            <div class="section-kicker">Внимание HR</div>
-            <h2>У развития бывают препятствия</h2>
-            <p class="small muted section">
-              Отсутствие рекомендации может означать пробел в каталоге,
-              ограничения аудитории или неполные данные. Эти сигналы не
-              оценивают мотивацию сотрудника.
-            </p>
+            <div class="section-kicker"> {{ t("Внимание HR") }} </div>
+            <h2> {{ t("У развития бывают препятствия") }} </h2>
+            <p class="small muted section"> {{ t("Отсутствие рекомендации может означать пробел в каталоге, ограничения аудитории или неполные данные. Эти сигналы не оценивают мотивацию сотрудника.") }} </p>
             <NuxtLink to="/hr-people" class="btn section"
-              >Посмотреть сотрудников <CqIcon name="people"
+              > {{ t("Посмотреть сотрудников") }} <CqIcon name="people"
             /></NuxtLink>
           </section>
           <section class="panel">
             <div class="panel-head">
-              <h2>Доступность рекомендаций</h2>
+              <h2> {{ t("Доступность рекомендаций") }} </h2>
               <CqIcon name="chart" />
             </div>
             <div
@@ -279,7 +267,7 @@ onMounted(async () => {
               :key="status"
               class="legend-row"
             >
-              <span class="small">{{ label }}</span
+              <span class="small">{{ t(label) }}</span
               ><strong>{{ coverage[status] }}</strong>
             </div>
           </section>
@@ -287,18 +275,18 @@ onMounted(async () => {
       </div>
       <section class="panel section">
         <div class="panel-head">
-          <h2>Сигналы для внимания HR</h2>
-          <CqTag color="outline">{{ attentionMeta.total }} сотрудников</CqTag>
+          <h2> {{ t("Сигналы для внимания HR") }} </h2>
+          <CqTag color="outline">{{ attentionMeta.total }} {{ t("сотрудников") }} </CqTag>
         </div>
         <div class="table-wrap">
           <table v-if="attention.length">
             <thead>
               <tr>
-                <th>Сотрудник</th>
-                <th>Роль / грейд</th>
-                <th>Наблюдаемые сигналы</th>
-                <th>Участий</th>
-                <th>Действие</th>
+                <th> {{ t("Сотрудник") }} </th>
+                <th> {{ t("Роль / грейд") }} </th>
+                <th> {{ t("Наблюдаемые сигналы") }} </th>
+                <th> {{ t("Участий") }} </th>
+                <th> {{ t("Действие") }} </th>
               </tr>
             </thead>
             <tbody>
@@ -316,13 +304,14 @@ onMounted(async () => {
                     :key="reason"
                     class="small"
                   >
-                    {{ reasons[reason] || reason }}
+                    {{ t(reasons[reason] || reason) }}
                   </div>
                 </td>
                 <td>
                   {{ row.recordedParticipations }}
-                  <div class="sub">
-                    Пропусков: {{ row.skippedParticipations }}
+                  <div class="sub"> {{ t("Пропусков:") }} {{ row.skippedParticipations }}
+                    · {{ t('Прерываний:') }} {{ row.droppedParticipations ?? 0 }}
+                    · {{ t('Отказов:') }} {{ row.declinedParticipations ?? 0 }}
                   </div>
                 </td>
                 <td>
@@ -332,41 +321,35 @@ onMounted(async () => {
                       query: { id: row.employeeId },
                     }"
                     class="btn ghost"
-                    >Открыть <CqIcon name="arrow"
+                    > {{ t("Открыть") }} <CqIcon name="arrow"
                   /></NuxtLink>
                 </td>
               </tr>
             </tbody>
           </table>
-          <div v-else class="empty-inline">
-            В выбранной выборке нет сигналов для внимания HR.
-          </div>
+          <div v-else class="empty-inline"> {{ t("В выбранной выборке нет сигналов для внимания HR.") }} </div>
         </div>
         <div class="pagination">
-          <span>Страница {{ attentionPage }} из {{ attentionPages }}</span>
+          <span> {{ t("Страница") }} {{ attentionPage }} {{ t("из") }} {{ attentionPages }}</span>
           <div class="actions">
             <button
               class="btn secondary"
               :disabled="attentionPage <= 1"
               @click="paginate('attention', attentionPage - 1)"
             >
-              <CqIcon name="back" /> Назад
-            </button>
+              <CqIcon name="back" /> {{ t("Назад") }} </button>
             <button
               class="btn secondary"
               :disabled="attentionPage >= attentionPages"
               @click="paginate('attention', attentionPage + 1)"
-            >
-              Далее <CqIcon name="arrow" />
+            > {{ t("Далее") }} <CqIcon name="arrow" />
             </button>
           </div>
         </div>
       </section>
       <div class="section">
         <CqNotice
-          >Доля завершений рассчитана по всем записям участия за период, включая
-          обязательные активности и незавершённые записи. Это описание участия,
-          а не оценка эффективности сотрудника.</CqNotice
+          > {{ t("Доля завершений рассчитана по всем записям участия за период, включая обязательные активности и незавершённые записи. Это описание участия, а не оценка эффективности сотрудника.") }} </CqNotice
         >
       </div>
     </template>

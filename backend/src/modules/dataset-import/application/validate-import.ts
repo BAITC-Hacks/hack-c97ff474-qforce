@@ -20,7 +20,7 @@ export function validateImport(plan: ImportPlan, existing: ExistingImportState, 
     const old = existing.employees.find((e) => e.id === employee.id);
     if (!old) report.counts.create++;
     else if (old.sourceHash === employee.sourceHash && old.baselineHash === employee.baselineHash) report.counts.skip++;
-    else if (old.baselineHash !== employee.baselineHash) diagnose('employees.json', employee.id, 'skills', 'BASELINE_CONFLICT', 'Changing an existing assessment requires an explicit reassessment workflow; stored progress and ledger are preserved');
+    else if (old.baselineHash !== employee.baselineHash) diagnose('employees.json', employee.id, 'skills', 'BASELINE_CONFLICT', `Employee ${employee.id} already has an assessment. To compare a new test profile safely, assign it a new employee_id, update its history employee_id and give copied history rows new record_id values, then import profile and history together. Keep the existing ID and baseline unchanged to append history. No stored progress or ledger was changed.`);
     else report.counts.update++;
   }
   for (const activity of plan.activities) {
@@ -33,7 +33,7 @@ export function validateImport(plan: ImportPlan, existing: ExistingImportState, 
   for (const history of plan.history) {
     ref(employeeIds.has(history.employeeId), 'activity_history.csv', history.id, 'employee_id', history.employeeId);
     ref(activityIds.has(history.activityId), 'activity_history.csv', history.id, 'event_id', history.activityId);
-    const employee = plan.employees.find((e) => e.id === history.employeeId);
+    const employee = plan.employees.find((e) => e.id === history.employeeId) ?? existing.employees.find((e) => e.id === history.employeeId);
     if (history.date > plan.rules.asOfDate || (employee && history.date < employee.hireDate)) diagnose('activity_history.csv', history.id, 'date', 'INVALID_DATE', 'History must be no later than snapshot and cannot precede employee hire date');
     const old = existing.history.find((h) => h.id === history.id);
     if (old) {
@@ -44,7 +44,7 @@ export function validateImport(plan: ImportPlan, existing: ExistingImportState, 
     const current = existing.employees.find((e) => e.id === history.employeeId);
     if (plan.rules.baseline === 'last_review' && current && history.status === 'COMPLETED' && history.date > current.baselineDate) {
       const later = existing.history.some((h) => h.employeeId === history.employeeId && h.status === 'COMPLETED' && h.date >= history.date && h.date > current.baselineDate);
-      if (current.onlineVersion > 0 || later) diagnose('activity_history.csv', history.id, 'date', 'BACKDATED_HISTORY_CONFLICT', 'Late completed history would reorder an already applied ledger; import a new profile or append ordered history before online progress');
+      if (current.onlineVersion > 0 || later) diagnose('activity_history.csv', history.id, 'date', 'BACKDATED_HISTORY_CONFLICT', `Completed history for employee ${history.employeeId} would change an already applied skill ledger. To evaluate the complete alternative history, copy the original assessment to a new employee_id, point all history rows to that ID, assign new record_id values, and import the profile with its complete history in one package. Do not switch baseline mode or change dates to bypass this check. Existing history and progress were preserved.`);
     }
     report.counts.create++;
   }

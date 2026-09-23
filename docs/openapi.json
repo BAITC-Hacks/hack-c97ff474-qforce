@@ -5066,7 +5066,7 @@
                   "activityId": {
                     "type": "string",
                     "minLength": 1,
-                    "maxLength": 128
+                    "maxLength": 200
                   },
                   "sessionDate": {
                     "type": "string",
@@ -9233,7 +9233,9 @@
                                 "INCOMPLETE_REQUIREMENTS_OR_LEVELS",
                                 "NO_ELIGIBLE_ACTIVITIES",
                                 "NO_PARTICIPATION_IN_WINDOW",
-                                "REPEATED_SKIPS_IN_WINDOW"
+                                "REPEATED_SKIPS_IN_WINDOW",
+                                "REPEATED_DROPS_IN_WINDOW",
+                                "REPEATED_DECLINES_IN_WINDOW"
                               ]
                             }
                           },
@@ -9244,6 +9246,14 @@
                           "skippedParticipations": {
                             "type": "integer",
                             "minimum": 0
+                          },
+                          "droppedParticipations": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "declinedParticipations": {
+                            "type": "integer",
+                            "minimum": 0
                           }
                         },
                         "required": [
@@ -9252,7 +9262,9 @@
                           "gradeId",
                           "reasons",
                           "recordedParticipations",
-                          "skippedParticipations"
+                          "skippedParticipations",
+                          "droppedParticipations",
+                          "declinedParticipations"
                         ]
                       }
                     },

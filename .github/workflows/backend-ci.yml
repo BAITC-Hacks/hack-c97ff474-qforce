@@ -1,9 +1,9 @@
-name: Backend checks
+name: Career Quest checks
 on:
   push:
-    paths: ['backend/**', '.github/workflows/backend-ci.yml']
+    paths: ['backend/**', 'frontend/**', 'compose*.yaml', 'docs/compose.verify.yaml', '.env.example', '.github/workflows/backend-ci.yml']
   pull_request:
-    paths: ['backend/**', '.github/workflows/backend-ci.yml']
+    paths: ['backend/**', 'frontend/**', 'compose*.yaml', 'docs/compose.verify.yaml', '.env.example', '.github/workflows/backend-ci.yml']
 
 permissions:
   contents: read
@@ -84,4 +84,40 @@ jobs:
       - run: docker compose logs --no-color
         if: failure()
       - run: docker compose down --volumes
+        if: always()
+
+  frontend:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm test
+        working-directory: frontend
+      - run: npm run typecheck
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Start isolated fixture stack without external AI
+        run: docker compose -p career-quest-ci -f compose.yaml -f docs/compose.verify.yaml up --build -d --wait --wait-timeout 240
+      - run: npm run test:e2e
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: frontend-browser-results
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          if-no-files-found: ignore
+      - run: docker compose -p career-quest-ci -f compose.yaml -f docs/compose.verify.yaml logs --no-color
+        if: failure()
+      - run: docker compose -p career-quest-ci -f compose.yaml -f docs/compose.verify.yaml down --volumes
         if: always()

@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 const { request } = useApi();
 const route = useRoute(),
   router = useRouter();
@@ -134,16 +135,16 @@ onMounted(loadSaved);
 <template>
   <div>
     <CqHeading
-      title="Импорт профилей и истории"
-      subtitle="Проверьте пакет данных, затем примените его к общему набору."
+      :title="t('Импорт профилей и истории')"
+      :subtitle="t('Проверьте пакет данных, затем примените его к общему набору.')"
     >
-      <CqTag color="green">Сохранение на сервере</CqTag>
+      <CqTag color="green"> {{ t("Сохранение на сервере") }} </CqTag>
     </CqHeading>
     <div class="grid main-aside">
       <div class="stack">
         <section class="panel" :aria-busy="busy || loading">
           <div class="panel-head">
-            <h2>Добавить данные</h2>
+            <h2> {{ t("Добавить данные") }} </h2>
             <CqTag color="outline">JSON + CSV</CqTag>
           </div>
           <div
@@ -154,24 +155,20 @@ onMounted(loadSaved);
             @drop.prevent="drop"
           >
             <CqIcon name="upload" />
-            <h3>Выберите файлы профилей, каталога и истории</h3>
-            <p>
-              До 5 файлов, до 8 МиБ каждый. Можно загрузить полный пакет или
-              отдельные файлы. ZIP предварительно распакуйте.
-            </p>
+            <h3> {{ t("Выберите файлы профилей, каталога и истории") }} </h3>
+            <p> {{ t("До 5 файлов, до 8 МиБ каждый. Можно загрузить полный пакет или отдельные файлы. ZIP предварительно распакуйте.") }} </p>
             <button
               class="btn"
               type="button"
               :disabled="busy || loading"
               @click="input.click()"
-            >
-              Выбрать файлы <CqIcon name="file" />
+            > {{ t("Выбрать файлы") }} <CqIcon name="file" />
             </button>
             <input
               ref="input"
               type="file"
               class="sr-only"
-              aria-label="Файлы для импорта"
+              :aria-label="t('Файлы для импорта')"
               accept=".json,.csv"
               multiple
               :disabled="busy || loading"
@@ -183,10 +180,9 @@ onMounted(loadSaved);
             <div>
               <strong>{{ file.name }}</strong>
               <div class="small muted">
-                {{ (file.size / 1024).toFixed(1) }} КиБ
-              </div>
+                {{ (file.size / 1024).toFixed(1) }} {{ t("КиБ") }} </div>
             </div>
-            <CqTag color="outline">Выбран</CqTag>
+            <CqTag color="outline"> {{ t("Выбран") }} </CqTag>
           </div>
           <div class="actions section">
             <button
@@ -194,47 +190,36 @@ onMounted(loadSaved);
               :disabled="busy || loading || !files.length || !!error"
               @click="run(false)"
             >
-              {{ busy ? "Обрабатываем…" : "1. Проверить пакет" }}
+              {{ t(busy ? "Обрабатываем…" : "1. Проверить пакет") }}
               <CqIcon name="check" />
             </button>
-            <button class="btn" :disabled="!canApply" @click="run(true)">
-              2. Применить импорт <CqIcon name="upload" />
+            <button class="btn" :disabled="!canApply" @click="run(true)"> {{ t("2. Применить импорт") }} <CqIcon name="upload" />
             </button>
             <button
               class="btn ghost"
               :disabled="busy || loading || !files.length"
               @click="clear"
-            >
-              Очистить <CqIcon name="x" />
+            > {{ t("Очистить") }} <CqIcon name="x" />
             </button>
           </div>
-          <p class="small muted section">
-            Проверка не изменяет профили и историю. Применение доступно после
-            успешной проверки выбранных файлов.
-          </p>
-          <div v-if="loading" class="empty-inline" role="status">
-            Получаем сохранённый отчёт…
-          </div>
+          <p class="small muted section"> {{ t("Проверка не изменяет профили и историю. Применение доступно после успешной проверки выбранных файлов.") }} </p>
+          <div v-if="loading" class="empty-inline" role="status"> {{ t("Получаем сохранённый отчёт…") }} </div>
           <div v-if="error" class="section" role="alert">
-            <CqNotice color="red">{{ error }}</CqNotice>
+            <CqNotice color="red">{{ t(error) }}</CqNotice>
             <button
               v-if="!files.length && route.query.run"
               class="btn secondary section"
               :disabled="loading"
               @click="loadSaved"
-            >
-              Повторить загрузку отчёта
-            </button>
+            > {{ t("Повторить загрузку отчёта") }} </button>
             <button
               v-else-if="files.length && !busy"
               class="btn secondary section"
               @click="choose(files)"
-            >
-              Проверить выбор файлов заново
-            </button>
+            > {{ t("Проверить выбор файлов заново") }} </button>
           </div>
           <CqNotice v-if="reportWarning" color="gold" class="section">{{
-            reportWarning
+            t(reportWarning)
           }}</CqNotice>
         </section>
         <section
@@ -243,7 +228,7 @@ onMounted(loadSaved);
           :role="result.status === 'REJECTED' ? 'alert' : 'status'"
         >
           <div class="panel-head">
-            <h2>{{ runLabels[result.status] || result.status }}</h2>
+            <h2>{{ t(runLabels[result.status] || result.status) }}</h2>
             <CqTag
               :color="
                 result.status === 'APPLIED' || result.status === 'VALIDATED'
@@ -253,46 +238,36 @@ onMounted(loadSaved);
               >{{ result.status }}</CqTag
             >
           </div>
-          <p v-if="result.status === 'APPLIED'">
-            Данные сохранены. Профили, каталог и HR-сводки используют
-            обновлённый набор.
-          </p>
-          <p v-else-if="result.status === 'VALIDATED'">
-            Пакет прошёл проверку. Бизнес-данные ещё не изменены.
-          </p>
-          <p v-else-if="result.status === 'REJECTED'">
-            Ничего не импортировано. Исправьте указанные ошибки и выберите файлы
-            заново.
-          </p>
+          <p v-if="result.status === 'APPLIED'"> {{ t("Данные сохранены. Профили, каталог и HR-сводки используют обновлённый набор.") }} </p>
+          <p v-else-if="result.status === 'VALIDATED'"> {{ t("Пакет прошёл проверку. Бизнес-данные ещё не изменены.") }} </p>
+          <p v-else-if="result.status === 'REJECTED'"> {{ t("Ничего не импортировано. Исправьте указанные ошибки и выберите файлы заново.") }} </p>
           <div class="grid four section">
             <CqMetric
-              label="Создание"
+              :label="t('Создание')"
               :value="result.report.counts.create"
-              caption="Записей"
+              :caption="t('Записей')"
               icon="file"
             />
             <CqMetric
-              label="Обновление"
+              :label="t('Обновление')"
               :value="result.report.counts.update"
-              caption="Записей"
+              :caption="t('Записей')"
               icon="refresh"
             />
             <CqMetric
-              label="Пропущено"
+              :label="t('Пропущено')"
               :value="result.report.counts.skip"
-              caption="Повторные записи"
+              :caption="t('Повторные записи')"
               icon="check"
             />
             <CqMetric
-              label="Конфликты"
+              :label="t('Конфликты')"
               :value="result.report.counts.conflict"
-              caption="Требуют исправления"
+              :caption="t('Требуют исправления')"
               icon="file"
             />
           </div>
-          <p class="small muted section">
-            ID отчёта: {{ result.id }} · Дата среза:
-            {{ result.report.rules.asOfDate }}
+          <p class="small muted section"> {{ t("ID отчёта:") }} {{ result.id }} {{ t("· Дата среза:") }} {{ result.report.rules.asOfDate }}
           </p>
           <div
             v-for="(count, filename) in result.report.records"
@@ -309,9 +284,9 @@ onMounted(loadSaved);
             <table>
               <thead>
                 <tr>
-                  <th>Файл / строка</th>
-                  <th>Поле / код</th>
-                  <th>Описание</th>
+                  <th> {{ t("Файл / строка") }} </th>
+                  <th> {{ t("Поле / код") }} </th>
+                  <th> {{ t("Описание") }} </th>
                 </tr>
               </thead>
               <tbody>
@@ -323,9 +298,9 @@ onMounted(loadSaved);
                     {{ diagnostic.file }}
                     <div class="sub">
                       {{
-                        diagnostic.row != null
+                        t(diagnostic.row != null
                           ? "Строка " + diagnostic.row
-                          : diagnostic.recordId || ""
+                          : diagnostic.recordId || "")
                       }}
                     </div>
                   </td>
@@ -340,16 +315,16 @@ onMounted(loadSaved);
           </div>
           <div v-if="result.status === 'APPLIED'" class="actions section">
             <NuxtLink to="/hr-people" class="btn"
-              >Открыть сотрудников <CqIcon name="people" /></NuxtLink
+              > {{ t("Открыть сотрудников") }} <CqIcon name="people" /></NuxtLink
             ><NuxtLink to="/hr-dashboard" class="btn secondary"
-              >Обновлённая сводка <CqIcon name="chart"
+              > {{ t("Обновлённая сводка") }} <CqIcon name="chart"
             /></NuxtLink>
           </div>
         </section>
       </div>
       <div class="stack">
         <section class="panel">
-          <h2>Поддерживаемые файлы</h2>
+          <h2> {{ t("Поддерживаемые файлы") }} </h2>
           <div
             v-for="[filename, description] in [
               ['skills.json', 'Каталог навыков, ролей, грейдов и требований'],
@@ -364,12 +339,12 @@ onMounted(loadSaved);
             <span class="mini-icon"><CqIcon name="file" /></span>
             <div>
               <strong>{{ filename }}</strong>
-              <div class="small muted">{{ description }}</div>
+              <div class="small muted">{{ t(description) }}</div>
             </div>
           </div>
         </section>
         <section class="panel">
-          <h2>Что проверяем</h2>
+          <h2> {{ t("Что проверяем") }} </h2>
           <div
             v-for="([title, description], index) in [
               [
@@ -394,14 +369,13 @@ onMounted(loadSaved);
           >
             <div class="num">{{ index + 1 }}</div>
             <div>
-              <h3>{{ title }}</h3>
-              <p>{{ description }}</p>
+              <h3>{{ t(title) }}</h3>
+              <p>{{ t(description) }}</p>
             </div>
           </div>
         </section>
         <CqNotice color="gold"
-          >Импорт доступен HR. Отчёт сохраняется на сервере; ссылку на текущую
-          страницу можно открыть повторно после обновления браузера.</CqNotice
+          > {{ t("Импорт доступен HR. Отчёт сохраняется на сервере; ссылку на текущую страницу можно открыть повторно после обновления браузера.") }} </CqNotice
         >
       </div>
     </div>

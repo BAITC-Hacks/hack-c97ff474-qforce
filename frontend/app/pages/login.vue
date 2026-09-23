@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 definePageMeta({ layout: "auth" });
 const { login, session } = useApi();
 const { logout } = useCareer();
@@ -24,12 +25,12 @@ async function submit() {
 </script>
 <template>
   <div>
-    <div class="eyebrow text-primary">Начните с вашего профиля</div>
-    <h2>Добро пожаловать</h2>
-    <p>Войдите в свою учётную запись Career Quest.</p>
+    <div class="eyebrow text-primary"> {{ t("Начните с вашего профиля") }} </div>
+    <h2> {{ t("Добро пожаловать") }} </h2>
+    <p> {{ t("Войдите в свою учётную запись Career Quest.") }} </p>
     <form @submit.prevent="submit">
       <div class="field">
-        <label for="username">Имя пользователя</label
+        <label for="username"> {{ t("Имя пользователя") }} </label
         ><input
           id="username"
           v-model="username"
@@ -40,7 +41,7 @@ async function submit() {
         />
       </div>
       <div class="field">
-        <label for="password">Пароль</label
+        <label for="password"> {{ t("Пароль") }} </label
         ><input
           id="password"
           v-model="password"
@@ -52,21 +53,18 @@ async function submit() {
         />
       </div>
       <CqNotice v-if="error || session.error" color="red" role="alert">{{
-        error || session.error
+        t(error || session.error)
       }}</CqNotice>
       <button type="submit" class="btn wide section" :disabled="busy">
-        {{ busy ? "Входим…" : "Войти" }} <CqIcon name="arrow" />
+        {{ t(busy ? "Входим…" : "Войти") }} <CqIcon name="arrow" />
       </button>
     </form>
     <div class="section">
       <CqNotice
-        >Доступ к профилю и HR-разделам определяется вашей учётной
-        записью.</CqNotice
+        > {{ t("Доступ к профилю и HR-разделам определяется вашей учётной записью.") }} </CqNotice
       >
     </div>
-    <div class="auth-return">
-      Нет учётной записи?
-      <NuxtLink to="/register" class="auth-link">Как получить доступ</NuxtLink>
+    <div class="auth-return"> {{ t("Нет учётной записи?") }} <NuxtLink to="/register" class="auth-link"> {{ t("Как получить доступ") }} </NuxtLink>
     </div>
   </div>
 </template>

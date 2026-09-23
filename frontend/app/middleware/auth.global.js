@@ -18,7 +18,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
       "/recommendations",
       "/activities",
       "/catalog",
-      "/event",
       "/completion",
     ].includes(to.path)
   )

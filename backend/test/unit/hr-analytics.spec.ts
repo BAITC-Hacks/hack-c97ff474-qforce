@@ -31,4 +31,19 @@ describe('HR read model arithmetic and missing data', () => {
     expect((await analytics.participation(query)).data).toEqual([]);
     expect((await analytics.coverage(query)).meta).toMatchObject({counts: {NOT_GENERATED: 0, FRESH: 0, STALE: 0, DATA_INCOMPLETE: 0}});
   });
+  test.each([
+    ['DROPPED', 'REPEATED_DROPS_IN_WINDOW', 'droppedParticipations'],
+    ['DECLINED', 'REPEATED_DECLINES_IN_WINDOW', 'declinedParticipations'],
+    ['NO_SHOW', 'REPEATED_SKIPS_IN_WINDOW', 'skippedParticipations'],
+  ])('reports repeated %s as a separate observable signal within the selected window', async (status, reason, countField) => {
+    const context = syntheticContext();
+    context.history = Array.from({length: 4}, (_, i) => ({id: String(i), employeeId: context.employee.id, activityId: 'DESIGN_COURSE', date: i ? '2025-05-01' : '2024-05-01', status, completionPct: status === 'DROPPED' ? 50 : 0, assignedBy: 'self', source: 'IMPORT'}));
+    const snapshot = {employees: [{context, latest: null}], asOfDate: '2025-06-01', dateFrom: '2024-06-01', dateTo: '2025-06-01'};
+    const result = await service(snapshot).needsAttention(query);
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]).toMatchObject({reasons: [reason], recordedParticipations: 3, [countField]: 3});
+    expect(result.meta).toMatchObject({interpretation: 'OBSERVABLE_SIGNALS_ONLY'});
+    context.history.pop();
+    expect((await service(snapshot).needsAttention(query)).data).toEqual([]);
+  });
 });

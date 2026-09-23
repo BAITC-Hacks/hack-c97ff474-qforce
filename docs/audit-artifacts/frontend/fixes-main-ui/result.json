@@ -1,0 +1,80 @@
+{
+  "time": "2026-09-23T11:47:20.804Z",
+  "baseURL": "http://127.0.0.1:3000",
+  "errors": [],
+  "checks": [
+    {
+      "name": "ui-latency",
+      "path": "/dashboard",
+      "ready": "critical profile and trajectory visible; optional blocks may still load",
+      "ms": [
+        168,
+        166,
+        120
+      ],
+      "maxMs": 168
+    },
+    {
+      "name": "employee-desktop",
+      "overflow": false
+    },
+    {
+      "name": "employee-recommendations-desktop",
+      "overflow": false
+    },
+    {
+      "name": "employee-profile-mobile",
+      "overflow": false
+    },
+    {
+      "name": "employee-profile-kk-mobile",
+      "overflow": false
+    },
+    {
+      "name": "ui-latency",
+      "path": "/hr-dashboard",
+      "ready": "overview, skill gaps, attention and coverage loaded",
+      "ms": [
+        878,
+        899,
+        867
+      ],
+      "maxMs": 899
+    },
+    {
+      "name": "hr-dashboard-desktop",
+      "overflow": false
+    },
+    {
+      "name": "ui-latency",
+      "path": "/hr-employee?id=E0090",
+      "ready": "critical employee profile and saved recommendation cards visible",
+      "ms": [
+        255,
+        144,
+        133
+      ],
+      "maxMs": 255
+    },
+    {
+      "name": "hr-E0090-recommendations-desktop",
+      "overflow": false
+    },
+    {
+      "name": "E0090_saved_recommendations",
+      "count": 3
+    },
+    {
+      "name": "hr-event-readonly-desktop",
+      "overflow": false
+    },
+    {
+      "name": "hr-E0090-recommendations-mobile",
+      "overflow": false
+    },
+    {
+      "name": "hr-E0090-kk-mobile",
+      "overflow": false
+    }
+  ]
+}

@@ -54,8 +54,12 @@ export class HrAnalyticsService {
       if (ranking.status === 'NO_ELIGIBLE_ACTIVITIES') reasons.push('NO_ELIGIBLE_ACTIVITIES');
       if (history.length === 0) reasons.push('NO_PARTICIPATION_IN_WINDOW');
       const missed = history.filter(h => ['NO_SHOW', 'SKIPPED'].includes(h.status.toUpperCase())).length;
+      const dropped = history.filter(h => h.status.toUpperCase() === 'DROPPED').length;
+      const declined = history.filter(h => h.status.toUpperCase() === 'DECLINED').length;
       if (missed >= 3) reasons.push('REPEATED_SKIPS_IN_WINDOW');
-      return {employeeId: employee.context.employee.id, roleId: employee.context.employee.roleId, gradeId: employee.context.employee.gradeId, reasons, recordedParticipations: history.length, skippedParticipations: missed};
+      if (dropped >= 3) reasons.push('REPEATED_DROPS_IN_WINDOW');
+      if (declined >= 3) reasons.push('REPEATED_DECLINES_IN_WINDOW');
+      return {employeeId: employee.context.employee.id, roleId: employee.context.employee.roleId, gradeId: employee.context.employee.gradeId, reasons, recordedParticipations: history.length, skippedParticipations: missed, droppedParticipations: dropped, declinedParticipations: declined};
     }).filter(row => row.reasons.length);
     return this.paginate(items, filters, {...this.window(snapshot), interpretation: 'OBSERVABLE_SIGNALS_ONLY'});
   }

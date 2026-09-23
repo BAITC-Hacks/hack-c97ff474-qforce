@@ -1,0 +1,125 @@
+﻿{
+  "checkedAt": "2026-09-23T11:13:12.292Z",
+  "results": [
+    {
+      "name": "full_supplied_dataset_static_validation",
+      "valid": true,
+      "records": {
+        "skills": 60,
+        "grades": 32,
+        "employees": 200,
+        "activities": 40,
+        "history": 2743
+      },
+      "firstHistory": "2024-10-01",
+      "lastHistory": "2026-09-30",
+      "rules": {
+        "asOfDate": "2026-10-01",
+        "missingSkillLevel": 0,
+        "baseline": "last_review",
+        "repeatableActivityIds": [
+          "EV_036"
+        ],
+        "gradeOrder": [
+          "Junior",
+          "Middle",
+          "Senior",
+          "Lead"
+        ]
+      }
+    },
+    {
+      "name": "additional_profile_with_existing_catalog",
+      "valid": true,
+      "creates": 1
+    },
+    {
+      "name": "null_json_employees.json",
+      "uncaught": true,
+      "error": "TypeError",
+      "message": "Cannot convert undefined or null to object"
+    },
+    {
+      "name": "null_json_skills.json",
+      "uncaught": true,
+      "error": "TypeError",
+      "message": "Cannot convert undefined or null to object"
+    },
+    {
+      "name": "null_json_events.json",
+      "uncaught": true,
+      "error": "TypeError",
+      "message": "Cannot convert undefined or null to object"
+    },
+    {
+      "name": "null_json_dataset-rules.json",
+      "uncaught": true,
+      "error": "TypeError",
+      "message": "Cannot convert undefined or null to object"
+    },
+    {
+      "name": "history_before_hire_validation_depends_on_package",
+      "hireDate": "2026-04-28",
+      "historyDate": "2000-01-01",
+      "historyOnlyValid": true,
+      "withProfileValid": false,
+      "fullDiagnostics": [
+        {
+          "file": "activity_history.csv",
+          "recordId": "AUDIT_BEFORE_HIRE",
+          "field": "date",
+          "code": "INVALID_DATE",
+          "message": "History must be no later than snapshot and cannot precede employee hire date"
+        }
+      ]
+    },
+    {
+      "name": "reenrol_terminal_declined",
+      "listedEligible": true,
+      "returnedStatus": "declined",
+      "newRegistrations": 0,
+      "completionRejected": true
+    },
+    {
+      "name": "reenrol_terminal_dropped",
+      "listedEligible": true,
+      "returnedStatus": "dropped",
+      "newRegistrations": 0,
+      "completionRejected": true
+    },
+    {
+      "name": "reenrol_terminal_no_show",
+      "listedEligible": true,
+      "returnedStatus": "no_show",
+      "newRegistrations": 0,
+      "completionRejected": true
+    },
+    {
+      "name": "hr_four_dropped",
+      "employeesInAttention": 0,
+      "reasons": []
+    },
+    {
+      "name": "hr_four_declined",
+      "employeesInAttention": 0,
+      "reasons": []
+    },
+    {
+      "name": "hr_four_no_show",
+      "employeesInAttention": 1,
+      "reasons": [
+        "REPEATED_SKIPS_IN_WINDOW"
+      ]
+    },
+    {
+      "name": "growth_5863_combinations",
+      "passed": true
+    },
+    {
+      "name": "domain_employee_scope",
+      "ownAllowed": true,
+      "otherDenied": true,
+      "hrAllowed": true
+    }
+  ]
+}

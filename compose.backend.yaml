@@ -10,5 +10,16 @@ services:
     <<: *root-environment
   bootstrap:
     <<: *root-environment
+    environment:
+      DATA_MODE: ${DATA_MODE:-input}
+      DEMO_EMPLOYEE_ID: ${DEMO_EMPLOYEE_ID:-E0001}
+    volumes:
+      - type: bind
+        source: ${INPUT_DATA_DIR:-../frontend/app/data}
+        target: /app/data/input
+        read_only: true
   api:
     <<: *root-environment
+    environment:
+      DATA_MODE: ${DATA_MODE:-input}
+      DEMO_EMPLOYEE_ID: ${DEMO_EMPLOYEE_ID:-E0001}

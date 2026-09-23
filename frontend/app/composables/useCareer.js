@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import { session, clearSession, onSessionChange } from "../utils/session.js";
+import { localeState, adoptPreferredLocale, t } from '../utils/i18n.js';
 import { ApiError } from "../utils/api-client.js";
 
 const store = reactive({
@@ -19,6 +20,8 @@ const store = reactive({
   error: "",
   toast: "",
   lastCompletion: null,
+  blockErrors: {},
+  blockLoading: {},
 });
 let timer;
 let loadVersion = 0;
@@ -38,6 +41,8 @@ export function resetCareer() {
     activities: [],
     eligible: null,
     lastCompletion: null,
+    blockErrors: {},
+    blockLoading: {},
     error: "",
     loading: false,
     toast: "",
@@ -57,9 +62,9 @@ export function useCareer() {
     const version = ++catalogVersion,
       sessionVersion = session.version;
     const [skills, roles, activities] = await Promise.all([
-      request("/skills", { query: { locale: "ru" } }),
-      request("/roles", { query: { locale: "ru" } }),
-      allPages("/activities", { locale: "ru" }),
+      request("/skills", { query: { locale: localeState.locale } }),
+      request("/roles", { query: { locale: localeState.locale } }),
+      allPages("/activities", { locale: localeState.locale }),
     ]);
     if (version === catalogVersion && sessionVersion === session.version) {
       store.skills = skills.data;
@@ -67,47 +72,49 @@ export function useCareer() {
       store.activities = activities;
     }
   }
-  async function loadEmployee(id = session.user?.employeeId) {
+  async function loadBlock(key, id = store.profile?.id, version = loadVersion) {
+    if (!id) return;
+    const sessionVersion = session.version;
+    const current = () => version === loadVersion && sessionVersion === session.version && store.profile?.id === id;
+    const path = `/employees/${encodeURIComponent(id)}`;
+    // Read first, commit only if both the employee and the session are still current.
+    const readers = {
+      history: () => allPages(`${path}/history`),
+      recommendations: async () => (await request(`${path}/recommendations/latest`, { query: { locale: localeState.locale } })).data,
+      eligible: async () => (await request(`${path}/eligible-activities`)).data,
+      grades: async () => (await request(`/roles/${encodeURIComponent(store.profile.roleId)}/grades`, { query: { locale: localeState.locale } })).data,
+      catalogs: loadCatalogs,
+    };
+    if (!readers[key] || !current()) return;
+    store.blockLoading[key] = true;
+    store.blockErrors[key] = '';
+    try {
+      const data = await readers[key]();
+      if (current() && key !== 'catalogs') store[key] = data;
+    } catch (cause) {
+      if (current()) store.blockErrors[key] = cause.message;
+    } finally {
+      if (current()) store.blockLoading[key] = false;
+    }
+  }
+  async function loadEmployee(id = session.user?.employeeId, { waitForOptional = true } = {}) {
     if (!id) return;
     const version = ++loadVersion;
     const sessionVersion = session.version;
-    store.loading = true;
-    store.error = "";
-    store.profile = null;
-    store.trajectory = null;
-    store.history = [];
-    store.recommendations = null;
-    store.eligible = null;
+    const current = () => version === loadVersion && sessionVersion === session.version;
+    Object.assign(store, { loading: true, error: '', profile: null, trajectory: null, history: [], recommendations: null, eligible: null, grades: [], blockErrors: {}, blockLoading: {} });
     const path = `/employees/${encodeURIComponent(id)}`;
     try {
-      const [profile, trajectory, history, recommendations, eligible] =
-        await Promise.all([
-          request(path),
-          request(`${path}/trajectory`),
-          allPages(`${path}/history`),
-          request(`${path}/recommendations/latest`, {
-            query: { locale: "ru" },
-          }),
-          request(`${path}/eligible-activities`),
-          loadCatalogs(),
-        ]);
-      if (version !== loadVersion || sessionVersion !== session.version) return;
-      const grades = await request(
-        `/roles/${encodeURIComponent(profile.data.roleId)}/grades`,
-      );
-      if (version !== loadVersion || sessionVersion !== session.version) return;
-      Object.assign(store, {
-        profile: profile.data,
-        trajectory: trajectory.data,
-        history,
-        recommendations: recommendations.data,
-        eligible: eligible.data,
-        grades: grades.data,
-      });
+      const [profile, trajectory] = await Promise.all([request(path), request(`${path}/trajectory`)]);
+      if (!current()) return;
+      if (session.user?.role === 'EMPLOYEE') adoptPreferredLocale(profile.data.preferredLanguage);
+      Object.assign(store, { profile: profile.data, trajectory: trajectory.data, loading: false });
+      const optional = Promise.all(['history', 'recommendations', 'eligible', 'grades', 'catalogs'].map(key => loadBlock(key, id, version)));
+      if (waitForOptional) await optional;
     } catch (error) {
-      if (version === loadVersion) store.error = error.message;
+      if (current()) store.error = error.message;
     } finally {
-      if (version === loadVersion) store.loading = false;
+      if (current()) store.loading = false;
     }
   }
   async function generateRecommendations() {
@@ -119,7 +126,7 @@ export function useCareer() {
       `/employees/${encodeURIComponent(id)}/recommendations`,
       {
         method: "POST",
-        body: { locale: "ru", force: true },
+        body: { locale: localeState.locale, force: true },
       },
     );
     if (
@@ -134,6 +141,7 @@ export function useCareer() {
       );
     }
     store.recommendations = result.data;
+    store.blockErrors.recommendations = '';
     return result.data;
   }
   function logout() {
@@ -142,6 +150,7 @@ export function useCareer() {
   return {
     store,
     loadEmployee,
+    loadBlock,
     loadCatalogs,
     generateRecommendations,
     logout,

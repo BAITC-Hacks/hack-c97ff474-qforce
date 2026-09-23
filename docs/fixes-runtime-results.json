@@ -1,0 +1,845 @@
+{
+  "base": "http://127.0.0.1:3201",
+  "timestamp": "2026-09-23T11:32:07.447Z",
+  "checks": {
+    "newProfiles": {
+      "status": 201,
+      "ms": 77.66,
+      "body": {
+        "data": {
+          "id": "08047791-7c71-4764-a946-dd486f55c80a",
+          "status": "APPLIED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 4,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 4,
+              "activities": 0,
+              "history": 0
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 55
+          }
+        },
+        "meta": {
+          "requestId": "574e8db0-d079-4795-8012-45afa551d5b5"
+        }
+      }
+    },
+    "declined": {
+      "initialStatus": 201,
+      "cancelledStatus": "declined",
+      "eligibleAgain": true,
+      "recommendedAgain": false,
+      "reregisterStatus": 201,
+      "reregisterState": "registered",
+      "sameParticipation": false,
+      "completion": {
+        "status": 201,
+        "ms": 37.84,
+        "body": {
+          "data": {
+            "participationId": "afbc134a-5ce5-4f51-83f1-5a74bade664a",
+            "alreadyCompleted": false,
+            "changedSkills": [
+              {
+                "skillId": "SK_SYSTEM_DESIGN",
+                "before": 1,
+                "after": 2,
+                "actualGain": 1,
+                "rule": {
+                  "gain": 1,
+                  "maxLevel": 5
+                }
+              }
+            ],
+            "stateVersion": 2,
+            "trajectoryBefore": {
+              "status": "IN_PROGRESS",
+              "currentGradeId": "Apprentice",
+              "nextGradeId": "Practitioner",
+              "readinessPercent": 50,
+              "coverage": 1,
+              "gaps": [
+                {
+                  "skillId": "SK_COMMUNICATION",
+                  "requiredLevel": 2,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 0
+                },
+                {
+                  "skillId": "SK_PUBLIC_SPEAKING",
+                  "requiredLevel": 1,
+                  "critical": false,
+                  "currentLevel": 0,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SQL",
+                  "requiredLevel": 3,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SYSTEM_DESIGN",
+                  "requiredLevel": 4,
+                  "critical": true,
+                  "currentLevel": 1,
+                  "gap": 3
+                }
+              ],
+              "criticalSkillsMet": false
+            },
+            "trajectoryAfter": {
+              "status": "IN_PROGRESS",
+              "currentGradeId": "Apprentice",
+              "nextGradeId": "Practitioner",
+              "readinessPercent": 60,
+              "coverage": 1,
+              "gaps": [
+                {
+                  "skillId": "SK_COMMUNICATION",
+                  "requiredLevel": 2,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 0
+                },
+                {
+                  "skillId": "SK_PUBLIC_SPEAKING",
+                  "requiredLevel": 1,
+                  "critical": false,
+                  "currentLevel": 0,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SQL",
+                  "requiredLevel": 3,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SYSTEM_DESIGN",
+                  "requiredLevel": 4,
+                  "critical": true,
+                  "currentLevel": 2,
+                  "gap": 2
+                }
+              ],
+              "criticalSkillsMet": false
+            }
+          },
+          "meta": {
+            "requestId": "153bd6fd-ce4c-4898-87fa-0a5152550a95"
+          }
+        }
+      }
+    },
+    "dropped": {
+      "initialStatus": 201,
+      "cancelledStatus": "dropped",
+      "eligibleAgain": true,
+      "recommendedAgain": false,
+      "reregisterStatus": 201,
+      "reregisterState": "registered",
+      "sameParticipation": false,
+      "completion": {
+        "status": 201,
+        "ms": 29.6,
+        "body": {
+          "data": {
+            "participationId": "70143d11-f5e0-4a96-a60b-b758ee69470b",
+            "alreadyCompleted": false,
+            "changedSkills": [
+              {
+                "skillId": "SK_SYSTEM_DESIGN",
+                "before": 1,
+                "after": 2,
+                "actualGain": 1,
+                "rule": {
+                  "gain": 1,
+                  "maxLevel": 5
+                }
+              }
+            ],
+            "stateVersion": 2,
+            "trajectoryBefore": {
+              "status": "IN_PROGRESS",
+              "currentGradeId": "Apprentice",
+              "nextGradeId": "Practitioner",
+              "readinessPercent": 50,
+              "coverage": 1,
+              "gaps": [
+                {
+                  "skillId": "SK_COMMUNICATION",
+                  "requiredLevel": 2,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 0
+                },
+                {
+                  "skillId": "SK_PUBLIC_SPEAKING",
+                  "requiredLevel": 1,
+                  "critical": false,
+                  "currentLevel": 0,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SQL",
+                  "requiredLevel": 3,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SYSTEM_DESIGN",
+                  "requiredLevel": 4,
+                  "critical": true,
+                  "currentLevel": 1,
+                  "gap": 3
+                }
+              ],
+              "criticalSkillsMet": false
+            },
+            "trajectoryAfter": {
+              "status": "IN_PROGRESS",
+              "currentGradeId": "Apprentice",
+              "nextGradeId": "Practitioner",
+              "readinessPercent": 60,
+              "coverage": 1,
+              "gaps": [
+                {
+                  "skillId": "SK_COMMUNICATION",
+                  "requiredLevel": 2,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 0
+                },
+                {
+                  "skillId": "SK_PUBLIC_SPEAKING",
+                  "requiredLevel": 1,
+                  "critical": false,
+                  "currentLevel": 0,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SQL",
+                  "requiredLevel": 3,
+                  "critical": false,
+                  "currentLevel": 2,
+                  "gap": 1
+                },
+                {
+                  "skillId": "SK_SYSTEM_DESIGN",
+                  "requiredLevel": 4,
+                  "critical": true,
+                  "currentLevel": 2,
+                  "gap": 2
+                }
+              ],
+              "criticalSkillsMet": false
+            }
+          },
+          "meta": {
+            "requestId": "b93f991f-5048-47e8-818a-604b708f5cd6"
+          }
+        }
+      }
+    },
+    "null_employees": {
+      "status": 200,
+      "ms": 15.7,
+      "body": {
+        "data": {
+          "id": "b865a072-4f08-4415-8276-7d75d2f2e62e",
+          "status": "REJECTED",
+          "report": {
+            "valid": false,
+            "diagnostics": [
+              {
+                "file": "employees.json",
+                "field": "",
+                "code": "INVALID_FIELD",
+                "message": "Expected object, received null"
+              }
+            ],
+            "counts": {
+              "create": 0,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 0
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            }
+          }
+        },
+        "meta": {
+          "requestId": "95af3f8b-d9a7-4e92-a092-7bd9a882ef94"
+        }
+      }
+    },
+    "null_skills": {
+      "status": 200,
+      "ms": 13.57,
+      "body": {
+        "data": {
+          "id": "4a2250ec-0eac-40a1-9492-bd9eab8ab09a",
+          "status": "REJECTED",
+          "report": {
+            "valid": false,
+            "diagnostics": [
+              {
+                "file": "skills.json",
+                "field": "",
+                "code": "INVALID_FIELD",
+                "message": "Expected object, received null"
+              }
+            ],
+            "counts": {
+              "create": 0,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 0
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            }
+          }
+        },
+        "meta": {
+          "requestId": "8864b69d-b1e7-4d2b-b2ec-cf37f44d977d"
+        }
+      }
+    },
+    "null_events": {
+      "status": 200,
+      "ms": 11.36,
+      "body": {
+        "data": {
+          "id": "49408243-9822-4c9f-9591-678d03f7760d",
+          "status": "REJECTED",
+          "report": {
+            "valid": false,
+            "diagnostics": [
+              {
+                "file": "events.json",
+                "field": "",
+                "code": "INVALID_FIELD",
+                "message": "Expected object, received null"
+              }
+            ],
+            "counts": {
+              "create": 0,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 0
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            }
+          }
+        },
+        "meta": {
+          "requestId": "ad7f6b0e-17cc-442c-9882-3abbe9d80704"
+        }
+      }
+    },
+    "import_dropped": {
+      "status": 201,
+      "ms": 43.4,
+      "body": {
+        "data": {
+          "id": "12f5c5ac-6c17-4bc0-a18b-c81dea267e35",
+          "status": "APPLIED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 3,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 3
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 24
+          }
+        },
+        "meta": {
+          "requestId": "7d6e8f72-c2e3-4aec-96e2-d673574ee407"
+        }
+      }
+    },
+    "import_declined": {
+      "status": 201,
+      "ms": 43.32,
+      "body": {
+        "data": {
+          "id": "85cafcfd-e136-4b98-b598-db3c22d87211",
+          "status": "APPLIED",
+          "report": {
+            "valid": true,
+            "diagnostics": [],
+            "counts": {
+              "create": 3,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 3
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 23
+          }
+        },
+        "meta": {
+          "requestId": "d89cc5cd-a05b-4347-b58d-b71c69f5b5c8"
+        }
+      }
+    },
+    "hrAttention": {
+      "status": 200,
+      "threeDroppedVisible": true,
+      "threeDeclinedVisible": true
+    },
+    "prehireHistory": {
+      "status": 200,
+      "ms": 32.39,
+      "body": {
+        "data": {
+          "id": "864d6eea-b575-4cce-84ed-b5320dbc0471",
+          "status": "REJECTED",
+          "report": {
+            "valid": false,
+            "diagnostics": [
+              {
+                "file": "activity_history.csv",
+                "recordId": "AUDIT_PREHIRE_mue0wliw",
+                "field": "date",
+                "code": "INVALID_DATE",
+                "message": "History must be no later than snapshot and cannot precede employee hire date"
+              }
+            ],
+            "counts": {
+              "create": 1,
+              "update": 0,
+              "skip": 0,
+              "conflict": 0
+            },
+            "records": {
+              "skills": 0,
+              "grades": 0,
+              "employees": 0,
+              "activities": 0,
+              "history": 1
+            },
+            "rules": {
+              "asOfDate": "2026-10-01",
+              "missingSkillLevel": 0,
+              "baseline": "last_review",
+              "repeatableActivityIds": [
+                "FX_SPEAKING"
+              ],
+              "gradeOrder": [
+                "Apprentice",
+                "Practitioner",
+                "Expert"
+              ]
+            },
+            "elapsedMs": 7
+          }
+        },
+        "meta": {
+          "requestId": "3ecc793e-1353-40a6-9887-693aac21c766"
+        }
+      }
+    },
+    "defaultRecommendationMode": {
+      "recommendationSetId": "31438bae-43bf-4523-a81e-97f3877e4ae8",
+      "employeeId": "audit_null_history_mue0wliw",
+      "generatedAt": "2026-09-23T11:32:08.247Z",
+      "expiresAt": "2026-09-23T11:47:08.247Z",
+      "locale": "ru",
+      "source": "RULES_FALLBACK",
+      "aiUsed": false,
+      "model": null,
+      "promptVersion": "evidence-selection-v2",
+      "rankingVersion": "multifactor-v2",
+      "contextVersion": {
+        "skills": 1,
+        "catalog": 1,
+        "history": 1,
+        "profile": 1,
+        "asOfDate": "2026-10-01",
+        "feedback": 1
+      },
+      "cacheKey": "6276035bf7d186ae57218d47053e7c553bcd5d5d91972cf5d32fb1db80fd2c82",
+      "stale": false,
+      "status": "READY",
+      "diagnostics": {
+        "excluded": [
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "FX_BASELINE_HISTORY"
+          },
+          {
+            "reasons": [
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "FX_CAPPED"
+          },
+          {
+            "reasons": [
+              "MANDATORY_ACTIVITY",
+              "NO_RELEVANT_GAIN",
+              "NO_USEFUL_EFFECT",
+              "NO_RELEVANT_GAP_EFFECT"
+            ],
+            "activityId": "FX_MANDATORY"
+          },
+          {
+            "reasons": [
+              "ROLE_MISMATCH"
+            ],
+            "activityId": "FX_WRONG_AUDIENCE"
+          }
+        ],
+        "latencyMs": 16,
+        "shortlisted": 4,
+        "fallbackReason": "LLM_DISABLED"
+      },
+      "recommendations": [
+        {
+          "activityId": "FX_DESIGN_LAB",
+          "rank": 1,
+          "score": 0.5625,
+          "explanation": "Роль Fixture Engineer, переход Apprentice → Practitioner. История участия отсутствует; предпочтения по формату неизвестны. System Design: уровень 1, требование 4 (критичный навык); ожидаемый прирост 1, до 2.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Fixture Engineer",
+                "nextGradeId": "Practitioner",
+                "currentGradeId": "Apprentice"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:FX_DESIGN_LAB",
+              "facts": {
+                "type": "workshop",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "self_paced",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 0,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY"
+            },
+            {
+              "id": "novelty:FX_DESIGN_LAB",
+              "facts": {
+                "activityId": "FX_DESIGN_LAB"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            },
+            {
+              "id": "gap:FX_DESIGN_LAB:SK_SYSTEM_DESIGN",
+              "facts": {
+                "gap": 3,
+                "skillId": "SK_SYSTEM_DESIGN",
+                "critical": true,
+                "nextLevel": 2,
+                "skillName": "System Design",
+                "actualGain": 1,
+                "skillNameKk": "System Design",
+                "skillNameRu": "System Design",
+                "currentLevel": 1,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 2,
+              "before": 1,
+              "skillId": "SK_SYSTEM_DESIGN",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 10
+        },
+        {
+          "activityId": "FX_SPEAKING",
+          "rank": 2,
+          "score": 0.50625,
+          "explanation": "Роль Fixture Engineer, переход Apprentice → Practitioner. История участия отсутствует; предпочтения по формату неизвестны. Public Speaking: уровень 0, требование 1; ожидаемый прирост 1, до 1.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Fixture Engineer",
+                "nextGradeId": "Practitioner",
+                "currentGradeId": "Apprentice"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:FX_SPEAKING",
+              "facts": {
+                "type": "meetup",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "offline",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 0,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY"
+            },
+            {
+              "id": "novelty:FX_SPEAKING",
+              "facts": {
+                "activityId": "FX_SPEAKING"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            },
+            {
+              "id": "gap:FX_SPEAKING:SK_PUBLIC_SPEAKING",
+              "facts": {
+                "gap": 1,
+                "skillId": "SK_PUBLIC_SPEAKING",
+                "critical": false,
+                "nextLevel": 1,
+                "skillName": "Public Speaking",
+                "actualGain": 1,
+                "skillNameKk": "Public Speaking",
+                "skillNameRu": "Public Speaking",
+                "currentLevel": 0,
+                "requiredLevel": 1
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 1,
+              "before": 0,
+              "skillId": "SK_PUBLIC_SPEAKING",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 10
+        },
+        {
+          "activityId": "FX_DESIGN_COURSE",
+          "rank": 3,
+          "score": 0.5625,
+          "explanation": "Роль Fixture Engineer, переход Apprentice → Practitioner. История участия отсутствует; предпочтения по формату неизвестны. System Design: уровень 2, требование 4 (критичный навык); ожидаемый прирост 1, до 3.",
+          "factors": [
+            {
+              "id": "career",
+              "facts": {
+                "roleId": "Fixture Engineer",
+                "nextGradeId": "Practitioner",
+                "currentGradeId": "Apprentice"
+              },
+              "category": "CAREER_CONTEXT",
+              "reasonCode": "NEXT_GRADE_CONTEXT"
+            },
+            {
+              "id": "history:FX_DESIGN_COURSE",
+              "facts": {
+                "type": "course",
+                "scope": "VOLUNTARY_LEARNING_WITH_SHARED_SKILLS",
+                "format": "self_paced",
+                "asOfDate": "2026-10-01",
+                "totalRecorded": 0,
+                "relevantDropped": 0,
+                "relevantCompleted": 0,
+                "weightedCompleted": 0,
+                "weightedUnfinished": 0,
+                "recencyHalfLifeDays": 180,
+                "sameFormatCompleted": 0,
+                "relevantMissedOrDeclined": 0,
+                "sameFormatMissedOrDeclined": 0
+              },
+              "category": "PARTICIPATION_HISTORY",
+              "reasonCode": "NO_RECORDED_HISTORY"
+            },
+            {
+              "id": "novelty:FX_DESIGN_COURSE",
+              "facts": {
+                "activityId": "FX_DESIGN_COURSE"
+              },
+              "category": "NOVELTY",
+              "reasonCode": "NEW_ACTIVITY"
+            },
+            {
+              "id": "gap:FX_DESIGN_COURSE:SK_SYSTEM_DESIGN",
+              "facts": {
+                "gap": 2,
+                "skillId": "SK_SYSTEM_DESIGN",
+                "critical": true,
+                "nextLevel": 3,
+                "skillName": "System Design",
+                "actualGain": 1,
+                "skillNameKk": "System Design",
+                "skillNameRu": "System Design",
+                "currentLevel": 2,
+                "requiredLevel": 4
+              },
+              "category": "SKILL_GAP",
+              "reasonCode": "CRITICAL_REQUIREMENT_GAP"
+            }
+          ],
+          "expectedSkillChanges": [
+            {
+              "after": 3,
+              "before": 2,
+              "skillId": "SK_SYSTEM_DESIGN",
+              "actualGain": 1
+            }
+          ],
+          "expectedReadinessDelta": 10
+        }
+      ]
+    }
+  }
+}

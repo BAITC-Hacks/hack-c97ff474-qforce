@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 import { date, initials, percent } from "../utils/labels.js";
 const props = defineProps({ hr: Boolean, employeeId: String });
 const { store, loadEmployee, roleName, gradeName } = useCareer();
@@ -18,11 +19,12 @@ watch(
     @retry="loadEmployee(employeeId || store.user?.employeeId)"
   >
     <div v-if="store.profile">
+      <CqDataWarnings :blocks="hr ? ['catalogs', 'grades', 'history', 'eligible'] : ['catalogs', 'grades', 'history', 'eligible', 'recommendations']" />
       <CqHeading
         :title="hr ? store.profile.fullName : 'Мой профиль и навыки'"
-        subtitle="Актуальные навыки, карьерная цель и история развития."
+        :subtitle="t('Актуальные навыки, карьерная цель и история развития.')"
         ><NuxtLink :to="hr ? '/hr-people' : '/path'" class="btn secondary"
-          >{{ hr ? "К списку сотрудников" : "Карьерная траектория" }}
+          >{{ t(hr ? "К списку сотрудников" : "Карьерная траектория") }}
           <CqIcon name="arrow" /></NuxtLink
       ></CqHeading>
       <div class="grid aside-main">
@@ -37,39 +39,38 @@ watch(
             </div>
             <dl class="details-list">
               <div>
-                <dt>Стаж</dt>
-                <dd>{{ store.profile.tenureMonths }} мес.</dd>
+                <dt> {{ t("Стаж") }} </dt>
+                <dd>{{ store.profile.tenureMonths }} {{ t("мес.") }} </dd>
               </div>
               <div>
-                <dt>Формат работы</dt>
+                <dt> {{ t("Формат работы") }} </dt>
                 <dd>
                   {{
-                    { office: "Офис", hybrid: "Гибрид", remote: "Удалённо" }[
+                    t({ office: "Офис", hybrid: "Гибрид", remote: "Удалённо" }[
                       store.profile.workFormat
-                    ] || store.profile.workFormat
+                    ] || store.profile.workFormat)
                   }}
                 </dd>
               </div>
               <div>
-                <dt>Оценка навыков</dt>
+                <dt> {{ t("Оценка навыков") }} </dt>
                 <dd>{{ date(store.profile.lastReviewDate) }}</dd>
               </div>
               <div>
-                <dt>Подразделение</dt>
+                <dt> {{ t("Подразделение") }} </dt>
                 <dd>{{ store.profile.department }}</dd>
               </div>
               <div>
-                <dt>Руководитель (ID)</dt>
-                <dd>{{ store.profile.managerId || "Не назначен" }}</dd>
+                <dt> {{ t("Руководитель (ID)") }} </dt>
+                <dd>{{ t(store.profile.managerId || "Не назначен") }}</dd>
               </div>
             </dl>
           </section>
           <CqNotice
-            >Уровни навыков учитывают сохранённые завершения. Автоматического
-            повышения грейда нет.</CqNotice
+            > {{ t("Уровни навыков учитывают сохранённые завершения. Автоматического повышения грейда нет.") }} </CqNotice
           >
           <section class="panel">
-            <div class="section-kicker">Соответствие следующему грейду</div>
+            <div class="section-kicker"> {{ t("Соответствие следующему грейду") }} </div>
             <div class="big-progress">
               {{ percent(store.trajectory.readinessPercent) }}
             </div>
@@ -78,8 +79,7 @@ watch(
         <div class="stack">
           <section class="panel">
             <div class="panel-head">
-              <h2>
-                Навыки для грейда {{ gradeName(store.trajectory.nextGradeId) }}
+              <h2> {{ t("Навыки для грейда") }} {{ gradeName(store.trajectory.nextGradeId) }}
               </h2>
             </div>
             <CqSkill
@@ -87,40 +87,39 @@ watch(
               :key="gap.skillId"
               :gap="gap"
             />
-            <p v-if="!store.trajectory.gaps.length" class="empty-inline">
-              Требования для следующего грейда не заданы.
-            </p>
+            <p v-if="!store.trajectory.gaps.length" class="empty-inline"> {{ t("Требования для следующего грейда не заданы.") }} </p>
           </section>
           <section class="panel">
-            <h2>Карьерная цель</h2>
+            <h2> {{ t("Карьерная цель") }} </h2>
             <p class="section">
               {{
-                store.profile.careerGoal
+                t(store.profile.careerGoal
                   ? store.profile.careerGoal.target_role +
                     " · " +
                     store.profile.careerGoal.target_grade
-                  : "Цель не указана"
+                  : "Цель не указана")
               }}
             </p>
-            <p class="small muted">
-              Траектория API рассчитывается для следующего грейда текущей роли.
-            </p>
+            <p class="small muted"> {{ t("Траектория API рассчитывается для следующего грейда текущей роли.") }} </p>
           </section>
           <section class="panel">
             <div class="panel-head">
-              <h2>История участия</h2>
+              <h2> {{ t("История участия") }} </h2>
               <NuxtLink v-if="!hr" to="/activities" class="inline-link"
-                >Все записи</NuxtLink
+                > {{ t("Все записи") }} </NuxtLink
               >
             </div>
             <CqRecent
+              v-if="!store.blockLoading.history && !store.blockErrors.history"
               :history="store.history"
               :hr="hr"
               :limit="hr ? store.history.length : 4"
             />
+            <p v-if="store.blockLoading.history" role="status">{{ t('Загружаем историю…') }}</p>
           </section>
         </div>
       </div>
+      <CqRecommendations v-if="hr" hr />
     </div>
   </CqAsync>
 </template>

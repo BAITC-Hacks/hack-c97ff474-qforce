@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-09-23T11:49:03.604Z",
+  "checks": [
+    {
+      "url": "http://127.0.0.1:3000/health/ready",
+      "status": 200,
+      "body": {
+        "status": "ready"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:3001/health/ready",
+      "status": 200,
+      "body": {
+        "data": {
+          "status": "ready",
+          "database": "up",
+          "llm": {
+            "provider": "openai",
+            "capability": "configured",
+            "reason": null,
+            "liveVerified": false
+          }
+        },
+        "meta": {
+          "requestId": "5b95587f-1c05-49dd-b1ba-fc7d13150e1b"
+        }
+      }
+    }
+  ],
+  "passed": true
+}

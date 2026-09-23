@@ -1,5 +1,7 @@
 # Проверка интеграции Career Quest
 
+> Этот отчёт относится к интеграции до последующего аудита и исправлений. Актуальная проверка полного набора, браузера и живого OpenAI: [fixes-verification.md](fixes-verification.md).
+
 Проверено 23 сентября 2026 года. Окружение: Windows, Node.js 24.20.0 для локальных проверок; Docker Desktop с Linux containers; образы Node 22.20.0 и PostgreSQL 17.6. Браузерные проверки выполнены в Chromium против production-сборки Nuxt в Docker, с реальным NestJS API и PostgreSQL.
 
 ## Результаты

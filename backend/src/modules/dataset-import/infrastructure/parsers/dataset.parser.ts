@@ -10,7 +10,10 @@ import { activitiesSchema, employeesSchema, historySchema, rulesSchema, skillsSc
 export const allowedFilenames = ['skills.json', 'employees.json', 'events.json', 'activity_history.csv', 'dataset-rules.json'];
 function canonical(value: unknown): string { if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`; if (value && typeof value === 'object') return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${JSON.stringify(k)}:${canonical(v)}`).join(',')}}`; return JSON.stringify(value); }
 export function hash(value: unknown): string { return createHash('sha256').update(canonical(value)).digest('hex'); }
-function unknownFields(value: Record<string, unknown>, keys: string[]): Metadata { return Object.fromEntries(Object.entries(value).filter(([key]) => !keys.includes(key))); }
+function unknownFields(value: unknown, keys: string[]): Metadata {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  return Object.fromEntries(Object.entries(value).filter(([key]) => !keys.includes(key)));
+}
 export class JsonCsvDatasetParser implements DatasetParser {
   constructor(private readonly defaults: DatasetRules = rulesSchema.parse(JSON.parse(readFileSync(resolve(process.cwd(), 'data/dataset-rules.json'), 'utf8')))) {}
   parse(files: ImportFiles, defaults?: DatasetRules): ParsedImport {
@@ -43,11 +46,26 @@ export class JsonCsvDatasetParser implements DatasetParser {
       }
       return undefined;
     };
-    rules = validate('dataset-rules.json', rulesSchema) ?? rules;
+    const explicitRules = validate('dataset-rules.json', rulesSchema);
+    rules = explicitRules ?? rules;
     const skills = validate('skills.json', skillsSchema);
     const employees = validate('employees.json', employeesSchema);
     const activities = validate('events.json', activitiesSchema);
     const history = validate('activity_history.csv', z.array(historySchema).max(100000));
+    // A package without rules can introduce the known starter-kit catalogue into
+    // a fixture installation. Preserve stored positions and only extend from an
+    // explicit configured order, never infer seniority from JSON array order.
+    if (!explicitRules) {
+      const introducedGrades = (skills?.role_profiles ?? []).map(profile => profile.grade).filter(grade => !rules.gradeOrder.includes(grade));
+      if (introducedGrades.some(grade => this.defaults.gradeOrder.includes(grade))) {
+        const merged = [...rules.gradeOrder, ...this.defaults.gradeOrder.filter(grade => !rules.gradeOrder.includes(grade))];
+        const knownOrder = merged.filter(grade => this.defaults.gradeOrder.includes(grade));
+        const compatible = knownOrder.every((grade, index) => index === 0 || this.defaults.gradeOrder.indexOf(knownOrder[index - 1]) < this.defaults.gradeOrder.indexOf(grade));
+        if (compatible) rules = { ...rules, gradeOrder: merged };
+      }
+      const importedIds = new Set((activities?.events ?? []).map(activity => activity.event_id));
+      rules = { ...rules, repeatableActivityIds: [...new Set([...rules.repeatableActivityIds, ...this.defaults.repeatableActivityIds.filter(id => importedIds.has(id))])] };
+    }
     const dates = [skills?.meta?.as_of_date, employees?.meta?.as_of_date, activities?.meta?.as_of_date].filter((v): v is string => !!v);
     if (new Set(dates).size > 1) diagnostics.push({ file: '', field: 'meta.as_of_date', code: 'INCONSISTENT_SNAPSHOT', message: 'All files must have the same snapshot date' });
     if (dates[0]) rules = { ...rules, asOfDate: dates[0] };

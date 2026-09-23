@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 defineProps({ profile: Object });
 const { gradeName } = useCareer();
 const circ = 2 * Math.PI * 57;
@@ -46,12 +47,9 @@ const circ = 2 * Math.PI * 57;
           : Number(profile.readinessPercent.toFixed(1)) + "%"
       }}
     </text>
-    <text x="228" y="110" text-anchor="middle" fill="#BDDBCE" font-size="10">
-      соответствие навыков
-    </text>
-    <text x="27" y="153" fill="#BFDBCE" font-size="11">сейчас</text>
-    <text x="228" y="174" text-anchor="middle" fill="#E2ECCB" font-size="11">
-      Цель: {{ gradeName(profile.nextGradeId) }}
+    <text x="228" y="110" text-anchor="middle" fill="#BDDBCE" font-size="10"> {{ t("соответствие навыков") }} </text>
+    <text x="27" y="153" fill="#BFDBCE" font-size="11"> {{ t("сейчас") }} </text>
+    <text x="228" y="174" text-anchor="middle" fill="#E2ECCB" font-size="11"> {{ t("Цель:") }} {{ gradeName(profile.nextGradeId) }}
     </text>
   </svg>
 </template>

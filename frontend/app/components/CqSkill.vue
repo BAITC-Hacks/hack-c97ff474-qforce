@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../utils/i18n.js';
 defineProps({ gap: { type: Object, required: true } });
 const { skillName } = useCareer();
 </script>
@@ -7,7 +8,7 @@ const { skillName } = useCareer();
     <div class="skill-top">
       <span
         >{{ skillName(gap.skillId) }}
-        <CqTag v-if="gap.critical" color="gold">Критический</CqTag></span
+        <CqTag v-if="gap.critical" color="gold"> {{ t("Критический") }} </CqTag></span
       ><strong
         >{{ gap.currentLevel ?? "—"
         }}<span class="muted"> / {{ gap.requiredLevel }}</span></strong
@@ -29,8 +30,6 @@ const { skillName } = useCareer();
         }"
       />
     </div>
-    <p v-else-if="gap.currentLevel === null" class="small muted">
-      Текущий уровень неизвестен
-    </p>
+    <p v-else-if="gap.currentLevel === null" class="small muted"> {{ t("Текущий уровень неизвестен") }} </p>
   </div>
 </template>

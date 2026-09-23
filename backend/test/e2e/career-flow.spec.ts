@@ -256,4 +256,43 @@ describe('Career Quest HTTP end-to-end flow on PostgreSQL', () => {
     expect(limited?.body).toMatchObject({ code: 'RATE_LIMITED', requestId: expect.any(String) });
     expect(Number(limited?.headers['retry-after'])).toBeGreaterThan(0);
   });
+
+  it('retries declined and dropped courses, preserves unsuccessful history, and applies each successful gain once', async () => {
+    const source = JSON.parse(fixtureFiles()['employees.json'].toString('utf8'));
+    source.employees = ['declined', 'dropped'].map(status => ({...source.employees[0], employee_id: `fixture_retry_${status}`}));
+    await request(app.getHttpServer()).post(`${base}/imports`).set(hrAuth()).attach('employees', Buffer.from(JSON.stringify(source)), 'employees.json').expect(201);
+    for (const status of ['declined', 'dropped']) {
+      const path = `${base}/employees/fixture_retry_${status}/participations`;
+      const first = await request(app.getHttpServer()).post(path).set(hrAuth()).send({activityId: 'FX_DESIGN_COURSE'}).expect(201);
+      if (status === 'dropped') await request(app.getHttpServer()).patch(`${path}/${first.body.data.id}/status`).set(hrAuth()).send({status: 'in_progress'}).expect(200);
+      await request(app.getHttpServer()).patch(`${path}/${first.body.data.id}/status`).set(hrAuth()).send({status}).expect(200);
+      const retries = await Promise.all([1, 2].map(() => request(app.getHttpServer()).post(path).set(hrAuth()).send({activityId: 'FX_DESIGN_COURSE'})));
+      expect(retries.map(response => response.status)).toEqual([201, 201]);
+      const pid = retries[0].body.data.id;
+      expect(retries[1].body.data.id).toBe(pid);
+      expect(pid).not.toBe(first.body.data.id);
+      expect(retries[0].body.data.status).toBe('registered');
+      await request(app.getHttpServer()).post(`${path}/${pid}/complete`).set(hrAuth()).set('Idempotency-Key', `retry-${status}`).send({}).expect(201);
+      await request(app.getHttpServer()).post(`${path}/${pid}/complete`).set(hrAuth()).set('Idempotency-Key', `retry-${status}-again`).send({}).expect(201);
+      expect(await prisma.skillChange.count({where: {participationId: pid}})).toBe(1);
+      expect((await prisma.participation.findUniqueOrThrow({where: {id: first.body.data.id}})).status).toBe(status.toUpperCase());
+    }
+  });
+
+  it('registers a dataset activity with a 200-character ID and exposes neutral repeated-drop/decline signals', async () => {
+    const source = JSON.parse(fixtureFiles()['events.json'].toString('utf8'));
+    const activity = source.events.find((event: {event_id: string}) => event.event_id === 'FX_DESIGN_COURSE');
+    const id = `A${'x'.repeat(199)}`;
+    source.events = [{...activity, event_id: id}];
+    await request(app.getHttpServer()).post(`${base}/imports`).set(hrAuth()).attach('events', Buffer.from(JSON.stringify(source)), 'events.json').expect(201);
+    await request(app.getHttpServer()).post(`${base}/employees/fixture_person_other/participations`).set(hrAuth()).send({activityId: id}).expect(201);
+    const rows = ['dropped', 'declined'].flatMap(status => [1, 2, 3].map(index => `SIGNAL_${status}_${index},fixture_retry_${status},FX_SQL,2026-09-20,,${status},${status === 'dropped' ? 50 : 0},,,self`));
+    const history = ['record_id,employee_id,event_id,date,due_date,status,completion_pct,score,feedback_rating,assigned_by', ...rows, ''].join('\n');
+    await request(app.getHttpServer()).post(`${base}/imports`).set(hrAuth()).attach('history', Buffer.from(history), 'activity_history.csv').expect(201);
+    const attention = await request(app.getHttpServer()).get(`${base}/hr/needs-attention?pageSize=100`).set(hrAuth()).expect(200);
+    expect(attention.body.data).toEqual(expect.arrayContaining([
+      expect.objectContaining({employeeId: 'fixture_retry_dropped', reasons: expect.arrayContaining(['REPEATED_DROPS_IN_WINDOW']), droppedParticipations: 4}),
+      expect.objectContaining({employeeId: 'fixture_retry_declined', reasons: expect.arrayContaining(['REPEATED_DECLINES_IN_WINDOW']), declinedParticipations: 4}),
+    ]));
+  });
 });

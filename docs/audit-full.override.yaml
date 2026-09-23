@@ -1,0 +1,10 @@
+# Isolated audit only. Used with backend/compose.yaml and a distinct project name.
+services:
+  bootstrap:
+    environment:
+      DATA_MODE: input
+      DEMO_EMPLOYEE_ID: E0001
+  api:
+    environment:
+      DATA_MODE: input
+      DEMO_EMPLOYEE_ID: E0001

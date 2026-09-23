@@ -24,7 +24,8 @@
     "data:import": "ts-node scripts/import-dataset.ts",
     "bootstrap": "ts-node scripts/bootstrap.ts",
     "smoke": "tsx scripts/smoke.ts",
-    "evaluate": "ts-node scripts/evaluate-recommendations.ts"
+    "evaluate": "ts-node scripts/evaluate-recommendations.ts",
+    "verify:dataset": "ts-node scripts/verify-dataset.ts"
   },
   "dependencies": {
     "@nestjs/common": "11.2.6",

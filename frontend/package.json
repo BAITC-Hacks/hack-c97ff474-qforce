@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "node tests/engine.test.js && node --test tests/api-client.test.js tests/hr-workflows.test.js",
+    "test": "node --test tests/api-client.test.js tests/hr-workflows.test.js tests/career.test.js",
+    "test:legacy": "node tests/engine.test.js",
     "typecheck": "nuxt typecheck",
     "test:e2e": "playwright test"
   },

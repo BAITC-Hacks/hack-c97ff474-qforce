@@ -125,7 +125,8 @@ export class RecommendationsService {
   private safeSnapshot(context: DevelopmentContext, preferences: Record<string, number>): unknown {
     return {version: contextVersion(context), roleId: context.employee.roleId, gradeId: context.employee.gradeId, nextGradeId: context.nextGradeId,
       levels: context.levels, requirements: context.requirements, preferences,
-      activities: context.activities.map(activity => ({id: activity.id, version: activity.version, format: activity.format, roleIds: activity.roleIds, gradeIds: activity.gradeIds,
+      skills: context.skills.map(skill => ({id: skill.id, name: skill.name, translations: skill.translations})),
+      activities: context.activities.map(activity => ({id: activity.id, title: activity.title, type: activity.type, durationHours: activity.durationHours, version: activity.version, format: activity.format, roleIds: activity.roleIds, gradeIds: activity.gradeIds,
         effects: activity.effects, prerequisites: activity.prerequisites, upcomingSessions: activity.upcomingSessions, repeatable: activity.repeatable, mandatory: activity.mandatory})),
       history: context.history.map(h => ({activityId: h.activityId, status: h.status, date: h.date}))};
   }

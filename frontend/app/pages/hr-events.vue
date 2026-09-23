@@ -1,4 +1,6 @@
 <script setup>
+import { t } from '../utils/i18n.js';
+import { localeState } from "../utils/i18n.js";
 import { date, formats } from "../utils/labels.js";
 const { request } = useApi();
 const department = ref(""),
@@ -32,10 +34,16 @@ async function load() {
         query: { ...filters.value, page: page.value, pageSize },
       }),
     ]);
+    if (current !== generation) return;
+    overview.value = summary.data;
+    rows.value = participation.data;
+    meta.value = participation.meta;
+    activities.value = {};
+    loading.value = false;
     const details = await Promise.allSettled(
       participation.data.map((row) =>
         request("/activities/" + encodeURIComponent(row.activityId), {
-          query: { locale: "ru" },
+          query: { locale: localeState.locale },
         }),
       ),
     );
@@ -73,89 +81,82 @@ function turnPage(value) {
   load();
 }
 onMounted(load);
+watch(() => localeState.locale, load);
 </script>
 <template>
   <div>
     <CqHeading
-      title="Участие в развивающих активностях"
-      subtitle="Анализируйте форматы и доступность, а не наказывайте за отказ от участия."
+      :title="t('Участие в развивающих активностях')"
+      :subtitle="t('Анализируйте форматы и доступность, а не наказывайте за отказ от участия.')"
     />
     <form class="filters" @submit.prevent="applyFilters">
       <CqDepartment v-model="department" :disabled="loading" />
       <label class="small"
-        >С
-        <input
+        > {{ t("С") }} <input
           v-model="dateFrom"
           type="date"
           class="input"
-          aria-label="Начало периода"
+          :aria-label="t('Начало периода')"
           :max="dateTo || undefined"
           :disabled="loading"
       /></label>
       <label class="small"
-        >По
-        <input
+        > {{ t("По") }} <input
           v-model="dateTo"
           type="date"
           class="input"
-          aria-label="Конец периода"
+          :aria-label="t('Конец периода')"
           :min="dateFrom || undefined"
           :disabled="loading"
       /></label>
-      <button class="btn secondary" :disabled="loading">
-        Применить <CqIcon name="search" />
+      <button class="btn secondary" :disabled="loading"> {{ t("Применить") }} <CqIcon name="search" />
       </button>
     </form>
-    <div v-if="loading" class="panel empty-inline section" role="status">
-      Загружаем статистику участия…
-    </div>
+    <div v-if="loading" class="panel empty-inline section" role="status"> {{ t("Загружаем статистику участия…") }} </div>
     <section v-else-if="error" class="panel section" role="alert">
-      <CqNotice color="red">{{ error }}</CqNotice>
-      <button class="btn secondary section" @click="load">
-        Повторить <CqIcon name="refresh" />
+      <CqNotice color="red">{{ t(error) }}</CqNotice>
+      <button class="btn secondary section" @click="load"> {{ t("Повторить") }} <CqIcon name="refresh" />
       </button>
     </section>
     <template v-else-if="overview">
-      <p class="small muted section">
-        Период: {{ date(overview.dateFrom) }} — {{ date(overview.dateTo) }} ·
-        Дата среза: {{ date(overview.asOfDate) }}
+      <p class="small muted section"> {{ t("Период:") }} {{ date(overview.dateFrom) }} — {{ date(overview.dateTo) }} {{ t("· Дата среза:") }} {{ date(overview.asOfDate) }}
       </p>
       <div class="grid three section">
         <CqMetric
-          label="Активностей с участием"
+          :label="t('Активностей с участием')"
           :value="meta.total"
-          caption="Обязательные и добровольные"
+          :caption="t('Обязательные и добровольные')"
           icon="book"
         />
         <CqMetric
-          label="Записей участия"
+          :label="t('Записей участия')"
           :value="overview.participationCount"
-          caption="За выбранный период"
+          :caption="t('За выбранный период')"
           icon="calendar"
         />
         <CqMetric
-          label="Участников"
+          :label="t('Участников')"
           :value="overview.uniqueParticipants"
-          caption="Уникальные сотрудники за период"
+          :caption="t('Уникальные сотрудники за период')"
           icon="people"
         />
       </div>
-      <CqNotice v-if="detailError" color="gold">{{ detailError }}</CqNotice>
+      <CqNotice v-if="detailError" color="gold">{{ t(detailError) }}</CqNotice>
       <section class="panel section">
         <div class="panel-head">
-          <h2>Сводка по мероприятиям</h2>
-          <CqTag color="outline">Записи и уникальные участники</CqTag>
+          <h2> {{ t("Сводка по мероприятиям") }} </h2>
+          <CqTag color="outline"> {{ t("Записи и уникальные участники") }} </CqTag>
         </div>
         <div class="table-wrap">
           <table v-if="rows.length">
             <thead>
               <tr>
-                <th>Активность</th>
-                <th>Формат</th>
-                <th>Участий / сотрудников</th>
-                <th>Завершено</th>
-                <th>Неявки / пропуски</th>
-                <th>Завершение</th>
+                <th> {{ t("Активность") }} </th>
+                <th> {{ t("Формат") }} </th>
+                <th> {{ t("Участий / сотрудников") }} </th>
+                <th> {{ t("Завершено") }} </th>
+                <th> {{ t("Неявки / пропуски") }} </th>
+                <th> {{ t("Завершение") }} </th>
               </tr>
             </thead>
             <tbody>
@@ -170,16 +171,15 @@ onMounted(load);
                   >
                   <div class="sub">
                     {{ row.activityId
-                    }}<span v-if="activities[row.activityId]?.mandatory">
-                      · Обязательная</span
+                    }}<span v-if="activities[row.activityId]?.mandatory"> {{ t("· Обязательная") }} </span
                     >
                   </div>
                 </td>
                 <td>
                   {{
-                    formats[activities[row.activityId]?.format] ||
+                    t(formats[activities[row.activityId]?.format] ||
                     activities[row.activityId]?.format ||
-                    "—"
+                    "—")
                   }}
                 </td>
                 <td>
@@ -199,37 +199,29 @@ onMounted(load);
               </tr>
             </tbody>
           </table>
-          <div v-else class="empty-inline">
-            В выбранный период записей участия нет. Измените подразделение или
-            даты.
-          </div>
+          <div v-else class="empty-inline"> {{ t("В выбранный период записей участия нет. Измените подразделение или даты.") }} </div>
         </div>
         <div class="pagination">
-          <span>Страница {{ page }} из {{ pages }}</span>
+          <span> {{ t("Страница") }} {{ page }} {{ t("из") }} {{ pages }}</span>
           <div class="actions">
             <button
               class="btn secondary"
               :disabled="page <= 1"
               @click="turnPage(page - 1)"
             >
-              <CqIcon name="back" /> Назад
-            </button>
+              <CqIcon name="back" /> {{ t("Назад") }} </button>
             <button
               class="btn secondary"
               :disabled="page >= pages"
               @click="turnPage(page + 1)"
-            >
-              Далее <CqIcon name="arrow" />
+            > {{ t("Далее") }} <CqIcon name="arrow" />
             </button>
           </div>
         </div>
       </section>
       <div class="section">
         <CqNotice
-          >Доля завершений — завершённые записи / все записи участия в
-          активности за период. В знаменатель входят все статусы, включая
-          участие в процессе. Это описательная метрика, а не оценка качества или
-          ROI программы.</CqNotice
+          > {{ t("Доля завершений — завершённые записи / все записи участия в активности за период. В знаменатель входят все статусы, включая участие в процессе. Это описательная метрика, а не оценка качества или ROI программы.") }} </CqNotice
         >
       </div>
     </template>

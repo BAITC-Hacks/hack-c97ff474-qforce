@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-09-23T11:45:41.487Z",
+  "mode": "read-only-rules-verification",
+  "externalCalls": 0,
+  "employees": 200,
+  "expectedEmployees": 200,
+  "cards": 364,
+  "gapFacts": 478,
+  "statuses": {
+    "READY": 158,
+    "NO_NEXT_GRADE": 16,
+    "NO_ELIGIBLE_ACTIVITIES": 26
+  },
+  "failures": [],
+  "passed": true
+}
