@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
+<template>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -738,5 +737,4 @@ window.addEventListener('hashchange', router);
 router();
 lucide.createIcons();
 </script>
-</body>
-</html>
+</template>
