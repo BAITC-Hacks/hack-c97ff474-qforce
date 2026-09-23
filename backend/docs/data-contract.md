@@ -1,0 +1,81 @@
+# Контракт исходных данных и импорта
+
+Фактически изучен предоставленный комплект `Career Quest 1.0`: `skills.json`, `employees.json`, `events.json`, `activity_history.csv`, `README.ru.md`. Дата среза — **2026-10-01**, история — 2024-10-01–2026-09-30. Проверенный объём: 60 навыков, 8 профессиональных ролей, 32 профиля роль/грейд, 200 сотрудников, 40 активностей, 2743 участия. Эти количества не ограничивают алгоритмы и не зашиты в бизнес-логику. Исходные файлы не копируются в Git.
+
+## Транспорт и нормализованная модель
+
+JSON-файлы являются объектами-обёртками, а не массивами верхнего уровня. Все три имеют `meta` с `dataset`, `version`, `as_of_date`. Адаптеры принимают UTF-8, включая BOM; некорректные байты отклоняются. CSV разбирается `csv-parse`, включая кавычки, запятые в значениях и многострочные поля.
+
+| Источник | Поля | Хранение |
+|---|---|---|
+| `skills.json.skills[]` | `skill_id`, `name`, `type`, `category`, `description` | `Skill`; исходный `skill_id` становится PK без замены |
+| `skills.json.role_profiles[]` | `role`, `grade`, `required_skills`, `critical_skills` | `ProfessionalRole`, `Grade(roleId,id,position)`, `RoleGradeRequirement(roleId,gradeId,skillId,requiredLevel,critical)` |
+| `skills.json.proficiency_scale` | ключи 0–5 и описания уровней | `CatalogVersion.metadata.source['skills.json'].proficiency_scale` |
+| `employees.json.employees[]` | `employee_id`, `full_name`, `role`, `grade`, `department`, `manager_id`, `hire_date`, `tenure_months`, `work_format`, `preferred_language`, `career_goal`, `last_review_date` | `Employee`; роль/грейд/менеджер имеют FK; `career_goal` сохраняет `target_role`, `target_grade` и расширения |
+| `employees[].skills` | объект `skill_id → number` | baseline в `EmployeeDevelopmentState`, текущие уровни в `EmployeeSkill`; владелец — development |
+| `events.json.events[]` | `event_id`, `title`, `description`, `type`, `format`, `duration_hours`, `mandatory` | `Activity`; исходное слово event относится к обучающему мероприятию, не к domain event |
+| `events[].target_roles/target_grades` | массивы строк | `ActivityRole`, `ActivityGrade` |
+| `events[].develops_skills` | `skill_id`, `gain`, `max_level` | `ActivitySkillEffect`; неизвестные вложенные поля сохраняются в `Activity.metadata.effectMetadata` |
+| `events[].prerequisites` | объект `skill_id → minimum level` | `ActivityPrerequisite` |
+| `events[].upcoming_sessions` | массив календарных дат | `ActivitySession`; пустой массив допустим для `self_paced` |
+| CSV | `record_id`, `employee_id`, `event_id`, `date`, `due_date`, `status`, `completion_pct`, `score`, `feedback_rating`, `assigned_by` | `Participation`; внешнее `record_id` сохраняется уникальным `sourceRecordId` |
+
+Неизвестные поля сущностей сохраняются в `metadata`, неизвестные поля JSON-обёрток — в `CatalogVersion.metadata.source` по имени файла. При частичном импорте metadata отсутствующих файлов сохраняются. Переводы сохраняются отдельно. Данные не свёрнуты в одну JSON-колонку: навыки, требования, эффекты, аудитории, сессии, участия и ledger нормализованы.
+
+## Шкала, baseline и история
+
+README явно задаёт: отсутствующий навык равен **0**; `employees.skills` — оценка на `last_review_date`; завершения после этой даты ещё не включены. Поэтому официальный режим — `missingSkillLevel=0`, `baseline=last_review`. Значения навыков и caps ограничены 0–5, gain неотрицательный. Реальный комплект содержит целые значения; модель использует дробные `Float`, чтобы не терять допустимые последующие дробные оценки. SQL CHECK constraints контролируют диапазоны и монотонность ledger.
+
+Импорт сначала создаёт baseline, затем воспроизводит только новые `COMPLETED` с `date > last_review_date` в порядке `(date, record_id)`. Прирост равен `max(0,min(gain,maxLevel-currentLevel,5-currentLevel))`. В `SkillChange` записывается только положительный фактический прирост: before/after, participation, source date и снимок gain/cap/версии активности. Каталог не переписывает этот снимок. Завершения в день оценки и раньше остаются контекстом. Все импортированные завершения уже закрыты для повторного начисления через API.
+
+**Ограничение точности источника:** `date` — дата сессии; для `self_paced` это дата зачисления/назначения, а не фактического завершения. В CSV нет completion timestamp. Для воспроизведения используется единственная доступная дата как эффективный порядок; точное разделение self-paced завершений относительно оценки восстановить невозможно. Это документированное допущение, а не выдуманная точная дата выполнения. `completedAt` импортированных записей остаётся `null`; точность источника сохраняется как дата, правило ledger содержит `sourceDate`.
+
+`hire_date`, `last_review_date`, сессии, `date`, `due_date` хранятся PostgreSQL `date` и возвращаются `YYYY-MM-DD`. Создание ImportRun, API-завершения, рекомендации и аудит используют UTC `timestamptz` и ISO 8601. Исторические даты не заменяются текущей датой машины.
+
+Статусы сохраняются без потери смысла: `completed`, `in_progress`, `dropped`, `no_show`, `declined`, `overdue`. В БД они представлены верхним регистром, в HTTP — нижним; API добавляет `registered`. `no_show` не смешивается с `dropped`. `completion_pct` обязателен: пустая строка не превращается в ноль. `score` и `feedback_rating` могут быть пустыми и сохраняются как null. `assigned_by` — `self`, `manager` или `hr`.
+
+## Настраиваемые правила
+
+`data/dataset-rules.json` содержит правила, извлечённые из README официального набора:
+
+```json
+{
+  "asOfDate": "2026-10-01",
+  "missingSkillLevel": 0,
+  "baseline": "last_review",
+  "repeatableActivityIds": ["EV_036"],
+  "gradeOrder": ["Junior", "Middle", "Senior", "Lead"]
+}
+```
+
+Список порядка грейдов — конфигурация адаптера, не enum домена. Следующий грейд находится по позиции внутри роли. Новые названия/порядок принимаются через файл `dataset-rules.json`; роли и employee ID не зашиты в код. Повторяемость клуба задаётся здесь, сохраняется в `Activity.repeatable`, а domain policy читает boolean, не сравнивает ID. В расширенном `events.json` допускается явное `repeatable`, имеющее приоритет над списком.
+
+Для другого набора правила поставляются явно. `missingSkillLevel=null` означает неизвестный уровень; точный gain/readiness не вычисляется на выдуманном нуле. `baseline=current_snapshot` означает, что импортированные завершения используются только как контекст и ничего не начисляют. Частичный пакет без rules использует правила уже загруженного каталога. `meta.as_of_date` уточняет дату среза; несовместимые даты файлов отклоняются.
+
+В официальных исходниках локализованных строк нет: `name/title/description` — английские. Адаптер поддерживает `translations: {ru:{name|title,description},kk:{...},en:{...}}`, а также строку языка для названия. Fallback: ru → en → исходная строка, kk → en → исходная строка. Отсутствующие переводы не генерируются.
+
+## Полный и частичный импорт
+
+CLI и HTTP используют один `ImportService.run`. CLI: `npm run data:import -- --dir ./data/input [--dry-run]`. HTTP: `POST /api/v1/imports/dry-run` и `POST /api/v1/imports`, только HR, multipart-поля:
+
+| Поле | Имя файла |
+|---|---|
+| `skills` | `skills.json` |
+| `employees` | `employees.json` |
+| `events` | `events.json` |
+| `history` | `activity_history.csv` |
+| `rules` | `dataset-rules.json` |
+
+Все поля опциональны, но нужен хотя бы один файл данных. HTTP не принимает путь клиента. Максимум 5 файлов по 8 MiB, до 10000 записей каждого JSON-каталога/профилей, до 100000 строк истории, размер одной CSV-записи до 65536 байт. Неизвестные имена/поля multipart отклоняются. Для частичного пакета ссылки проверяются одновременно по присланным данным и БД; отсутствие файла не удаляет существующие данные.
+
+Отчёт: `valid`, `counts{create,update,skip,conflict}`, `records`, `rules`, `diagnostics[]` с `file`, `field`, `row` или `recordId` при наличии, `code`, `message`; исполнение добавляет `elapsedMs`. SHA-256 файлов и канонические hashes записей сохраняются. `ImportRun` имеет статусы `RUNNING`, `VALIDATED`, `APPLIED`, `REJECTED`. Dry-run возвращает отчёт с HTTP 200 даже при семантически неверном пакете; применение неверного пакета возвращает 422 и ImportRun в `details`. Неверное имя файла — 400.
+
+Весь пакет применяется через транзакционные публичные writer-порты модулей. Инфраструктурные фабрики `public-infrastructure.ts` получают Prisma TransactionClient; application/domain Prisma не импортируют. Глобальный advisory lock сериализует импорты; блокировки development state и Serializable isolation защищают от одновременного completion. Serialization/deadlock конфликт повторяется ограниченно. Dry-run проходит тот же путь записи и откатывает транзакцию; сохраняется только диагностический ImportRun.
+
+Повтор исходного пакета не создаёт дубликаты, не сбрасывает уровни/версии и не начисляет gain. Ключ истории — `record_id`, доменный occurrence key — `source:<record_id>`, поэтому легитимные отдельные посещения одного мероприятия сохраняются. API использует собственные стабильные ключи проведения, определяемые модулем development.
+
+Изменение существующего baseline отклоняется как `BASELINE_CONFLICT`: отдельного reassessment workflow в этом backend нет. Изменение неизменяемого исходного record_id истории — `HISTORY_CONFLICT`. В режиме last_review поздно пришедшее завершение, которое переставило бы уже применённый ledger, либо завершение после online-прогресса отклоняется как `BACKDATED_HISTORY_CONFLICT`; старые записи до baseline и истории новых сотрудников допустимы. Такое ограничение сохраняет уже зафиксированные фактические gains. В current_snapshot это ограничение не применяется к контекстной истории.
+
+## Фактическая проверка
+
+На PostgreSQL 17.6 в отдельной тестовой схеме миграции применены на пустую БД. Предоставленный полный комплект прошёл dry-run: 3075 исходных записей, ошибок нет, все бизнес-таблицы остались пустыми. Затем импортированы 200 сотрудников и 2743 участия; создано 308 положительных записей роста после baseline. Два повторных применения дали 3075 skip, 0 create, 0 update, не изменили skill levels, ledger или catalogVersion. Время и среда — в [verification.md](verification.md). Полная совместимость заявляется для фактически проверенных файлов; дополнительные неизвестные форматы требуют явных правил и проходят ту же валидацию.

@@ -1,0 +1,18 @@
+{
+  "meta": {"dataset":"Career Quest independent test fixtures","version":"1.0","as_of_date":"2026-10-01","synthetic":true},
+  "proficiency_scale": {"0":"None","1":"Basic","2":"Working","3":"Proficient","4":"Advanced","5":"Expert"},
+  "skills": [
+    {"skill_id":"SK_SYSTEM_DESIGN","name":"System Design","type":"hard","category":"engineering","description":"Designing reliable services."},
+    {"skill_id":"SK_PUBLIC_SPEAKING","name":"Public Speaking","type":"soft","category":"communication","description":"Presenting ideas to a group."},
+    {"skill_id":"SK_SQL","name":"SQL","type":"hard","category":"engineering","description":"Querying relational data."},
+    {"skill_id":"SK_COMMUNICATION","name":"Communication","type":"soft","category":"communication","description":"Clear teamwork communication."}
+  ],
+  "role_profiles": [
+    {"role":"Fixture Engineer","grade":"Apprentice","required_skills":{"SK_SYSTEM_DESIGN":1,"SK_PUBLIC_SPEAKING":0,"SK_SQL":2,"SK_COMMUNICATION":1},"critical_skills":["SK_SYSTEM_DESIGN"]},
+    {"role":"Fixture Engineer","grade":"Practitioner","required_skills":{"SK_SYSTEM_DESIGN":4,"SK_PUBLIC_SPEAKING":1,"SK_SQL":3,"SK_COMMUNICATION":2},"critical_skills":["SK_SYSTEM_DESIGN"]},
+    {"role":"Fixture Engineer","grade":"Expert","required_skills":{"SK_SYSTEM_DESIGN":5,"SK_PUBLIC_SPEAKING":3,"SK_SQL":4,"SK_COMMUNICATION":4},"critical_skills":["SK_SYSTEM_DESIGN"]},
+    {"role":"Fixture Analyst","grade":"Apprentice","required_skills":{"SK_SQL":1,"SK_COMMUNICATION":1},"critical_skills":["SK_SQL"]},
+    {"role":"Fixture Analyst","grade":"Practitioner","required_skills":{"SK_SQL":4,"SK_COMMUNICATION":3},"critical_skills":["SK_SQL"]},
+    {"role":"Fixture Analyst","grade":"Expert","required_skills":{"SK_SQL":5,"SK_COMMUNICATION":4},"critical_skills":["SK_SQL"]}
+  ]
+}

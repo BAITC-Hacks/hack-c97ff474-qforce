@@ -1,0 +1,8 @@
+record_id,employee_id,event_id,date,due_date,status,completion_pct,score,feedback_rating,assigned_by
+FX_H001,fixture_person_a,FX_SPEAKING,2026-06-05,,no_show,0,,,self
+FX_H002,fixture_person_a,FX_SPEAKING,2026-07-05,,no_show,0,,,self
+FX_H003,fixture_person_a,FX_SPEAKING,2026-08-05,,no_show,0,,,self
+FX_H004,fixture_person_a,FX_BASELINE_HISTORY,2026-08-15,,completed,100,90,4,self
+FX_H005,fixture_person_history,FX_BASELINE_HISTORY,2026-09-15,,completed,100,92,5,self
+FX_H006,fixture_person_history,FX_DESIGN_COURSE,2026-08-20,,dropped,45,,2,self
+FX_H007,fixture_person_history,FX_DESIGN_LAB,2026-08-22,,dropped,35,,2,self

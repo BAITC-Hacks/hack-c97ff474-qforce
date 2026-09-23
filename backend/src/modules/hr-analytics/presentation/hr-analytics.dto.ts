@@ -1,0 +1,15 @@
+import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+
+const string: SchemaObject = {type: 'string'};
+const count: SchemaObject = {type: 'integer', minimum: 0};
+const nullableNumber: SchemaObject = {type: 'number', nullable: true};
+const object = (properties: Record<string, SchemaObject>, required = Object.keys(properties)): SchemaObject => ({type: 'object', properties, required});
+const array = (items: SchemaObject): SchemaObject => ({type: 'array', items});
+const window = {asOfDate: {type: 'string', format: 'date'} as SchemaObject, dateFrom: {type: 'string', format: 'date'} as SchemaObject, dateTo: {type: 'string', format: 'date'} as SchemaObject};
+const meta = {...window, total: count, page: {type: 'integer', minimum: 1} as SchemaObject, pageSize: {type: 'integer', minimum: 1, maximum: 100} as SchemaObject, requestId: string};
+const list = (item: SchemaObject, extras: Record<string, SchemaObject>): SchemaObject => object({data: array(item), meta: object({...meta, ...extras})});
+export const overviewResponse = object({data: object({...window, employeeCount: count, participationCount: count, uniqueParticipants: count, completedParticipations: count, completionRate: nullableNumber, completionRateDenominator: string, employeesWithEligibleNextStep: count}), meta: object({requestId: string})});
+export const skillGapsResponse = list(object({skillId: string, roleId: string, currentGradeId: string, targetGradeId: string, employeesWithGap: count, applicableEmployees: count, knownLevelEmployees: count, incompleteDataEmployees: count, deficitShare: nullableNumber, averageGap: nullableNumber}), {deficitShareDenominator: string, employeesWithoutTargetRequirements: count});
+export const participationResponse = list(object({activityId: string, statusCounts: {type: 'object', additionalProperties: count}, participationCount: count, uniqueParticipants: count, completionRate: {type: 'number', minimum: 0, maximum: 1}}), {completionRateDenominator: string});
+export const attentionResponse = list(object({employeeId: string, roleId: string, gradeId: string, reasons: array({type: 'string', enum: ['INCOMPLETE_REQUIREMENTS_OR_LEVELS', 'NO_ELIGIBLE_ACTIVITIES', 'NO_PARTICIPATION_IN_WINDOW', 'REPEATED_SKIPS_IN_WINDOW']}), recordedParticipations: count, skippedParticipations: count}), {interpretation: {type: 'string', enum: ['OBSERVABLE_SIGNALS_ONLY']}});
+export const coverageResponse = list(object({employeeId: string, status: {type: 'string', enum: ['NOT_GENERATED', 'FRESH', 'STALE', 'NO_ELIGIBLE_ACTIVITIES', 'DATA_INCOMPLETE', 'NO_NEXT_GRADE']}, hasEligibleNextStep: {type: 'boolean'}, recommendationGeneratedAt: {type: 'string', format: 'date-time', nullable: true}, savedRecommendationStale: {type: 'boolean'}}), {counts: object({NOT_GENERATED: count, FRESH: count, STALE: count, NO_ELIGIBLE_ACTIVITIES: count, DATA_INCOMPLETE: count, NO_NEXT_GRADE: count})});

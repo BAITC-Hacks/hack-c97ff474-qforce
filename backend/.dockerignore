@@ -1,0 +1,17 @@
+node_modules
+dist
+coverage
+.git
+.env
+.env.*
+!.env.example
+data/input
+.tmp
+.temp
+test/**
+!test/evaluations/
+!test/evaluations/recommendation-fixtures.ts
+docs
+*.log
+reports
+.postgres*

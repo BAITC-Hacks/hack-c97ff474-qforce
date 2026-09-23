@@ -1,0 +1,20 @@
+import { z } from 'zod';
+export const generateSchema = z.object({locale: z.enum(['ru', 'kk', 'en']).optional(), force: z.boolean().default(false)}).strict();
+export const feedbackSchema = z.object({activityId: z.string().min(1).max(200).optional(), rating: z.enum(['HELPFUL', 'NOT_HELPFUL']), reason: z.string().max(500).optional()}).strict();
+export const latestQuerySchema = z.object({locale: z.enum(['ru', 'kk', 'en']).optional()}).strict();
+export const recommendationResponseSchema = {
+  type: 'object' as const, required: ['data', 'meta'], properties: {meta: {type: 'object' as const, required: ['requestId'], properties: {requestId: {type: 'string' as const}}}, data: {type: 'object' as const, nullable: true,
+    required: ['recommendationSetId', 'employeeId', 'generatedAt', 'expiresAt', 'locale', 'source', 'aiUsed', 'model', 'promptVersion', 'rankingVersion', 'contextVersion', 'cacheKey', 'stale', 'status', 'recommendations', 'diagnostics'], properties: {
+      recommendationSetId: {type: 'string' as const, format: 'uuid'}, employeeId: {type: 'string' as const}, generatedAt: {type: 'string' as const, format: 'date-time'}, expiresAt: {type: 'string' as const, format: 'date-time'},
+      locale: {type: 'string' as const, enum: ['ru', 'kk', 'en']}, source: {type: 'string' as const, enum: ['AI_ASSISTED', 'RULES_FALLBACK']}, aiUsed: {type: 'boolean' as const}, model: {type: 'string' as const, nullable: true},
+      promptVersion: {type: 'string' as const}, rankingVersion: {type: 'string' as const}, contextVersion: {type: 'object' as const, required: ['profile', 'skills', 'history', 'feedback', 'catalog', 'asOfDate'], properties: {profile: {type: 'integer' as const}, skills: {type: 'integer' as const}, history: {type: 'integer' as const}, feedback: {type: 'integer' as const}, catalog: {type: 'integer' as const}, asOfDate: {type: 'string' as const, format: 'date'}}}, cacheKey: {type: 'string' as const}, stale: {type: 'boolean' as const},
+      status: {type: 'string' as const, enum: ['READY', 'NO_ELIGIBLE_ACTIVITIES', 'DATA_INCOMPLETE', 'NO_NEXT_GRADE']},
+      diagnostics: {type: 'object' as const, required: ['fallbackReason', 'latencyMs', 'shortlisted', 'excluded'], properties: {fallbackReason: {type: 'string' as const, nullable: true}, latencyMs: {type: 'number' as const}, shortlisted: {type: 'integer' as const}, excluded: {type: 'array' as const, items: {type: 'object' as const, required: ['activityId', 'reasons'], properties: {activityId: {type: 'string' as const}, reasons: {type: 'array' as const, items: {type: 'string' as const}}}}}}},
+      recommendations: {type: 'array' as const, minItems: 0, maxItems: 3, items: {type: 'object' as const, required: ['activityId', 'rank', 'explanation', 'factors', 'expectedSkillChanges', 'expectedReadinessDelta'], properties: {
+        activityId: {type: 'string' as const}, rank: {type: 'integer' as const, minimum: 1, maximum: 3}, score: {type: 'number' as const}, explanation: {type: 'string' as const},
+        factors: {type: 'array' as const, items: {type: 'object' as const, properties: {id: {type: 'string' as const}, category: {type: 'string' as const}, reasonCode: {type: 'string' as const}, facts: {type: 'object' as const}}}},
+        expectedSkillChanges: {type: 'array' as const, items: {type: 'object' as const, properties: {skillId: {type: 'string' as const}, before: {type: 'number' as const}, after: {type: 'number' as const}, actualGain: {type: 'number' as const}}}}, expectedReadinessDelta: {type: 'number' as const, nullable: true},
+      }}},
+    }},
+  },
+};

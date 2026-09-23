@@ -1,0 +1,7 @@
+{
+  "asOfDate": "2026-10-01",
+  "missingSkillLevel": 0,
+  "baseline": "last_review",
+  "repeatableActivityIds": ["FX_SPEAKING"],
+  "gradeOrder": ["Apprentice", "Practitioner", "Expert"]
+}

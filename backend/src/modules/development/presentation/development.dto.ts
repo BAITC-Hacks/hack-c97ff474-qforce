@@ -1,0 +1,13 @@
+import { z } from 'zod';
+export const skillChangeSchema = z.object({skillId:z.string(),before:z.number().min(0).max(5),after:z.number().min(0).max(5),actualGain:z.number().nonnegative()});
+export const trajectorySchema = z.object({
+  status:z.enum(['READY','IN_PROGRESS','DATA_INCOMPLETE','NO_NEXT_GRADE','NO_REQUIREMENTS']),
+  currentGradeId:z.string(),nextGradeId:z.string().nullable(),readinessPercent:z.number().min(0).max(100).nullable(),coverage:z.number().min(0).max(1),criticalSkillsMet:z.boolean().nullable(),
+  gaps:z.array(z.object({skillId:z.string(),currentLevel:z.number().nullable(),requiredLevel:z.number(),gap:z.number().nullable(),critical:z.boolean()})),
+});
+const employee = z.object({id:z.string(),fullName:z.string(),roleId:z.string(),gradeId:z.string(),department:z.string(),tenureMonths:z.number().int(),preferredLanguage:z.string(),workFormat:z.string(),hireDate:z.string().date(),lastReviewDate:z.string().date(),careerGoal:z.object({target_role:z.string(),target_grade:z.string()}).nullable(),version:z.number().int()});
+export const profileSchema = employee.extend({managerId:z.string().nullable().optional(),skills:z.record(z.number().nullable()),stateVersion:z.number().int(),trajectory:trajectorySchema});
+export const participationSchema = z.object({id:z.string(),employeeId:z.string(),activityId:z.string(),date:z.string().date(),status:z.enum(['registered','in_progress','completed','dropped','no_show','declined','overdue']),completionPct:z.number().int(),assignedBy:z.string(),source:z.string(),completionResult:z.unknown().nullable()});
+export const completionSchema = z.object({participationId:z.string(),alreadyCompleted:z.boolean(),changedSkills:z.array(skillChangeSchema.extend({rule:z.object({gain:z.number(),maxLevel:z.number()})})),stateVersion:z.number().int(),trajectoryBefore:trajectorySchema,trajectoryAfter:trajectorySchema});
+const activity = z.object({id:z.string(),title:z.string(),description:z.string(),type:z.string(),format:z.string(),durationHours:z.number(),mandatory:z.boolean(),roleIds:z.array(z.string()),gradeIds:z.array(z.string()),effects:z.array(z.object({skillId:z.string(),gain:z.number(),maxLevel:z.number()})),prerequisites:z.record(z.number()),upcomingSessions:z.array(z.string().date()),repeatable:z.boolean(),version:z.number().int(),translations:z.record(z.unknown()).optional()});
+export const eligibleSchema = z.object({asOfDate:z.string().date(),eligible:z.array(z.object({activity,eligible:z.boolean(),reasons:z.array(z.string()),expectedSkillChanges:z.array(skillChangeSchema)})),excluded:z.array(z.object({activityId:z.string(),reasons:z.array(z.string())}))});

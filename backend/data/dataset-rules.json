@@ -1,0 +1,7 @@
+{
+  "asOfDate": "2026-10-01",
+  "missingSkillLevel": 0,
+  "baseline": "last_review",
+  "repeatableActivityIds": ["EV_036"],
+  "gradeOrder": ["Junior", "Middle", "Senior", "Lead"]
+}
